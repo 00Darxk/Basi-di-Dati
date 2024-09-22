@@ -2,7 +2,7 @@
 Appunti tratti dal corso di Basi di Dati, Anno Accademico 2024/25, Dipartimento di Ingegneria Civile, Informatica e delle Tecnologie Aeronautiche, Università degli Studi "Roma Tre". 
 
 ## Contenuti:
-- [Appunti](Basi-di-Dati.pdf) delle lezioni, tenute l'anno accademico 2024/25 dal Professore XX. 
+- [Appunti](Basi_di_Dati.pdf) delle lezioni, tenute l'anno accademico 2024/25 dal Professore XX. 
 
 ## Contenuti del Corso
 
