@@ -68,7 +68,7 @@ Università degli Studi ``Roma Tre"}}
 \clearpage
 \pagenumbering{arabic}
 
-%% TODO aggiungere lezione 23, 27, 30 sett; 4, 7, 11 ott;
+%% TODO aggiungere lezione 23, 27, 30 set; 4, 7, 11 ott;
 
 \section{Introduzione}
 
@@ -163,134 +163,14 @@ Esiste un altra clausola \verb|HAVING| per definire una condizione su raggruppam
 
 %% TODO problema di trovare il max (fine lezione 14 ott)
 
-\subsection{Esercitazione 18/10/24}
-
-%% TODO esercitazione --
-
 In SQLite online l'inserimento di una ennupla in una tabella non controlla se gli attributi che si vogliono aggiungere sono presenti nella tabella, infatti 
 potrebbe causare dei danni all'intera tabella. Questa reference dovrebbe essere controllata ad ogni inserimento. 
 
-Si considera il seguente database:
-\begin{minted}{sql}
-    CREATE TABLE Compositori (codice integer NOT NULL PRIMARY KEY,
-                        cognome text ,
-                        nome text);
-						
-CREATE TABLE Concerti (codice integer NOT NULL PRIMARY KEY,
-                        titolo text ,
-                        descrizione text);
-
-CREATE TABLE Pezzi (codice  integer NOT NULL PRIMARY KEY,
-                        titolo text,
-                        autore integer NOT NULL REFERENCES Compositori,
-                        durata integer);
-
-CREATE TABLE Programmazione ( pezzo integer NOT NULL REFERENCES Pezzi,
-                        concerto integer NOT NULL REFERENCES Concerti, 
-                        posizione integer,
-                        PRIMARY KEY(pezzo, concerto));
-
-\end{minted}
-
-Popolato dai seguenti valori:
-\begin{minted}{sql}
-insert into compositori values(1, 'Mozart', 'Wolfgang Amadeus');
-insert into compositori values(2, 'Bach', 'Johann Sebastian');
-insert into compositori values(3, 'Beethoven', 'Ludwig van');
-
-insert into concerti values(1, 'Concerto di Febbraio', 'Selezione di musica Barocca');
-insert into concerti values(2, 'Concerto di Marzo', 'Estratti di belle sinfonie');
-insert into concerti values(3, 'Concerto di Giugno', 'Concerto a Villa Ada');
-
-insert into pezzi values(1, 'Variazioni Goldberg', 2, 32);
-insert into pezzi values(2, 'L''arte della fuga', 2, 38);
-insert into pezzi values(3, 'Il clavicembalo ben temperato', 2, 85);
-insert into pezzi values(4, 'Il flauto magico', 1, 95);
-insert into pezzi values(5, 'Serenata in do minore k 388', 1, 45);
-insert into pezzi values(6, 'Requiem', 1, 87);
-insert into pezzi values(7, 'Sinfonia n. 6 in fa maggiore op. 68', 3, 91);
-insert into pezzi values(8, 'Sinfonia n. 9 in re minore', 3, 91);
-insert into pezzi values(9, 'Trio d''archi in mi bemolle maggiore op. 3', 3, 52);
-
-insert into programmazione values(1, 1,1);
-insert into programmazione values(2, 1,2);
-insert into programmazione values(3, 2,2);
-insert into programmazione values(4, 3,1);
-insert into programmazione values(5, 2,3);
-insert into programmazione values(5, 3,2);
-insert into programmazione values(7, 2,1);
-\end{minted}
 
 Su SQLite si può attivare il controllo della chiave esterna con il comando:
 \begin{minted}{sql}
 PRAGMA foreign_keys=on
 \end{minted}
-
-Vengono proposti una serie di esercizi su questo database:
-
-Determinare il titolo dei pezzi che hanno durata compresa tra 40 e 60 minuti. Per effettuare quest'operazione è sufficiente operare sulla singola tabella \verb|Pezzi|:
-\begin{minted}{sql}
-SELECT titolo FROM Pezzi
-WHERE durata>40 AND durata<60
-\end{minted}
-
-Determinare il titolo, nome e cognome dell'autore dei pezzi che hanno durata compresa tra 40 e 60 minuti. Oltre alla tabella \verb|Pezzi|, è necessario ottenere i campi 
-\verb|nome| e \verb|cognome| della tabella \verb|Compositori|. Si effettua mediante un join, specificando come vengono associate le due relazioni, infatti il campo \verb|autore| 
-di \verb|Pezzi| si riferisce alla chiave primaria della relazione \verb|Compositori|:
-\begin{minted}{sql}
-SELECT titolo, nome, cognome  
-FROM Pezzi P JOIN Compositori C ON P.autore=C.codice
-WHERE durata>40 and durata<60
-\end{minted}
-
-Determinare il nome e cognome dei compositori dei pezzi presenti nel ``Concerto di Giugno''. Per ottenere questo si utilizza una vista. Nei database industriali 
-la vista p contenuta nella cache. La vista può essere utilizzata come fosse un'altra tabella nel database, ed è possibile utilizzarla per effettuare altre 
-interrogazioni nella stessa query. Si crea quindi una vista di tutti i pezzi presenti nel concerto di Giugno:
-\begin{minted}{sql}
-CREATE VIEW pezzi_giugno AS Select *
-FROM Concerti JOIN Programmazione ON Concerti.codice=Programmazione.concerto
-WHERE Concerti.titolo='Concerto di Giugno'
-\end{minted}
-Per ottenere il nome ed il cognome dei compositori si effettua una join su questa vista, prima con i pezzi, e poi con la relazione compositori, selezionando solo gli 
-attributi richiesti:
-\begin{minted}{sql}
-SELECT DISTINCT nome, cognome
-FROM pezzi_giugno JOIN Pezzi ON pezzi_giugno.pezzo=Pezzi.codice
-JOIN Compositori ON Compositori.codice=autore
-\end{minted}
-
-%% ^^^ visti a lezione
-
-Determinare il nome e cognome dei compositori che non hanno pezzi nel ``Concerto di Giugno''. 
-
-
-
-
-Determinare il titolo e descrizione dei concerti in cui sono presenti pezzi di Mozart:
-\begin{minted}{sql}
-SELECT DISTINCT C.titolo, descrizione
-FROM Concerti C join Programmazione P1 ON C.codice=concerto 
-JOIN Pezzi P ON pezzo=P.codice
-JOIN Compositori C1 ON autore=C1.codice
-WHERE cognome='Mozart'
-\end{minted}
-
-
-
-Determinare il titolo e descrizione dei concerti in cui non sono presenti pezzi di Beethoven:
-
-
-codice e titolo dei pezzi che non sono presenti in nessun concerto. Ordinare per codice
-i pezzi che compaiono in ultima posizione in almeno un concerto. Mostrare codice, titolo, cognome dell'autore e durata del pezzo. Ordinare per codice
-i pezzi che compaiono in ultima posizione in TUTTI i concerti. Mostrare codice, titolo, cognome dell'autore e durata del pezzo. Ordinare per codice
-coppie di pezzi con lo stesso titolo. Mostrare il titolo e i due codici (ordinando il risultato sul titolo). Nota bene: ogni coppia va mostrata una sola volta (ad esempio, se i pezzi 3 e 5 hanno stesso titolo, va mostrata solo la coppia 3,5 e non la coppia 5,3)
-per ogni concerto, la durata totale (somma delle durate dei pezzi). Supporre che per tutti i concerti ci sia almeno un pezzo. Mostrare codice e titolo del concerto e durata totale. Ordinare per codice.
-i concerti che hanno durata totale minore di 90 minuti; per ogni concerto, mostrare codice e durata totale. Ordinare per codice.
-codice, nome e cognome dei compositori che sono presenti in tutti i concerti. Ordinare per codice
-
-
-
-
 
 
 

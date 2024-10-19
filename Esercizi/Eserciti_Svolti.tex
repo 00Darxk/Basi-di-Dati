@@ -1,0 +1,313 @@
+\documentclass{article}
+
+\usepackage{cancel}
+\usepackage{amsmath}
+\usepackage[includehead,nomarginpar]{geometry}
+\usepackage{graphicx}
+\usepackage{amsfonts} 
+\usepackage{verbatim}
+\usepackage{mathrsfs}  
+\usepackage{lmodern}
+\usepackage{braket}
+\usepackage{bookmark}
+\usepackage{fancyhdr}
+\usepackage{romanbarpagenumber}
+\usepackage{minted}
+%\usepackage{subfig}
+\usepackage[italian]{babel}
+%\usepackage{float}
+%\usepackage{wrapfig}
+%\usepackage[export]{adjustbox}
+\allowdisplaybreaks
+
+\setlength{\headheight}{12.0pt}
+\addtolength{\topmargin}{-12.0pt}
+\graphicspath{ {./Immagini/} }
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+}
+
+\newsavebox{\tempbox} %{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}}
+
+
+\makeatother
+
+\numberwithin{equation}{subsection}
+\newcommand{\tageq}{\tag{\stepcounter{equation}\theequation}}
+\AtBeginDocument{%
+  \renewcommand{\figurename}{Fig.}
+}
+\fancypagestyle{link}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{Sorgente del file LaTeX disponibile al seguente link: \url{https://github.com/00Darxk/Basi-di-Dati/}}}
+
+\begin{document}
+
+\title{%
+    \textbf{Esercizi Svolti di Basi di Dati}  \\ 
+    \textit{Anno Accademico: 2024/25}}
+\author{\textit{Giacomo Sturm}}
+\date{\textit{Dipartimento di Ingegneria Civile, Informatica e delle Tecnologie Aeronautiche \\
+Università degli Studi ``Roma Tre"}}
+
+\maketitle
+\thispagestyle{link}
+
+\clearpage
+
+
+\pagestyle{fancy}
+\fancyhead{}\fancyfoot{}
+\fancyhead[C]{\textit{Basi di Dati - Università degli Studi ``Roma Tre"}}
+\fancyfoot[C]{\thepage}
+\pagenumbering{Roman}
+
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+
+\section{Esercitazione del 18/10/24}
+
+
+Si considera il seguente database:
+\begin{minted}{sql}
+CREATE TABLE Compositori (codice integer NOT NULL PRIMARY KEY,
+                        cognome text ,
+                        nome text);
+						
+CREATE TABLE Concerti (codice integer NOT NULL PRIMARY KEY,
+                        titolo text ,
+                        descrizione text);
+
+CREATE TABLE Pezzi (codice  integer NOT NULL PRIMARY KEY,
+                        titolo text,
+                        autore integer NOT NULL REFERENCES Compositori,
+                        durata integer);
+
+CREATE TABLE Programmazione ( pezzo integer NOT NULL REFERENCES Pezzi,
+                        concerto integer NOT NULL REFERENCES Concerti, 
+                        posizione integer,
+                        PRIMARY KEY(pezzo, concerto));
+
+\end{minted}
+
+Popolato dai seguenti valori:
+\begin{minted}{sql}
+insert into compositori values(1, 'Mozart', 'Wolfgang Amadeus');
+insert into compositori values(2, 'Bach', 'Johann Sebastian');
+insert into compositori values(3, 'Beethoven', 'Ludwig van');
+
+insert into concerti values(1, 'Concerto di Febbraio', 'Selezione di musica Barocca');
+insert into concerti values(2, 'Concerto di Marzo', 'Estratti di belle sinfonie');
+insert into concerti values(3, 'Concerto di Giugno', 'Concerto a Villa Ada');
+
+insert into pezzi values(1, 'Variazioni Goldberg', 2, 32);
+insert into pezzi values(2, 'L''arte della fuga', 2, 38);
+insert into pezzi values(3, 'Il clavicembalo ben temperato', 2, 85);
+insert into pezzi values(4, 'Il flauto magico', 1, 95);
+insert into pezzi values(5, 'Serenata in do minore k 388', 1, 45);
+insert into pezzi values(6, 'Requiem', 1, 87);
+insert into pezzi values(7, 'Sinfonia n. 6 in fa maggiore op. 68', 3, 91);
+insert into pezzi values(8, 'Sinfonia n. 9 in re minore', 3, 91);
+insert into pezzi values(9, 'Trio d''archi in mi bemolle maggiore op. 3', 3, 52);
+
+insert into programmazione values(1, 1,1);
+insert into programmazione values(2, 1,2);
+insert into programmazione values(3, 2,2);
+insert into programmazione values(4, 3,1);
+insert into programmazione values(5, 2,3);
+insert into programmazione values(5, 3,2);
+insert into programmazione values(7, 2,1);
+\end{minted}
+
+Vengono proposti una serie di esercizi su questo database. 
+
+\subsection*{Domanda 1}
+Determinare il titolo dei pezzi che hanno durata compresa tra 40 e 60 minuti. Per effettuare quest'operazione è sufficiente operare sulla singola tabella \verb|Pezzi|:
+\begin{minted}{sql}
+SELECT titolo FROM Pezzi
+WHERE durata>40 AND durata<60
+\end{minted}
+
+\subsection*{Domanda 2}
+Determinare il titolo, nome e cognome dell'autore dei pezzi che hanno durata compresa tra 40 e 60 minuti. Oltre alla tabella \verb|Pezzi|, è necessario ottenere i campi 
+\verb|nome| e \verb|cognome| della tabella \verb|Compositori|. Si effettua mediante un join, specificando come vengono associate le due relazioni, infatti il campo \verb|autore| 
+di \verb|Pezzi| si riferisce alla chiave primaria della relazione \verb|Compositori|:
+\begin{minted}{sql}
+SELECT titolo, nome, cognome  
+FROM Pezzi JOIN Compositori ON Pezzi.autore=Compositori.codice
+WHERE durata>40 and durata<60
+\end{minted}
+
+\subsection*{Domanda 3}
+Determinare il nome e cognome dei compositori dei pezzi presenti nel ``Concerto di Giugno''. Per ottenere questo si utilizza una vista. Nei database industriali 
+la vista p contenuta nella cache. La vista può essere utilizzata come fosse un'altra tabella nel database, ed è possibile utilizzarla per effettuare altre 
+interrogazioni nella stessa query. Si crea quindi una vista di tutti i pezzi presenti nel concerto di Giugno:
+\begin{minted}{sql}
+CREATE VIEW pezzi_giugno AS Select *
+FROM Concerti JOIN Programmazione ON Concerti.codice=Programmazione.concerto
+WHERE Concerti.titolo='Concerto di Giugno'
+\end{minted}
+Per ottenere il nome ed il cognome dei compositori si effettua una join su questa vista, prima con i pezzi, e poi con la relazione compositori, selezionando solo gli 
+attributi richiesti:
+\begin{minted}{sql}
+SELECT DISTINCT nome, cognome
+FROM pezzi_giugno JOIN Pezzi ON pezzi_giugno.pezzo=Pezzi.codice
+JOIN Compositori ON Compositori.codice=autore
+\end{minted}
+
+\subsection*{Domanda 4}
+Determinare il nome e cognome dei compositori che non hanno pezzi nel ``Concerto di Giugno''. Utilizzando la stessa vista \verb|pezzi_giugno|, è possibile utilizzare una semplice \verb|EXCEPT| sulla 
+relazione dei compositori per rimuovere quelli presenti nel concerto di Giugno:
+\begin{minted}{sql}
+SELECT DISTINCT nome, cognome
+FROM Compositori EXCEPT
+SELECT DISTINCT nome, cognome
+FROM pezzi_giugno JOIN pezzi ON pezzo=pezzi.codice 
+JOIN Compositori ON autore=Compositori.codice
+\end{minted}
+
+\subsection*{Domanda 5}
+Determinare il titolo e descrizione dei concerti in cui sono presenti pezzi di Mozart. Per ottenere questi risultati è sufficiente effettuare un'operazione di join tra tutte le relazioni del database, 
+considerando solo le ennuple di valore specificato per l'attributo \verb|cognome|:
+\begin{minted}{sql}
+SELECT DISTINCT concerti.titolo, descrizione 
+FROM Concerti JOIN Programmazione ON Concerti.codice=Programmazione.concerto
+JOIN pezzi ON pezzi.codice=pezzo
+JOIN Compositori ON autore=Compositori.codice
+WHERE cognome='Mozart'
+\end{minted}
+
+\subsection*{Domanda 6}
+Determinare il titolo e descrizione dei concerti in cui non sono presenti pezzi di Beethoven. Per effettuare quest'operazione è sufficiente trovare tutti i concerti dove sono presenti 
+pezzi di Beethoven, come nella domanda precedente, ed in seguito rimuoverli dalla lista di tutti i concerti con un \verb|EXCEPT| iniziale:
+\begin{minted}{sql}
+SELECT DISTINCT concerti.titolo, descrizione
+FROM Concerti EXCEPT
+-- concerti contenenti pezzi di Beethoven
+SELECT DISTINCT concerti.titolo, descrizione 
+FROM Concerti join Programmazione ON Concerti.codice=Programmazione.concerto
+JOIN pezzi ON pezzi.codice=pezzo
+JOIN Compositori ON autore=Compositori.codice
+WHERE cognome='Beethoven'
+\end{minted}
+
+\subsection*{Domanda 7}
+Determinare il codice ed il titolo dei pezzi che non sono presenti in nessun concerto. Ordinare per codice. Si può effettuare in modo analogo alla precedente domanda, si ottengono i pezzi contenuti in tutti i 
+concerti tramite un join tra le relazioni \verb|Programmazione| e \verb|Pezzi|. Si rimuove quindi questo risultato dalla relazione \verb|Pezzi|, tenendo conto di selezionare solamente gli attributi in comune, ed 
+in seguito ordinando in base al codice con il comando \verb|ORDER BY|, seguito dall'attributo su cui si vuole effettuare l'ordinamento: 
+\begin{minted}{sql}
+SELECT DISTINCT pezzi.codice, titolo
+FROM Pezzi EXCEPT
+SELECT DISTINCT pezzi.codice, titolo
+FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=codice
+ORDER BY pezzi.codice 
+\end{minted}
+
+\subsection*{Domanda 8}
+Determinare i pezzi che compaiono in ultima posizione in almeno un concerto. Mostrare codice, titolo, cognome dell'autore e durata del pezzo. Ordinare per codice. Si può utilizzare una vista \verb|ultimi_pezzi|, 
+dove vengono salvati i pezzi in ultima posizione nei concerti con il comando \verb|MAX(posizione)|, raggruppandoli rispetto all'attributo \verb|concerto|. 
+\begin{minted}{sql}
+CREATE VIEW ultimi_pezzi AS
+SELECT DISTINCT MAX(posizione), pezzo
+FROM Programmazione 
+GROUP BY Programmazione.concerto
+\end{minted}
+Da questa vista si possono ottenere le informazioni richieste con i singoli pezzi effettuando una join con le relazioni \verb|Pezzi| e \verb|Compositori|, ed ordinando con \verb|ORDER BY| rispetto al codice dei 
+pezzi:
+\begin{minted}{sql}
+SELECT DISTINCT pezzi.codice, pezzi.titolo, cognome, durata
+FROM Pezzi JOIN Compositori ON Compositori.codice=autore
+JOIN ultimi_pezzi ON pezzi.codice=pezzo
+ORDER BY pezzi.codice
+\end{minted}
+
+\subsection*{Domanda 9}
+Determinare i pezzi che compaiono in ultima posizione in tutti i concerti. Mostrare codice, titolo, cognome dell'autore e durata del pezzo. Ordinare per codice. Si può utilizzare la stessa vista realizzata 
+alla domanda precedente, e si utilizza la stessa interrogazione alla domanda precedente, inserendo una condizione nel \verb|WHERE| dove viene controllato che la vista \verb|ultimi_pezzi| contenga solo un'ennupla, 
+ovvero il pezzo che compare in ultima posizione in tutti i concerti:
+\begin{minted}{sql}
+SELECT DISTINCT pezzi.codice, pezzi.titolo, cognome, durata
+FROM pezzi JOIN Compositori ON Compositori.codice=autore
+JOIN ultimi_pezzi ON pezzi.codice=pezzo
+WHERE (SELECT COUNT(pezzo) FROM ultimi_pezzi)=1
+ORDER BY pezzi.codice
+\end{minted}
+
+\subsection*{Domanda 10}
+Determinare coppie di pezzi con lo stesso titolo. Mostrare il titolo e i due codici (ordinando il risultato sul titolo). Nota bene: ogni coppia va mostrata una sola volta 
+(ad esempio, se i pezzi 3 e 5 hanno stesso titolo, va mostrata solo la coppia 3,5 e non la coppia 5,3). Effettuando un'operazione di join sulla relazione \verb|Pezzi| con sé stessa si ottiene una relazione dove sono 
+presenti due volte le stesse coppie. Per ovviare a questo problema, si può utilizzare una \verb|GROUP BY| rispetto al titolo dei pezzi, anche se questo tipo di operazioni vengono sconsigliate poiché mostrano 
+un'ennupla casualmente tra le due, senza poter scegliere quale:
+\begin{minted}{sql}
+SELECT p1.titolo, p1.codice pezzo1, p2.codice pezzo2
+FROM pezzi p1 JOIN pezzi p2 ON p1.titolo=p2.titolo
+WHERE p1.codice!=p2.codice
+GROUP BY p1.titolo
+\end{minted}
+
+\subsection*{Domanda 11}
+Determinare per ogni concerto, la durata totale (somma delle durate dei pezzi). Supporre che per tutti i concerti ci sia almeno un pezzo. Mostrare codice e titolo del concerto e durata totale. Ordinare per codice. 
+Per ottenere le informazioni necessarie si usa una join tra le relazioni \verb|Programmazione|, \verb|Pezzi| e \verb|Concerti|. Si utilizza il comando \verb|SUM(durata)| per sommare tutte le durate dei pezzi, nello 
+stesso concerto tramite \verb|GROUP BY concerto|  
+\begin{minted}{sql}
+SELECT Concerti.codice, Concerti.titolo, SUM(durata) AS durata_concerto
+FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
+JOIN Concerti ON Concerti.codice=concerto
+GROUP BY concerto
+ORDER BY Concerti.codice
+\end{minted}
+
+\subsection*{Domanda 12}
+Determinare i concerti che hanno durata totale minore di 90 minuti; per ogni concerto, mostrare codice e durata totale. Ordinare per codice. Questa domanda è essenzialmente identica alla precedente, è 
+sufficiente inserire la nuova condizione tramite il comando \verb|HAVING|, che opera su tutte le ennuple della relazione: 
+\begin{minted}{sql}
+SELECT Concerti.codice, Concerti.titolo, SUM(durata) AS durata_concerto
+FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
+JOIN Concerti ON Concerti.codice=concerto
+GROUP BY concerto HAVING durata_concerto < 90
+ORDER by Concerti.codice
+\end{minted}
+Poiché è sostanzialmente uguale alla domanda precedente, si potrebbe realizzare una vista per rispondere alla domanda 11, utilizzata anche dalla 12:
+\begin{minted}{sql}
+CREATE VIEW concerti_con_durata AS
+SELECT Concerti.codice, Concerti.titolo, SUM(durata) AS durata_concerto
+FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
+JOIN Concerti ON Concerti.codice=concerto
+GROUP BY concerto
+ORDER BY Concerti.codice
+
+-- domanda 11:
+SELECT * FROM concerti_con_durata
+
+--domanda 12:
+SELECT * FROM concerti_con_durata WHERE durata_concerto < 90
+\end{minted}
+
+\subsection*{Domanda 13}
+Determinare codice, nome e cognome dei compositori che sono presenti in tutti i concerti. Ordinare per codice. Si può realizzare in modo poco elegante tramite una serie di \verb|EXCEPT|. Si ottiene la 
+relazione dei compositori per concerto effettuando una join tra \verb|Programmazione|, \verb|Pezzi| e \verb|Compositori|, si ottiene il suo complementare effettuando una \verb|EXCEPT| tra la join di \verb|Programmazione| e 
+\verb|Compositori| per la relazione appena calcolata. Se un compositore è presente in tutti i concerti, non sarà presente in questa tabella. Quindi essenzialmente raggruppando per concerto, senza \verb|GROUP BY|, si 
+considerano solo le ennuple distinte senza l'attributo \verb|concerto|, per cui si ottiene la tabella dei compositori non presenti in tutti i concerti. La sua relazione complementare conterrà quindi tutti i compositori 
+presenti in tutti i concerti, ottenuta mediante un'altra \verb|EXCEPT|:
+\begin{minted}{sql}
+-- compositori presenti in tutti i concerti:
+SELECT DISTINCT codice, nome, cognome FROM Compositori EXCEPT
+    
+    -- compositori non presenti in tutti i concerti:
+    SELECT DISTINCT codice, nome, cognome FROM(
+
+        -- ogni compositore per ogni concerto:
+        SELECT DISTINCT Compositori.codice, nome, cognome, concerto
+        FROM Compositori JOIN Programmazione 
+        JOIN Concerti ON concerto=Concerti.codice EXCEPT
+
+            -- compositori per ogni concerto:
+            SELECT DISTINCT Compositori.codice, nome, cognome, concerto
+            FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
+            JOIN Compositori ON Pezzi.autore=Compositori.codice)
+ORDER BY Compositori.codice
+\end{minted}
+
+\end{document}
