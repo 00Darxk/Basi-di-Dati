@@ -163,14 +163,43 @@ Esiste un altra clausola \verb|HAVING| per definire una condizione su raggruppam
 
 %% TODO problema di trovare il max (fine lezione 14 ott)
 
+%% TODO inserire meglio
 In SQLite online l'inserimento di una ennupla in una tabella non controlla se gli attributi che si vogliono aggiungere sono presenti nella tabella, infatti 
 potrebbe causare dei danni all'intera tabella. Questa reference dovrebbe essere controllata ad ogni inserimento. 
-
 
 Su SQLite si può attivare il controllo della chiave esterna con il comando:
 \begin{minted}{sql}
 PRAGMA foreign_keys=on
 \end{minted}
+%% ^^^^
+
+La funzioni di aggregazione effettuano l'operazione sulla target list, raggruppando i campi, quindi in alcuni casi non permettono di scegliere di quale ennupla mostrare 
+l'attributo. Si applicano al gruppo di ennuple che soddisfano la condizione imposta dal \verb|GROUP BY|. 
+Per risolvere questo problema e non perdere informazioni sulle relazioni utilizzati, si può utilizzare una vista, oppure interrogazioni nidificate. Le viste sono 
+interrogazioni, calcolata per mezzo di un'espressione, utilizzabile come fosse una relazione. Prima di creare una vista è consigliabile 
+effettuare l'interrogazione per osservare il suo risultato. 
+In SQL non esistono valori, ma relazioni di singolo attributi su una singola ennupla. 
+
+All'interno di un'interrogazione è possibile scrivere altre interrogazioni, in molti modi diversi nella versioni recenti di SQL. Si può inserire nei comandi \verb|WHERE|, 
+\verb|FROM|, \verb|SELECT|, etc. Esiste anche con i tipi, per esempio con valori booleani con \verb|EXISTS|. 
+
+Se nel \verb|WHERE|, invece di restituire una ennupla con un singolo valore dalla sotto-interrogazione, vengono restituite diverse ennupla, in SQLite questo non genera 
+un errore, ma rappresenta un comportamento errato della piattaforma. Su PostgreSQL infatti questo solleva un errore, poiché non può utilizzare le ennuple fornite nel 
+confronto. In questo modo è come se l'interrogazione interna nella \verb|WHERE|, utilizzando attributi dell'interrogazione esterna, venga eseguita ogni volta per ogni 
+ennupla della interrogazione esterna. 
+
+Le interrogazioni nidificate erano nella versione base di SQL, fin dalla sua nascita, poiché non si credeva di poter utilizzare la join. Quindi ogni interrogazioni 
+veniva realizzata con valori distinti, ma si capì molto presto la necessità di introdurre la join per effettuare interrogazioni più semplicemente. 
+
+
+In SQL si possono scrivere operazioni di aggiornamento del database, tramite il comando \verb|INSERT INTO|, allo stesso modo si possono eliminare dei valori con 
+\verb|REMOVE FROM|. Per modificare una tabella già creata, si può utilizzare il comando \verb|ALTER TABLE|. 
+
+
+
+
+
+
 
 
 
