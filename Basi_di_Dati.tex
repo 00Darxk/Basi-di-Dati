@@ -111,16 +111,131 @@ predefinite. Mentre utenti casuali eseguono operazioni non previste dal sistema,
 
 \section{Modello Relazionale}
 
+Per organizzare i dati all'interno di una base di dati si possono utilizzare diversi modelli o astrazioni dei dati. Il modello dei dati rappresenta un insieme di costrutti 
+attraverso i quali i dati di interesse vengono organizzati ed utilizzati. Il modello relazionale prevede la costruzione di una tabella, ovvero una relazione, che 
+permette di definire insiemi di record o n-uple composte da unità atomiche, chiamate attributi, omogenee. 
+
+Questo rappresenta un modello logico dei dati tradizionale, mentre altri modelli più recenti ad oggetti, XML e ``NoSQL''. 
+Il modello relazionale è stato proposto da E. F. Codd nel 1970 per favorire l'indipendenza dei dati. Questo modello fu implementato in DBMS già nel 1981, poiché non è 
+facile implementare l'indipendenza dei dati con efficienza ed affidabilità. Si basa sul concetto matematico di relazione che trova una naturale rappresentazione per 
+mezzo di tabelle. 
+
+\subsection{Relazione}
+
+Una relazione $\rho$ rappresenta un sottoinsieme del prodotto cartesiano tra due o più domini $D_1$ e $D_2$:
+\begin{equation*}
+    \rho\subseteq D_1\times D_2
+\end{equation*}
+Dati $n$ insiemi $D_i$, il loro prodotto cartesiano $D_1\times\cdots\times D_n$ rappresenta l'insieme di tutte le n-uple $(d_1,\cdots,d_n)$ tali che per ogni $i=1,\cdots n$ 
+si ha $d_i\in D_i$. Poiché è un insieme non sono presenti ennuple uguali. Una relazione $\rho$ su questi $n$ insiemi, chiamati domini, rappresenta un sottoinsieme 
+di questo prodotto cartesiano:
+\begin{equation}
+    \rho\subseteq D_1\times\cdots\times D_2
+\end{equation}
+
+La struttura così definita non è posizionale, poiché a ciascun dominio si associa un nome, attributo o colonna, nell'intestazione della tabella. 
+Le tabelle che rappresentano una relazione l'ordinamento tra le righe è irrilevante, così come l'ordinamento tra le colonne. 
+Una tabella rappresenta una relazione se tutte le righe sono diverse fra di loro e rappresentano una ennupla distinta, le intestazioni delle colonne sono diverse 
+fra di loro, ed i valori di ogni colonna sono omogenei fra di loro. 
+Nelle tabelle ci sono solo valori, si indica anche come modello basato sui valori. I riferimenti fra dati in relazioni diverse sono rappresentati tramite i valori 
+dei domini nelle ennuple. 
+
+Una base di dati rappresenta un'insieme di relazioni, dove il suo schema è costituito da tutte le intestazioni, mentre i valori contenuti quindi tutte le righe 
+contenute nelle tabelle rappresentano un'istanza della base di dati. 
+
+Per gestire le relazioni useremo il linguaggio SQL, inizialmente acronimo per ``Structured English Query Language'', ma poi estesa a ``Structured Query Language'', 
+senza appoggiarsi principalmente sul linguaggio inglese. Rappresenta una lingua di alto livello, che tratteremo approfonditamente in sezioni successive. 
+
+Lo schema di una relazione è composto da un nome $R$ ed un insieme $X$ di $n$ attributi $A_i$:
+\begin{equation}
+    R(A_1,\cdots,A_n)
+\end{equation} 
+Lo schema di una base di dati $R$ è costituito da uno schema di relazioni $R_i$:
+\begin{equation}
+    R=\left\{R_1(X_1),\cdots R_k(X_k)\right\}
+\end{equation}
+
+Un'ennupla su un insieme di attributi $X$ viene definita come una funzione che associa a ciascun attributo $A$ in $X$ un valore del dominio di $A$. 
+Il valore di una singola ennupla $t$ su un attributo $A$ si indica con $t[A]$. Un'istanza di una relazione $\rho$ su uno schema $R(X)$ rappresenta un insieme di 
+ennuple su $X$. 
+Un'istanza di una base di dati su uno schema $R(X)=\left\{R_1(X_1),\cdots R_k(X_k)\right\}$ si definisce come un insieme di relazioni $\rho=\left\{\rho_i,\cdots,\rho_k\right\}$, 
+dove ogni $\rho_i$ rappresenta un'istanza di una relazione sullo schema di una relazione $R_i(X_i)$. 
+
+\subsection{Valore Nullo}
+
+Questo modello impone ai dati una struttura rigida, solo alcuni formati sono infatti ammessi, ed esclusivamente rappresentati come ennuple che appartengono un 
+certo schema di relazione. Ma la realtà potrebbe non corrispondere alla struttura attesa, quindi i dati ottenuti dalla realtà potrebbero non rappresentare 
+un'ennupla intera. 
+Per cui quando un'ennupla contiene informazioni incomplete, il valore dell'ennupla per quell'attributo è vuoto nella relazione. Per ovviare a questo problema nel 
+modello relazionale, si utilizza un valore convenzionale per rappresentare questo valore vuoto nell'ennupla, si utilizza un valore diverso dai valori del dominio $A$, 
+chiamato $null$. 
+L'introduzione di questo altro valore è una soluzione semplice, ma efficace ai fini della base di dati. Tutti i domini $A$ sono in grado di accettare un valore $null$ 
+per indicare la mancanza del valore nell'ennupla. Per cui data un'ennupla $t$ il suo valore su di un attributo $A$ può essere:
+\begin{equation}
+    t[A]=\begin{cases}
+        \mathrm{dom}(A)\\
+        null
+    \end{cases}
+\end{equation}
 
 
-%% TODO aggiungere lezione 23, 27, 30 set; 4, 7, 11 ott;
+Nonostante la semplicità non è una tecnica perfetta, poiché la perdita di informazioni impedisce di effettuare riferimenti per valori tra le relazioni. 
+Su SQL si può utilizzare il comando \verb|NOT NULL| alla creazione di uno schema di relazione. 
+
+\subsection{Vincoli}
+
+Oltre all'assenza di informazioni, è possibile riscontrare errori interni alla base di dati, delle scorrettezze legate all'integrità dei dati. Si possono introdurre 
+vincoli di integrità per rappresentare istanze ammissibili. I vincoli sono delle funzioni booleane, dei predicati, che associa ad ogni istanza un valore vero o falso. 
+
+Solo alcuni tipi di vincoli sono integrati nei DBMS, e questi li verificano e ne impediscono la violazione. Per i vincoli supportati invece la verifica spetta all'utente 
+o al programmatore. 
+Questi vincoli possono essere intra-relazionali o inter-relazionali. I vincoli intra-relazionali coinvolgono solamente i valori di una singola relazione, e possono 
+essere sul valore o di dominio, di ennupla, o di chiave. 
+
+\subsubsection{Intra-Relazionali}
+
+I vincoli di dominio impongono condizioni sull'ammissibilità dei valori di un singolo attributo. 
+Possono utilizzare operatori booleani come AND, OR e NOT, ed operazioni di confronto matematiche con una costante. 
+
+In SQL data uno schema, si può aggiungere un vincolo con la sintassi \verb|ADD CONSTRAINT|, seguita dalla funzione boolean che definisce il vincolo. Si possono 
+aggiungere ad uno schema di relazione tramite il comando \verb|ALTER TABLE|. Se il vincolo che si prova a definire è violato, non si può definirlo. Convenzionalmente 
+prima viene definito lo schema con i vincoli poi questi vengono verificati ad ogni modifica, ed in caso rifiutata. 
+
+I vincoli possono essere di ennupla, quando controllano più valori, appartenenti a più attributi, della stessa ennupla. Il vincolo di dominio quindi rappresenta un 
+caso particolare del vincolo di ennupla. Rappresenta una combinazione booleana di condizioni semplici sui singoli valori di attributi, due attributi o più valori di essi. 
 
 
+Se un insieme $K$, dominio della relazione, è una chiave, allora per il vincolo di chiave si impone che non possano esistere due ennuple uguali su $K$. Una chiave 
+essendo univoca permette di identificare le ennuple, ed è minimale rispetto a questa proprietà. Ovvero è l'insieme più piccolo possibile per poter identificare univocamente 
+tutte le ennuple della relazione. Se una chiave è formata da più di un insieme allora si chiama superchiave. Su SQL si indica che un attributo è una chiave attraverso 
+il comando \verb|UNIQUE|. Alcune chiavi possono essere definite su più attributi, ma devono essere univoche. Una chiave è una superchiave minimale. 
 
+Ogni relazione è un insieme, quindi non può contenere due ennuple uguali, e ha come superchiave almeno l'insieme degli attributi su cui è stata definita. Ogni relazione 
+ha almeno una chiave. 
+L'esistenza delle chiavi garantisce la possibilità di accedere ad ogni ennupla della base di dati e permettono di correlare relazioni diverse. 
+Se nella chiave sono presenti valori nulli, questo non permette di identificare le ennuple e di realizzare facilmente riferimenti ad altre relazioni. Per cui la loro 
+presenza nelle chiavi deve essere limitata o almeno controllata. 
+
+Una chiave si dice primaria se su di essa non sono ammessi valori nulli, indicata nell'intestazione sottolineando l'attributo corrispondente. 
+
+
+In SQL dopo aver definito lo schema della relazione, si inserisce la parola chiave \verb|KEY| o \verb|PRIMARY KEY|, in seguito all'attributo considerato come 
+chiave oppure si inseriscono tra parentesi questi attributi. 
+
+\subsubsection{Inter-Relazionali}
+
+Un vincolo di integrità referenziale, utilizza delle chiavi esterne ``foreign key'' $X$ per collegare due relazioni $R_1$ e $R_2$. Questo vincolo impone ai valori su 
+$X$ in $R_1$ di comparire come valori della chiave primaria in $R_2$.  
+
+
+In SQL si definiscono dopo le colonne degli attribuiti tramite la parola chiave \verb|FOREIGN KEY| specificando tra parentesi gli attributi da considerare. Si 
+inserisce in seguito \verb|REFERENCES| seguito dal nome della relazione $R_1$ e tra parentesi gli attributi di questa relazione da utilizzare. 
 
 \clearpage
 
 \section{Algebra Relazionale}
+
+%% TODO aggiungere lezione 30 set; 4, 7, 11 ott;
 
 \clearpage
 
