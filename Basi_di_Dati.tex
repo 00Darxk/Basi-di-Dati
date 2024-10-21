@@ -68,9 +68,55 @@ Università degli Studi ``Roma Tre"}}
 \clearpage
 \pagenumbering{arabic}
 
+\section{Introduzione}
+
+Per definire cosa sono i dati, si utilizza la definizione del Data Governance Act; per ``Data'' si intende una qualsiasi rappresentazione di informazione. 
+Una base di dati in generale, invece, rappresenta un insieme organizzato di dati utilizzati per il supporto dello svolgimento delle attività. La maggior parte delle 
+attività moderne si basano su una qualche base di dati. 
+Si possono analizzare dal punto di vista metodologico e tecnologico. La definizione dell'Informatica dall'Accademia di Francia si può notare la presenza di queste due 
+anime. L'informatica viene definita come la scienza del trattamento razionale, specialmente per mezzo di macchine, dell'informazione considerata come supporto alla 
+conoscenza umana e della comunicazione. 
+
+
+
+I dati quindi nei sistemi informatici, e non solo, sono mezzi per poter gestire dell'informazione, rappresentati in modo essenziale. Molto spesso vengono rappresentati 
+in forma di codice numerico. Sono necessari quindi meccanismi di codifica e decodifica dei dati per poterli rappresentare in forma essenziale e quindi in modo da 
+ottenere informazioni. Un dato può essere considerato quindi un elemento di informazione che deve essere ancora elaborato. 
+
+Nello specifico una base di dati rappresenta un insieme organizzato di dati, gestiti da un DBMS. 
+Un ``DataBase Management System'' rappresenta un sistema che gestisce collezioni di dati, grandi, persistenti e condivise. 
+Si tratta di insiemi grandi, molto di più della memoria fisica dei dispositivi centrali di calcolo, rappresentano il loro limite fisico, e poiché la richiesta di immagazzinare dati 
+è sempre maggiore, si vuole aumentare la disponibilità di memorizzare più dati. 
+I DBMS sono persistenti, poiché le informazioni salvate al loro interno non svaniscono nel tempo, sono importanti vengono salvati su memorie secondarie non volatili. 
+Sono accessibili perché sono condivise e permettono accessi in remoto, essendo generalmente salvati nel cloud. 
+
+I DBMS garantiscono privatezza, affidabilità, efficienza ed efficacia. I DBMS sono privati, poiché devono garantire che i dati salvati al loro interno siano privati, 
+e siano accessibili solamente quando vengono richiesti. Devono comprendere meccanismi di autorizzazione per mantenere la privacy. 
+Sono affidabili poiché devono poter resistere a malfunzionamenti o attacchi, di tipo hardware o software. I dati sono risorse pregiate e devono poter essere conservati 
+a lungo termine. 
+Per interfacciarsi con un DBMS una tecnica fondamentale consiste nelle transazioni. Queste sono un insieme di operazioni da considerare indivisibili o atomiche, anche 
+concorrenti e di effetto definitivo. Poiché sono operazioni atomiche, possono essere eseguite solo per intero, quando vengono eseguite. Devono essere concorrenti, poiché 
+accedendo allo stesso DB da remote bisogna che l'effetto delle due transizioni concorrenti sia coerente sul DB, senza recare danni o perdita di informazioni da nessuna delle 
+due. 
+I risultati delle transazioni devono essere permanenti ed il loro termine viene identificato da un ``commit'', un impegno che segna una conclusione positiva. Una serie 
+di commit quindi mantiene traccia dei risultati in modo definitivo, anche in presenza di guasti o esecuzioni concorrenti. 
+L'efficacia e l'efficienza del DBMS dipende da sistema a sistema. 
+
+I progettisti e realizzatori di un DBMS compiono un ruolo diverso dai futuri utilizzatori del DBMS. I primi creano un sistema di gestione, mentre la creazione della base 
+di dati è affidati ad altri progettisti. Questa base di dati verrà utilizzata da altri programmatori per realizzare un'applicazione o programma con cui si potranno 
+interfacciare gli utenti. Gli utenti finali si distinguono in utenti finali, per cui è stata realizzata quella specifica applicazione ed eseguono operazioni 
+predefinite. Mentre utenti casuali eseguono operazioni non previste dal sistema, e possono provocare errori. 
+
+\clearpage
+
+\section{Modello Relazionale}
+
+
+
 %% TODO aggiungere lezione 23, 27, 30 set; 4, 7, 11 ott;
 
-\section{Introduzione}
+
+
 
 \clearpage
 

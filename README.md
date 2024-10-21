@@ -6,6 +6,11 @@ Appunti tratti dal corso di Basi di Dati, Anno Accademico 2024/25, Dipartimento 
 - [Esercizi](Esercizi/) svolti durante il corso;
 
 ## Contenuti del Corso
+- Sistemi di Basi di Dati: Proprietà Fondamentali;
+- Modello Relazionale;
+- Algebra Relazionale;
+- SQL;
+- Progettazione di Basi di Dati.
 
 ## Materiale Aggiuntivo
 - [SQLite](https://sqliteonline.com/): sito per compilare SQL online, utilizzato durante il corso;
