@@ -342,11 +342,84 @@ superchiave $X$ della relazione $R$ allora l'operazione:
 \end{equation*}
 Contiene esattamente lo stesso numero di ennuple della relazione $R$, e non sono presenti ennuple duplicate. 
 
-%% TODO aggiungere lezione 4, 7, 11 ott;
+
+La selezione e la proiezione sono operatori che permettono di estrarre informazioni da una relazione, restringendo le ennuple, e gli attributi. Effettuando una decomposizione orizzontale e verticale. 
+Non è possibile invece calcolare calcolare informazioni derivate, oppure correlare fra di loro informazioni presenti in relazioni diverse. 
+
+\subsection{Join}
+
+L'operatore join è l'operatore più interessante fornito dall'algebra relazionale. Permette di correlare informazioni presenti su più relazioni, tra di loro. Effettua quest'operazione congiungendo 
+ennuple di relazioni diverse su attributi dello stesso nome. 
+
+Il join è quindi un operatore binario, generalizzabile, e produce un risultato sull'unione degli attributi degli operandi. Le ennuple del risultato sono costruite a partire da ciascuna ennupla degli operandi. 
+
+Si definisce l'operatore join naturale $\Join$ tra due relazioni $R_1$ e $R_2$ su insiemi di attributi rispettivamente $X_1$ e $X_2$:
+\begin{equation}
+    R_1(X_1)\Join R_2(X_2)=\left\{t\,\mbox{su}\,X_1X_2\,\mbox{t.c.}\,\exists \,t_1\in R_1\land t_2\in R_2\implies t[X_1]=t_1\land t[X_2]=t_2\right\}
+\end{equation} 
+
+Un join si dice completo, se ogni ennupla contribuisce al risultato, mentre un join vuoto produce una relazione vuota, poiché non è possibile combinare tra di loro le ennuple delle due relazioni di partenza. 
+Ha una cardinalità massima data dalla cardinalità delle due relazioni $R_1$ e $R_2$, nel caso di un join completo, mentre ha una cardinalità minima pari a zero, nel caso di un join vuoto:
+\begin{equation}
+    0\leq |R_1\Join R_2|\leq |R_1|\cdot|R_2|
+\end{equation} 
+
+Se il join coinvolge una chiave di $R_2$ allora, produrrà al massimo $|R_1|$ ennuple differenti, poiché la relazione considera al massimo tutte le ennuple di $R_2$, associandole con le ennuple di $R_1$:
+\begin{equation*}
+    0\leq |R_1\Join R_2|\leq |R_1|
+\end{equation*}
+
+Invece se il join coinvolge una chiave di integrità referenziale tra le due relazioni $R_1$ e $R_2$, allora conterrà esattamente un numero $|R_1|$ di ennuple, senza contenere duplicati:
+\begin{equation*}
+    |R_1\Join R_2|=|R_1|
+\end{equation*}
+
+In generale la cardinalità di un join è intermedia a questi valori di cardinalità, dove una parte delle ennuple non contribuisce al risultato finale, vengono tagliate fuori. 
+Se si vuole considerare anche queste ennuple, allora si può utilizzare il join esterno, che che estende il join, utilizzando valori nulli. Si indica dove aggiungere queste ennuple tagliate fuori, ed il resto degli 
+attributi, non presenti in una delle due relazioni vengono attribuiti pari a null. 
+
+Esiste in tre versioni: sinistro, destro e completo. Il tipo di join esterno si indica al pedice del comando JOIN. Il join esterno sinistro, considera solo le ennuple della relazione $R_1$ e le aggiunge al 
+risultato, quello esterno analogamente solo $R_2$, mentre quello completo da entrambe. 
+
+%% TODO join e proiezioni
+
+Un join naturale su una relazione senza attributi in comune si definisce prodotto cartesiano, contiene sempre un numero di ennuple pari al prodotto delle cardinalità delle due relazioni. Si suppone che le ennuple 
+sono tutte combinabili tra di loro. Il risultato contiene ogni possibile combinazione tra tutte le ennuple degli operandi. 
+Viene utilizzato in genere sempre se seguito da una condizione booleana, tramite una selezione:
+\begin{equation*}
+    \mbox{SEL}_{\mbox{Condizione}}(R_1\Join R_2)
+\end{equation*}
+
+Quest'operazione viene chiamata ``theta-join'', e può essere espressa specificando la condizione al pedice del join. Se la condizione nel theta-join comprende sempre l'uguaglianza, allora questo si chiama 
+``equi-join''. Si utilizzano sopratutto equi-join e non theta-join. L'equi-join è definito quindi come il prodotto cartesiano tra due relazioni, seguito da una selezione all'uguaglianza, tra due liste di attributi 
+di entrambe le relazioni. Viene utilizzato per correlare due attributi di nome diverso, ma di stesso valore. 
+Nelle interrogazioni pratiche si userà solamente l'equi-join, mentre il join naturale viene descritto esclusivamente ad uso didattico. 
+
+Due espressioni si dicono equivalenti se producono risultati uguali in ogni istanza della base di dati, è rilevante poiché i DBMS utilizzano forme equivalenti per ridurre la complessità e rendere le interrogazioni 
+più efficienti. 
+Una di queste forme equivalenti è la ``push selection'', una selezione all'uguaglianza di un attributo con una costante su una join tra due relazioni. Questa forma è equivalente ad eseguire la selezione prima della 
+join, sulla relazione contenente l'attributo di interesse. 
+
+Tuttavia l'obiettivo di questo corso non è l'efficienza delle interrogazioni, ma la loro correttezza, dato che sono i DBMS a decidere quale sia la scelta più efficiente, e ad eseguirla. 
+
+\subsection{Viste}
+
+Date questi operatori è possibile realizzare altre relazioni, non contenute nella base di dati operando su di esse, e correlando le informazioni contenute al loro interno. Le relazioni appartenenti all'istanza 
+della base di dati si chiamano relazioni di base. Le relazioni definite attraverso interrogazioni vengono chiamate relazioni derivate, queste possono essere definite su altre relazioni derivate. Ma questo processo 
+di realizzare interrogazioni nidificate o annidate può rendere meno comprensibile l'interrogazione. 
+
+L'uso delle viste non influisce sull'efficienza dell'interrogazione. Nelle interrogazioni ci si riferisce alle viste come fosse una relazione appartenente alla base di dati. Rappresentano uno strumento di 
+programmazione per diminuire il codice ripetuto e semplificare la scrittura di interrogazioni. 
+
+Inoltre questa distinzione permette agli utenti di poter interagire solamente con ciò che gli interessa, o che sono autorizzati a vedere. Permette inoltre l'utilizzo di programmi esistenti su schemi 
+ristrutturati. 
 
 \clearpage
 
 \section{Introduzione a SQL}
+
+
+%% TODO aggiungere lezione 7, 11 ott;
 
 %% TODO divisione in sottosezioni
 
