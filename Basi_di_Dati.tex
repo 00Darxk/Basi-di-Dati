@@ -231,11 +231,118 @@ $X$ in $R_1$ di comparire come valori della chiave primaria in $R_2$.
 In SQL si definiscono dopo le colonne degli attribuiti tramite la parola chiave \verb|FOREIGN KEY| specificando tra parentesi gli attributi da considerare. Si 
 inserisce in seguito \verb|REFERENCES| seguito dal nome della relazione $R_1$ e tra parentesi gli attributi di questa relazione da utilizzare. 
 
+Quando questi vincoli sono su attributi multipli il loro ordine è rilevante, poiché le chiavi devono riferire agli attributi corretti, altrimenti non sarebbe presente un riscontro tra i domini. La struttura è in 
+notazione posizionale. 
+
+Spesso è richiesto che un singolo attributo sia legato ad una relazione, ma all'interno di una tabella, e relazione, è possibile utilizzare solamente valori semplici, non relazioni. 
+Per risolvere questa richiesta si utilizzano altre relazioni esterne, connesse utilizzando vincoli referenziali, per realizzare strutture simili a strutture nidificate, in più relazioni. I dati di interesse 
+infatti hanno una struttura generalmente nidificata, e per poter essere rappresentati in relazioni hanno bisogno di essere trasformati attraverso vari livelli di astrazione, che rappresentano un diverso livello 
+di dettaglio dello stesso fenomeno reale. 
+Questo meccanismo verrà trattato dettagliatamente nella sezione dedicata alla progettazione di basi di dati. In molti casi non vengono rappresentati ad una prima analisi tutti gli aspetti significativi di un 
+dato reale, e quindi si tende a modificare le relazioni ottenute all'aumentare delle informazioni ottenute dagli stessi dati. 
+
+Ogni modello presenta un suo livello di astrazione, utili per un ristretto contesto, e perde di utilità se viene utilizzato in contesti diversi. Questo vale per ogni modello, le cui informazioni di interesse potrebbero 
+o non potrebbero essere utili in base al tipo di analisi ed operazioni da effettuare. 
+
+
 \clearpage
 
 \section{Algebra Relazionale}
 
-%% TODO aggiungere lezione 30 set; 4, 7, 11 ott;
+%% TODO algebra relazione in verbatim environment ?
+
+Esistono due diversi tipi di linguaggi per basi di dati, rispetto alla loro funzione. Si può operare sullo schema della base di dati tramite DDL ``Data Definition Language'', oppure sui dati 
+memorizzati, tramite DML ``Data Manipulation Language''. Con la DML è possibile effettuare interrogazioni o ``query'' sul database ed operazioni di aggiornamento.
+
+I linguaggi DML, interrogativi, per basi di dati relazionali possono essere dichiarativi, ovvero esprimono le proprietà del risultato che si cerca, oppure possono essere procedurali ed indicano il modo in cui 
+si ottiene il risultato di interesse. 
+
+Alcuni di questi linguaggi sono:
+\begin{itemize}
+    \item Algebra Relazionale: procedurale;
+    \item Calcolo Relazionale: dichiarativo, e teorico;
+    \item SQL: parzialmente dichiarativo, di uso reale;
+    \item QBE: dichiarativo, di uso reale. 
+\end{itemize} 
+
+L'algebra relazionale fornisce un linguaggio tramite il cui è possibile effettuare interrogazioni su basi di dati, è quindi un linguaggio di tipo DML. Contiene un insieme di operatori su relazioni, che producono 
+una relazione. Quindi questi operatori possono essere composti l'uno sull'altro. 
+In questo corso verrà utilizzato il servizio online RelaX per utilizzare l'algebra relazionale. Questo sistema fornisce una struttura ad albero dell'interrogazione, dove le foglie sono gli operandi ed i 
+nodi interni gli operatori. Per effettuare un'interrogazione dato il suo albero, si parte dalle foglie, e si sale al loro genitore e si effettua questa operazione, salendo di un solo nodo alla volta, arrivando 
+fino alla radice dove sarà presente la relazione risultato dell'interrogazione. 
+
+L'algebra relazionale definisce i seguenti operatori:
+\begin{itemize}
+    \item Unione, Intersezione e Differenza;
+    \item Ridenominazione;
+    \item Selezione;
+    \item Proiezione;
+    \item Aggregazione;
+    \item Join. 
+\end{itemize}
+
+\subsection{Operatori Insiemistici}
+
+Sono disponibili operatori essenziali per insiemi, poiché le relazioni corrispondono a degli insiemi. Poiché i risultati devono essere relazioni, si possono applicare solamente su relazioni aventi gli stessi 
+attributi. Questa condizione però è mitigabile. 
+Queste operazioni sono l'unione tra due relazioni, l'intersezione e la differenza. La relazione risultante presenta gli stessi attributi, nello stesso ordine degli operandi, con un numero di ennuple che dipende 
+dal tipo di operazione. Ogni ennupla presente nel risultato deve quindi essere presente in almeno uno degli operandi. 
+
+Su RelaX queste operazioni vengono identificate dai caratteri $\cap$: intersezione, $\cup$: unione e $\setminus$: differenza. 
+
+L'unione tra relazioni aventi attributi diversi non è scorretta logicamente, ma utilizzando l'operatore insiemistico è impossibile. Bisogna gestire in modo corretto i nomi degli 
+attributi che si vuole, ed esiste un operatore specifico per effettuarlo. Su RelaX produce un risultato diverso da quello aspettato. 
+
+\subsection{Ridenominazione}
+
+Questo operatore permette di rinominare i nomi degli attributi in una relazione, passati come argomento. Può essere utilizzato per generare un risultato intermedio con attributi omonimi, tra due relazioni diverse, 
+per effettuare un'unione. In questo modo la relazione rimane uguale, ma cambiano solamente i nomi, in questo modo l'unione produce risultati comprensibili. 
+
+Questo operatore si indica con $\rho$, REN o RHO. Prende tra parentesi il nome della relazione di cui si vuole modificare il nome, e come pedice indica il vecchio nome e come cambiarlo:
+\begin{equation}
+    \mathrm{REN}_{\mathrm{ListaNuoviNomi}\leftarrow\mathrm{ListaVecchiNomi}}(\mathrm{Relazione})
+\end{equation}
+
+Si possono rinominare più di un attributo alla volta, specificando come pedici la lista degli attributi. Entrambe le liste nei pedici devono essere ordinate correttamente per poter agire sugli attributi specificati. 
+
+\subsection{Selezione}
+
+Questo operatore selezione da una relazione, le ennuple che soddisfano una certa condizione, sui loro attributi. Questo operatore si indica con $\sigma$ o SEL, e si rappresenta la condizione tramite una funzione 
+booleana sul pedice, applicata su tutte le ennuple della relazione passata come argomento. Se questa condizione è verificata per una certa ennupla, questa viene selezionata ed appartiene al risultato, altrimenti non 
+viene considerata. 
+Effettivamente realizza tagli orizzontali della tabella associata alla relazione. Si utilizza la seguente sintassi:
+\begin{equation}
+    \mathrm{SEL}_{\mathrm{{Condizione}}}(\mathrm{Relazione})
+\end{equation}
+
+Nella condizione booleana si possono effettuare confronti matematici tra attributi e costanti, e si possono utilizzare operatori booleani come AND, OR e NOT. 
+Quando su un attributo sono possibili valori nulli, le condizioni producono risultati un risultato non desiderabile, poiché le condizioni atomiche vengono valutate separatamente. In generale nei linguaggi per basi 
+di dati sono necessarie operazioni aggiuntive per gestire valori nulli, come IS NULL e IS NOT NULL. Senza queste operazioni si dovrebbe utilizzare la relazione senza considerare gli attributi dove possono essere 
+presenti attributi nulli. 
+Si potrebbe ulteriormente utilizzare una logica a tre stati, con uno stato sconosciuto per condizioni su attributi nulli. In RelaX si usa la sintassi:
+\begin{equation}
+    \mathrm{NomeAttributo}=\mathrm{null}
+\end{equation}
+
+\subsection{Proiezione}
+
+La proiezione è un'operazione che seziona verticalmente una relazione, agisce su tutte le ennuple, e solo sugli attributi specificati. Si indica con $\pi$ o PROJ, e prende come argomento tra parentesi la relazione 
+su cui agisce, e come pedice una lista di attributi:
+\begin{equation}
+    \mathrm{PROJ}_{\mathrm{ListaAttributi}}(Relazione)
+\end{equation}
+
+Il risultato è una relazione contenente tutte le ennuple ottenute dalla relazione di partenza ristrette agli attributi specificati nella lista. Rappresenta quindi un'operazione ortogonale rispetto 
+alla selezione. Poiché rimuove gli attributi non presenti nella lista, è possibile siano presenti ennuple identiche nel risultato. 
+
+La cardinalità di una proiezione indica il numero di ennuple del risultato dell'operazione. Può contenere un numero minore di ennuple rispetto all'operando. Se la lista di attributi coincide, o contiene una 
+superchiave $X$ della relazione $R$ allora l'operazione:
+\begin{equation*}
+    \sigma_X(R)
+\end{equation*}
+Contiene esattamente lo stesso numero di ennuple della relazione $R$, e non sono presenti ennuple duplicate. 
+
+%% TODO aggiungere lezione 4, 7, 11 ott;
 
 \clearpage
 
