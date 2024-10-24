@@ -414,6 +414,29 @@ programmazione per diminuire il codice ripetuto e semplificare la scrittura di i
 Inoltre questa distinzione permette agli utenti di poter interagire solamente con ciò che gli interessa, o che sono autorizzati a vedere. Permette inoltre l'utilizzo di programmi esistenti su schemi 
 ristrutturati. 
 
+\subsection{RelaX}
+
+RelaX è uno strumento online per effettuare interrogazioni in algebra relazionale. 
+
+La sintassi è molto simile a quella descritta nel libro di testo, anche se presenta piccole differenze. L'editor permette di cliccare su un'operazione ed inserirla, in una barra 
+sopra la zona di interrogazione. L'editor è ``case sensitive'', quindi bisogna prestare attenzione alle maiuscole. 
+A volte le espressioni perdono di leggibilità, poiché non è possibile inserire le condizione al pedice, vanno infatti inserite tutte su una singola linea. A volte lo strumento si confonde sugli spazi, ed è 
+consigliabile utilizzarne di più oppure utilizzare parentesi ampiamente. 
+
+Fornisce anche una rappresentazione grafica ad albero delle espressioni, di facile comprensione. 
+
+Accedendo al servizio si possono effettuare interrogazioni su basi di dati, caricate dall'utente, oppure preesistenti sul servizio. Per caricare una base di dati, si può specificare nel link URL per accedere al 
+servizio, oppure caricandola nel group editor. 
+La sintassi per descrivere una relazione è la seguente: prima si specifica il nome della relazione, assegnando con un uguale la sua istanza tra parentesi graffe. All'interno delle parentesi graffe la prima 
+riga indica i nomi degli attributi della relazione, divisi da spazi. Accanto al nome si può specificare il tipo di dato accettato da quell'attributo, dopo dei due punti. Se non viene specificato sarà possibile 
+utilizzare qualunque tipo. Nelle righe seguenti si popola la base di dati specificando per ogni riga un'ennupla diversa, con i valori separati da spazi. 
+
+Nelle interrogazioni è consigliabile inserire nei confronti per primo l'attributo del primo operando e per secondo l'attributo del secondo operando. 
+
+Quando vengono effettuate operazioni di join tra due relazioni con attributi di nome uguale, si comporta essenzialmente come SQL. Viene ignorato il join naturale, e per riconoscere gli attributi viene utilizzato 
+in notazione puntata il nome della relazione di appartenenza. Per rinominare relazioni si utilizzano viste, poiché rinominare attributi singoli è molto verboso ed è strettamente necessario solamente quando 
+bisogna effettuare delle unioni, o per dare nomi significativi nel risultato. In RelaX è necessaria una ridenominazione esplicita prima dell'assegnazione alla vista, tramite l'operatore $\rho$. 
+
 \clearpage
 
 \section{Introduzione a SQL}

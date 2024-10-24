@@ -44,7 +44,8 @@
 \begin{document}
 
 \title{%
-    \textbf{Esercizi Svolti di Basi di Dati}  \\ 
+    \textbf{Basi di Dati}  \\ 
+    \large Esercizi Svolti di Basi di Dati \\
     \textit{Anno Accademico: 2024/25}}
 \author{\textit{Giacomo Sturm}}
 \date{\textit{Dipartimento di Ingegneria Civile, Informatica e delle Tecnologie Aeronautiche \\
@@ -67,10 +68,220 @@ Università degli Studi ``Roma Tre"}}
 \clearpage
 \pagenumbering{arabic}
 
+\section{Esercitazione del 7/10/24}
+
+\subsection{Esercizio 1}
+
+Si considerano le seguenti relazioni, senza valori nulli:
+\begin{itemize}
+    \item $R_1(\underline{A},B)$ con vincolo di integrità referenziale, tra $B$ e la chiave $D$ di $R_2$. Con cardinalità $M_1=500$;
+    \item $R_2(\underline{D},E,F,G)$, con vincolo di integrità referenziale, tra $F$ e $G$ e la chiave $H,P$ di $R_3$. Con cardinalità $M_2=1000$;
+    \item $R_3(\underline{H},\underline{P},Q)$, con cardinalità $M_3=200$.
+\end{itemize}
+
+Determinare la cardinalità (numero di ennuple) massima e minima delle seguenti relazioni derivate:
+
+\subsubsection*{Domanda 1}
+
+L'equi-join tra $R_3$ e $R_1$ sulla condizione $Q=A$:
+\begin{equation*}
+    R_3\Join_{Q=A}R_1
+\end{equation*}
+Non comprendendo alcun vincolo di integrità referenziale tra le dure relazioni, potrebbe non contenere alcuna ennupla, quindi avere una cardinalità minima pari a zero. 
+Invece potrebbe contenere al massimo un numero di ennuple pari al numero di attributi $Q$ non nulli, quindi pari alla cardinalità di $R_3$, $M_3$. 
+
+\begin{equation}
+    M_{D_1}\in[0,M_3]
+\end{equation}
+
+\subsubsection*{Domanda 2}
+
+La proiezione sulla chiave $H,P$ di $R_3$:
+\begin{equation*}
+    \pi_{H,P}(R_3)
+\end{equation*}
+
+Poiché coinvolge una chiave della relazione, questa relazione derivata conterra esattamente tutte le ennuple presenti nella relazione di partenza, quindi avrà una cardinalità sempre pari 
+alla cardinalità di $R_3$, $M_3$: 
+
+\begin{equation}
+    M_{D_2}=M_3
+\end{equation}
+
+\subsubsection*{Domanda 3}
+
+La proiezione sugli attributi $H$ e $Q$ di $R_3$:
+\begin{equation*}
+    \pi_{H,P}(R_3)
+\end{equation*}
+
+Questi due attributi insieme non formano una superchiave, quindi potrebbero i valori potrebbero fra loro collassare, quindi produrre una singola ennupla di attributi distinti. Invece è 
+possibile che questa relazione contenga tutte le ennuple distinte della relazione $R_3$, e quindi abbia una cardinalità massima pari a $M_3$:
+\begin{equation}
+    M_{D_3}\in[1,M_3]
+\end{equation}
+
+In generale quando una proiezione non coinvolge una superchiave dell'operando, è possibile, ma non garantito, che abbia lo stesso numero di ennuple dell'operando. L'unico discriminante in una proiezione è la presenza 
+o meno della chiave, o superchiave, negli attributi considerati. 
+
+\subsubsection*{Domanda 4}
+
+L'equi-join tra $R_1$ ed $R_2$ sulla condizione $B=D$:
+\begin{equation*}
+    R_1\Join_{B=D}R_2
+\end{equation*}
+Gli attributi $B$ e la chiave $D$ rappresentano un vincolo di integrità referenziale tra $R_1$ ed $R_2$. Ciascuna ennupla di $R_1$ può essere estesa con una singola ennupla distanza di $R_2$, 
+poiché si effettua il join sulla sua chiave. La cardinalità di questa relazione è quindi $M_1$.  
+\begin{equation}
+    M_{D_4}=M_1
+\end{equation}
+
+\subsubsection*{Domanda 5}
+
+\begin{equation*}
+    (R_1\Join_{B=D}R_2)\Join_{(F=H)\land(G=P)}R_3
+\end{equation*}
+
+Analogamente alla domanda precedente, poiché si effettua un join tra $R_3$ e la relazione precedente, su una chiave di $R_3$ ed un vincolo di integrità referenziale, allora la cardinalità 
+corrisponde alla cardinalità dell'altro operando, calcolata nella domanda precedente pari a $M_1$:
+\begin{equation}
+    M_{D_5}=M_1
+\end{equation}
+
+\subsubsection*{Domanda 6}
+
+L'equi-join tra $R_1$ ed $R_3$ su $B=H$:
+\begin{equation*}
+    R_1\Join_{B=H}R_3
+\end{equation*}
+
+Non sono presenti vincoli di integrità referenziale, o chiavi delle relazioni, quindi è possibile che non siano presenti ennuple, oppure che ogni ennupla della prima relazione, sia operata 
+con ogni ennupla della seconda per un massimo di $M_1\cdot M_3$. Bisogna considerare che l'attributo $H$ non rappresenta una chiave primaria, quindi non si può effettuare lo stesso 
+ragionamento della domanda 5. 
+\begin{equation}
+    M_{D_6}\in[0,M_1\cdot M_2]
+\end{equation}
+
+\subsubsection*{Domanda 7}
+
+\begin{equation*}
+    (R_1\Join_{B=D}R_2)\Join_{F=H}R_3
+\end{equation*}
+
+Il primo join interno ha cardinalità $M_1$, mentre nel secondo join, è presente solo una parte del vincolo di integrità referenziale. Quindi ogni ennupla del primo join può al minimo 
+trovare una sua controparte in $R_3$, avendo una cardinalità minima di $M_1$. Mentre al massimo, non essendo completo il vincolo, è possibile che tutte le ennuple di $R_1$ siano combinate 
+con tutte le ennuple di $R_3$:
+\begin{equation}
+    M_{D_7}\in[M_1,M_1\cdot M_3]
+\end{equation}
+
+\subsection{Esercizio 2}
+
+Si considera la seguente \href{https://dbis-uibk.github.io/relax/calc/gist/b7a8eac38317e0d6a7f0b904a9a10bd3}{base di dati} su RelaX.
+
+%% TODO img inserire alberi \sim RelaX
+
+\subsubsection*{Domanda 1}
+
+Trovare matricola, nome, età e stipendio degli impiegati che guadagnano più di 40. Si utilizza una semplice selezione sulla relazione impiegati, specificando la condizione di selezione, e non è necessario 
+effettuare una proiezione, poiché si utilizzano tutti gli attributi: 
+
+\begin{minted}[mathescape,escapeinside=||]{sql}
+    |$\sigma$| Stipendio>40 (Impiegati)
+\end{minted}
+
+\subsubsection*{Domanda 2}
+
+Trovare matricola, nome ed età degli impiegati che guadagnano più di 40. In questa interrogazione è necessario effettuare una proiezione sulla lista di attributi di interesse, dato il risultato alla precedente 
+domanda:
+
+\begin{minted}[mathescape, escapeinside=||]{sql}
+    |$\pi$| Matricola, Nome, Eta (|$\sigma$| Stipendio>40 (Impiegati))
+\end{minted}
+
+\subsubsection*{Domanda 3}
+
+Trovare le matricole dei capi che guadagnano più di 40. Si può effettuare prima sia il join che la selezione, ma discussione in termini di efficienza non vengono trattate in questo corso. Si effettua una selezione 
+sullo stipendio, come per le prime due domande. Si effettua un join tra questa relazione e supervisione sulla condizione matricola, di impiegati, ed impiegato, di supervisione. Per ottenere solamente l'attributo 
+richiesto si effettua una proiezione su capo:
+\begin{minted}[mathescape, escapeinside=||]{sql}
+    |$\pi$| Capo ( (Supervisione)
+        |$\Join$| Matricola=Impiegato
+        (|$\sigma$| Stipendio>40 (Impiegati))
+    )
+\end{minted}
+
+Ovviamente quest'interrogazione produce un risultato solamente sui dati noti, in questa base di dati non sono presenti informazioni sui capi di alcuni impiegati, quindi non è possibile creare informazioni su di loro. 
+
+\subsubsection*{Domanda 4}
+Trovare nome e stipendio dei capi degli impiegati che guadagnano più di 40. Considerando i capi come impiegati, nella relazione impiegati sono presenti queste informazioni. Quindi dalla relazione precedente è possibile 
+effettuare un join ulteriore con la relazione impiegati su \verb|Capo = Impiegato|, ed in seguito una selezione per identificare le informazioni di interesse:
+\begin{minted}[mathescape, escapeinside=||]{sql}
+    |$\pi$| Nome, Stipendio ( (Impiegati)
+        |$\Join$| Impiegato=Capo 
+            (|$\pi$| Capo ( (Supervisione)
+                |$\Join$| Matricola=Impiegato
+                (|$\sigma$| Stipendio>40 (Impiegati)))))
+\end{minted}
+
+\subsubsection*{Domanda 5}
+
+Trovare gli impiegati che guadagnano più del proprio capo, mostrando matricola, nome e stipendio dell'impiegato e del capo. Per trovare questo risultato bisognerebbe utilizzare due copie della stessa relazione 
+impiegati per confrontare gli stipendi del capo, e dell'impiegato. Ma per poter confrontare questi attributi bisognerebbe rinominare gli attributi di una delle due, prima del join tra di loro, per correlare 
+le informazioni necessarie. Il join si effettua prima tra le matricole dei capi e supervisione e poi nuovamente con la relazione impiegati, per correlare per ogni impiegato, le informazioni del suo capo. A questo 
+punto si può effettuare una selezione per rimuovere le ennuple dove il capo guadagna di più del proprio impiegato, ed una proiezione finale sugli attributi di interesse:
+
+\begin{minted}[mathescape, escapeinside=||]{sql}
+    |$\pi$| Matricola, Nome, Stipendio, MatricolaCapo, NomeCapo, StipendioCapo (
+        |$\sigma$| Stipendio > StipendioCapo (
+            (|$\rho$| MatricolaCapo |$\leftarrow$| Matricola, NomeCapo |$\leftarrow$| Nome, 
+               StipendioCapo |$\leftarrow$| Stipendio, EtaCapo |$\leftarrow$| Eta (Impiegati))
+            |$\Join$| MatricolaCapo=Capo
+            ((Supervisione) |$\Join$| Matricola=Impiegato (Impiegati))))
+\end{minted}
+
+
+Questo processo è molto verboso, ed è possibile semplificarlo mediante l'utilizzo di viste. Utilizzano le viste si può rinominare la relazione impiegati a \verb|Capi|, per poter utilizzare la notazione puntate 
+per riferirsi ai suoi attributi:
+\begin{minted}[mathescape, escapeinside=||]{sql}
+    Capi = |$\rho$| Capi (Impiegati) 
+
+    |$\pi$| Impiegato.Matricola, Impiegato.Nome, Impiegato.Stipendio, 
+      Capi.Matricola, Capi.Nome, Capi.Stipendio (
+        |$\sigma$| Stipendio > Capi.Stipendio ((Capi)
+            |$\Join$| Capi.Matricola=Capo
+            ((Supervisione) |$\Join$| Matricola=Impiegato (Impiegati))))
+\end{minted}
+
+\subsubsection*{Domanda 6}
+
+Trovare matricola, nome e stipendio dei capi degli impiegati che guadagnano più di 40; per ciascuno, mostrare, matricola, nome e stipendio anche dell'impiegato. Questa rappresenta una versione semplificata 
+della domanda precedente, quindi invece di effettuare una selezione dopo il join tra capi ed impiegati, si effettua la selezione come per le domande precedenti:
+
+\begin{minted}[mathescape, escapeinside=||]{sql}
+    |$\pi$| Impiegato.Matricola, Impiegato.Nome, Impiegato.Stipendio, 
+      Capi.Matricola, Capi.Nome, Capi.Stipendio (
+        ((Capi) |$\Join$| Capi.Matricola=Capo
+        ((Supervisione) |$\Join$| Matricola=Impiegato (|$\sigma$| Stipendio>40 (Impiegati)))))
+\end{minted}
+
+\subsubsection*{Domanda 7}
+
+Trovare le matricole dei capi i cui impiegati guadagnano tutti più di 40. Quest'interrogazione è semplice, poiché è sufficiente individuare tutti i capi con almeno un impiegato che guadagna meno di 40, da togliere poi 
+tramite una differenza tra insiemi alla vista capi. Rimangono sicuramente tutti i capi con impiegati che guadagnano più di 40:
+\begin{minted}[mathescape, escapeinside=||]{sql}
+    |$\pi$| Capo (Supervisione) -
+    |$\pi$| Capo ((Supervisione) |$\Join$| Matricola=Impiegato
+    (|$\sigma$| Stipendio|$\leq$|40 (Impiegati)))
+
+\end{minted}
+
+\clearpage
+
 \section{Esercitazione del 18/10/24}
 
 
-Si considera il seguente database:
+Si considera la seguente base di dati:
 \begin{minted}{sql}
 CREATE TABLE Compositori (codice integer NOT NULL PRIMARY KEY,
                         cognome text ,
