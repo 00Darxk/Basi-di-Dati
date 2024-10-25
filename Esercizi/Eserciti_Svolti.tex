@@ -278,7 +278,7 @@ tramite una differenza tra insiemi alla vista capi. Rimangono sicuramente tutti 
 
 \clearpage
 
-\section{Esercitazione del 18/10/24}
+\section{Esercitazione del 18/10/24 e 25/10/24}
 
 
 Si considera la seguente base di dati:
@@ -455,7 +455,7 @@ un'ennupla casualmente tra le due, senza poter scegliere quale:
 SELECT p1.titolo, p1.codice pezzo1, p2.codice pezzo2
 FROM pezzi p1 JOIN pezzi p2 ON p1.titolo=p2.titolo
 WHERE p1.codice!=p2.codice
-GROUP BY p1.titolo
+GROUP BY p1.titolo, p1.codice
 \end{minted}
 
 \subsection*{Domanda 11}
