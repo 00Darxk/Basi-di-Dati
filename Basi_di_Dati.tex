@@ -439,29 +439,179 @@ bisogna effettuare delle unioni, o per dare nomi significativi nel risultato. In
 
 \clearpage
 
-\section{Introduzione a SQL}
+\section{SQL}
+
+Esistono diversi tipi di linguaggi per accedere alle basi di dati. Già si è analizzata l'algebra relazionale, un linguaggio procedurale, per costruire gradualmente il risultato tramite le relazioni della 
+base di dati. 
+
+Il linguaggio SQL ``Structured Query Language'', si basa in parte sull'algebra relazionale, mentre su altri aspetti è un linguaggio dichiarativo, spesso permette di specificare nelle interrogazioni la struttura e le 
+proprietà del risultato, a partire delle relazioni della base di dati. Ora SQL non rappresenta più un acronimo, ma solo un nome arbitrario.  
+Il linguaggio tende ad essere sintetico ed abbastanza intuitivo per certi aspetti. 
+
+Ne esistono varie versioni, standard fino ad un certo punto, ed è un linguaggio molto grande, e ne verranno analizzate solo funzioni generali. 
+Si può definire la componente di costruzione dei dati, e la componente di manipolazioni dei dati nello stesso SQL. 
+
+Ogni versione di SQL presenta dei piccoli dettagli diversi, ma che impediscono la completa esecuzione di una interrogazione arbitraria per un altro sistema. Il sistema utilizzato durante il corso è un servizio 
+online chiamato \href{https://sqliteonline.com/}{SQLiteonline}, con una base di dati sul cloud. 
+Su questo servizio è possibile utilizzare diverse DBMS SQL, oltre alla versione SQLite, si utilizzerà anche PostgreSQL, poiché fornisce un linguaggio più completo. 
+Poiché è un servizio web, le basi di dati analizzate vengono salvate nella cache e quindi dovranno essere inizializzate ogni volte che vi si accede. 
+
+Nel servizio web, alla sinistra sono presenti, oltre a vari DBMS, la basi di dati corrente, alla destra è presente la storia delle precedenti interrogazioni. Al centro è presente l'interfaccia dove si possono 
+scrivere le interrogazioni. Il risultato apparirò a schermo sotto questo editor, ma non verrà inserito all'interno della base di dati. 
 
 
-%% TODO aggiungere lezione 7, 11 ott;
-
-%% TODO divisione in sottosezioni
-
-SQL è indifferente tra maiuscolo e minuscolo, ma è preferibile essere coerente con le scelte di sintassi effettuate. Inoltre è indifferente 
+SQL è indifferente tra maiuscolo e minuscolo per i suoi comandi, ma è preferibile essere coerente con le scelte di sintassi effettuate. Inoltre è indifferente 
 dall'indentazione, ma si preferisce inserire parentesi oppure si va a capo per aumentare la leggibilità dell'interrogazione. Il linguaggio lo 
 interpreta cercando il nome della parola chiave, e gli argomenti dell'interrogazione.  
 
-Le istruzioni che coinvolgono più relazioni, nel formato base, consiste in una parola chiave \verb|SELECT| seguita la lista dove operare, 
-seguita dalla clausola \verb|FROM| ed in caso una condizione introdotta con \verb|WHERE|. 
 
-\begin{minted}{SQL}
-  SELECT ListaAttributi
-  FROM ListaTabelle
-  WHERE Condizione
+\subsection{DDL}
+
+Per creare uno schema di qualsiasi tipo si utilizza la parola chiave \verb|CREATE|, seguito dal tipo di oggetto da creare. Nella maggior parte dei casi si realizzeranno solamente relazioni, o tabelle, di tipo 
+\verb|TABLE|. In seguito viene inserito il nome della relazione, e tra parentesi tonde si inserisce ad ogni riga il nome dell'attributo della relazione e le sue proprietà:
+\begin{minted}{sql}
+CREATE TABLE NomeRelazione (
+    NomeAttributo1 TipoAttributo1 VincoliAttributo1, 
+    -- lista di attributi
+    NomeAttributoN TipoAttributoN VincoliAttributoN,
+    -- definizioni opzionali di superchiavi della relazione);
+    
+-- creazione degli altri schemi della base di dati
 \end{minted}
 
-Essenzialmente realizza un prodotto cartesiano delle relazioni specificate nella clausola \verb|FROM|, in seguito viene effettuata un'operazione di selezione in base alla 
-condizione specificata dalla parola chiave \verb|WHERE|, se si cercano solo certi attributi, si può effettuare una proiezione specificando la lista di attributi dopo 
-la parola chiave \verb|SELECT|. In SQL bisogna specificare con la parola chiave \verb|DISTINCT| che si stanno cercando solo gli attributi diversi. 
+Tra i tipi possibili si hanno numeri specificati dalla parola chiave \verb|number|, date da \verb|date|, stringe di caratteri di una certa lunghezza \verb|character(n)|, etc. Tra i vincoli di un attributo si 
+può specificare se non deve essere nullo tramite il costrutto \verb|NOT NULL|, di default quindi un attributo può assumere come valore \verb|NULL|. Se esiste una chiave primaria, si può specificare direttamente nel 
+campo proprietà di un attributo, invece che alla fine delle dichiarazioni di attributi. Si può specificare un vincolo di integrità referenziale tramite la parola chiave \verb|REFERENCES|, seguito dal nome dell'attributo, 
+se univoco, oppure dal nome della relazione che lo contiene, seguito tra parentesi tonde il suo nome, se non univoco. 
+
+In molti sistemi si possono utilizzare strumenti diversi da SQL per realizzare schemi di relazioni, il sistema PgAdmin offre un'interfaccia grafica. Ma è preferibile utilizzare il linguaggio SQL in modo da 
+essere riutilizzabile, e di implementazione più veloce. 
+In alcuni DBMS, se non viene specificato che la chiave primaria sia diversa da \verb|NULL|, questi sistemi utilizzano un valore progressivo di default, quando non viene inserito esplicitamente dall'utente.  
+
+
+Per i nomi delle relazioni o degli attributi si utilizzano solo lettere minuscole, senza accenti. Invece dello spazio, se necessario, si può utilizzare il carattere \verb|_| nei nomi. 
+
+Con la parola chiave \verb|SELECT| si effettuano delle interrogazioni sui dati, mentre si possono modificare i dati con \verb|INSERT|, \verb|DELETE| e \verb|UPDATE|. 
+Con \verb|INSERT| è possibile inserire una nuova riga in una relazione si utilizza la sintassi:
+\begin{minted}{sql}
+INSERT INTO NomeRelazione (ListaAttributi) -- omessa se coinvolge tutti gli attributi, o nello stesso ordine
+    VALUES (ListaValori) -- specificati tra singoli apici e divisi da una virgola
+\end{minted}
+Invece di specificare i valori tramite \verb|VALUES|, è possibile utilizzare \verb|SELECT|, ma verrà discusso più avanti. Se un attributo non è presente nella lista, il suo valore in quell'ennupla inserita sarà 
+\verb|NULL|. 
+
+
+In SQL si possono scrivere operazioni di aggiornamento del database, tramite il comando \verb|INSERT INTO|, allo stesso modo si possono eliminare dei valori con 
+\verb|REMOVE FROM|. Per modificare una tabella già creata, si può utilizzare il comando \verb|ALTER TABLE|. Si possono rimuovere relazioni, o altri oggetti, specificando il loro nome nella clausola \verb|DROP TABLE|. 
+
+
+In SQLiteonline l'inserimento di una ennupla in una tabella non controlla se gli attributi con cui hanno un vincolo di integrità referenziale che si vogliono aggiungere sono presenti nella relazione 
+a cui si riferiscono, altrimenti potrebbe causare dei danni all'intera base di dati. Questa reference dovrebbe essere controllata ad ogni inserimento. 
+
+Su SQLite si può attivare il controllo della chiave esterna con il comando:
+\begin{minted}{sql}
+    PRAGMA foreign_keys=on
+\end{minted}
+
+
+
+\subsection{DML}
+
+In SQL si possono effettuare le stesse operazioni disponibili nell'algebra relazionale, utilizzando una sintassi diversa:
+
+\subsubsection{Proiezione}
+
+Per visualizzare alcuni attributi da una relazione, si può utilizzare una proiezione, introdotta dalla parola chiave \verb|SELECT|, seguita dalla lista di attributi di interesse. Anche se si vuole visualizzare l'intera 
+relazione bisogna usare una proiezione, specificando come parametro \verb|*|, per indicare di visualizzare tutti gli attributi. Per specificare a quale relazione si vuole effettuare la proiezione, si utilizza 
+la parola chiave \verb|FROM|, seguita dal nome della relazione:
+\begin{minted}{sql}
+    SELECT ListaAttributi -- oppure '*'
+    FROM NomeRelazione
+\end{minted}
+
+La lista di attributi si indica anche come ``target list'', su cui devono operare condizioni, clausole, o funzioni più complesse, trattate in seguito. 
+
+\subsubsection{Operatori Insiemistici e Ridenominazione}
+
+Nell'algebra queste operazioni devono essere effettuate sugli stessi schemi, ma il loro comportamento è leggermente diverso tra RelaX e SQL. L'unione si effettua tramite la parola chiave \verb|UNION|, tramite 
+due interrogazioni, dove si richiedono gli stessi attributi:
+\begin{minted}{sql}
+    SELECT ListaAttributi
+    FROM Relazione1
+    UNION
+    SELECT ListaAttributi
+    FROM Relazione2
+\end{minted}
+
+Il risultato è una nuova tabella con tutte le righe di entrambe le tabelle. Se nelle due relazioni gli attributi sono differenti è possibile realizzare un'unione forzata, mentre nell'algebra solamente se i due 
+insiemi sono uguali. In base al DBMS utilizzato è possibile effettuare unioni tra relazioni con numero di attributi differente, gestiti in maniera automatica. Questo però richiede ennuple compatibili tra di loro. 
+Si utilizza l'approccio posizionale, nella lista degli attributi della proiezione. In questo modo si può specificare quali attributi unire tra di loro nell'unione. Inserisce prima tutte le ennuple della prima relazione, 
+ed in seguito concatena, se sono compatibili, tutte le ennuple nell'ordine di attributi specificato della seconda relazione. 
+Quindi in molti sistemi quest'operazione non è commutativa, il risultato prodotto sarà differente in base a quale relazione viene inserita per prima. Poiché il nome degli attributi nella relazione finale dipende 
+solo dalla prima relazione. 
+La maggior parte dei DBMS non vengono controllai se i nomi degli attributi combaciano, quindi bisogna prestare attenzione sopratutto all'ordine in cui sono inseriti nell'interrogazione ed al loro nome. 
+
+Per rinominare degli attributi si utilizza la parola chiave \verb|AS| nella lista degli attributi della proiezione. Questo può essere omesso, inserendo solamente il nome dell'attributo ed il nome del suo alias:
+\begin{minted}[mathescape, escapeinside=||]{sql}
+    SELECT NomeAttributo1 AS NomeAlias1, |$\cdots$|, NomeAttributoN NomeAliasN
+    FROM Relazione
+\end{minted}
+
+Come nell'algebra relazionale, rinominando gli attributi è possibile realizzare l'unione, anche se in algebra relazionale è possibile solamente dopo una ridenominazione. L'ordine rimane comunque importante, 
+nonostante la ridenominazione. Si può quindi realizzare una proiezione con ridenominazione, nella stessa interrogazione. 
+
+Quando in un'interrogazione non si è sicure del risultato, l'ambiguità deve essere risolta a monte. 
+
+Nell'unione, poiché si tratta di insiemi, le ennuple identiche verranno eliminate nella relazione risultante. Si può specificare con \verb|UNION ALL| di mantenere tutti i duplicati tra le due relazioni su cui 
+viene effettuata l'unione. 
+
+
+La differenza viene realizzata tramite il comando \verb|EXCEPT|:
+\begin{minted}{sql}
+    SELECT ListaAttributi
+    FROM Relazione1
+    EXCEPT
+    SELECT ListaAttributi
+    FROM Relazione2
+\end{minted}
+
+Produce una relazione contenente tutte le ennuple della prima relazione, eccetto le ennuple contenute anche nella seconda relazione. Come per l'intersezione il comportamento di SQL è analogo all'algebra relazionale. 
+Si specifica l'intersezione tra due relazioni con la parola chiave \verb|INTERSECT|:
+\begin{minted}{sql}
+    SELECT ListaAttributi
+    FROM Relazione1
+    INTERSECT
+    SELECT ListaAttributi
+    FROM Relazione2
+\end{minted}
+
+\subsubsection{Selezione}
+
+Per specificare una condizione su un'interrogazione si inserisce una riga al termine dell'interrogazione introdotta dalla parola chiave \verb|WHERE|, seguita dalla funzione booleana che si deve verificare:
+
+\begin{minted}{SQL}
+    SELECT ListaAttributi
+    FROM Relazione
+    WHERE Condizione
+\end{minted}
+
+Questa interrogazione una selezione ed una proiezione, per la lista di attributi passata come argomento alla \verb|SELECT|. 
+
+\subsubsection{Join}
+
+Il join essenzialmente realizza un prodotto cartesiano delle relazioni specificate nella clausola \verb|FROM|: 
+\begin{minted}{sql}
+    SELECT *
+    FROM Relazione1 JOIN Relazione2
+\end{minted}
+
+Può essere specificata una condizione dalla parola chiave \verb|WHERE|, se si cercano solo certi attributi, si può effettuare una proiezione specificando la lista di attributi dopo 
+la parola chiave \verb|SELECT|. In SQL bisogna specificare con la parola chiave \verb|DISTINCT| se si vuole avere solo ennuple diverse tra di loro: 
+\begin{minted}{sql}
+    SELECT DISTINCT ListaAttributi
+    FROM Relazione1 JOIN Relazione2
+    WHERE Condizione
+\end{minted}
 
 
 In algebra relazionale è possibile scrivere interrogazioni equivalenti in modi diversi, in cui ci sono variazioni di efficienza, 
@@ -478,24 +628,21 @@ clausola \verb|SELECT| l'attributo in notazione puntata, altrimenti solleverebbe
 condizione di join nella clausola \verb|FROM| bisogna specificare a chi appartiene l'attributo indicato, utilizzando la notazione puntata: 
 
 \begin{minted}{SQL}
-  SELECT Attributo1, Attributo2, Lista1.AttributoComune 
-  --oppure anche Lista2.AttributoComune
-  FROM Lista1 JOIN Lista2 ON Lista1.AttributoComune = Lista2.AttributoComune
+    SELECT Attributo1, Attributo2, Lista1.AttributoComune 
+    --oppure anche Lista2.AttributoComune
+    FROM Lista1 JOIN Lista2 ON Lista1.AttributoComune = Lista2.AttributoComune
 \end{minted}
 
 In SQL esiste il modo per effettuare join naturali specificando il nome dell'attributo non in notazione puntata, utilizzando la clausola \verb|USING|, 
 ma è preferibile non usarlo per favorire la comprensione:
 
 \begin{minted}{SQL}
-  SELECT AttributoComune, Attributo1, Attributo2
-  FROM Lista1 JOIN Lista2 USING AttributoComune
+    SELECT AttributoComune, Attributo1, Attributo2
+    FROM Lista1 JOIN Lista2 USING AttributoComune
 \end{minted}
 
-Inoltre è possibile utilizzare più volte la stessa relazione in un'interrogazione, utilizzando un nome diverso, chiamati alias in SQL, specificando dopo il nome 
-l'alias, oppure utilizzando la clausola \verb|AS|. In questo modo è possibile eliminare le ambiguità generate effettuando diversi join sulle stesse relazioni. 
-\begin{minted}{SQL}
-  Nome AS N
-\end{minted}
+Alternativamente è possibile utilizzare più volte la stessa relazione in un'interrogazione, applicando una ridenominazione dei suoi attributi. In questo modo è possibile eliminare le ambiguità generate effettuando diversi 
+join sulle stesse relazioni. 
 
 Questo è utile per visualizzare campi dallo stesso nome, ridenominando gli attributi del risultato, oppure per facilitare la scrittura 
 evitando nomi di relazioni molto lunghi. 
@@ -504,9 +651,13 @@ Esiste in SQL il join esterno, dove alcuni degli operandi partecipano solamente 
 seguito da \verb|JOIN|. Inoltre è possibile inserire \verb|OUTER| per realizzare join equivalenti, ma queste funzioni non sono presenti nel servizio web SQLite, dove 
 è possibile utilizzare solamente \verb|LEFT JOIN|. 
 
+\subsubsection{Condizioni ``Like''}
+
 L'ordinamento del risultato è un altro fattore determinante, in base a cui si distinguono due ennuple 
 o soluzioni tra di loro. Si può effettuare operazioni sulla target list e si può utilizzare la condizione \verb|LIKE| per identificare espressioni regolari, dove 
 \verb|_| identifica un qualsiasi carattere e \verb|%| per qualsiasi sequenza di carattere, inseriti tra doppi apici \verb|" ... "|. 
+
+\subsubsection{Aggregazione ed Operatori Aggregati}
 
 Il contenuto delle basi di dati viene spesso aggregato, ma questo non è possibile in algebra relazionale. SQL prevede la possibilità di calcolare piccole elaborazioni 
 a partire da insiemi di ennuple, di conteggio, minimo, massimo, media o totale. 
@@ -514,28 +665,22 @@ a partire da insiemi di ennuple, di conteggio, minimo, massimo, media o totale.
 Queste operazioni vengono svolte da operatori aggregati quali \verb|COUNT| per contare tutti le righe in una relazione. Le funzioni aggregative 
 lavorano anche con valori nulli. Bisogna specificare l'attributo di cui contare tutte le righe nella relazione tra parentesi tonde:
 \begin{minted}{SQL}
-  COUNT(Attributo)
+    COUNT(Attributo)
 \end{minted}
 Altri operatori aggregati sono \verb|SUM|, \verb|AVG|, \verb|MAX| e \verb|MIN|. Si nota un'ulteriore utilità del valore nullo, poiché il sistema li 
 riconosce come un valore non reale e non lo utilizza nel calcolo, al contrario di un sistema dove i valori nulli vengono codificati con 0 o -1. 
 
-Esiste un'altra clausola \verb|GROUP BY|, insieme alle funzione aggregate, divide le ennuple di una relazione sulla base dell'attributo specificato, questo attributo deve 
-essere presente anche nella target list. 
-Ma in questo modo nel raggruppamento sotto l'attributo raggruppato, se è presente più di uno, sarà scelto uno a caso da visualizzare, su SQLite. 
+Si utilizza un'altra clausola \verb|GROUP BY| per dividere le ennuple di una relazione sulla base dell'attributo specificato e su questi raggruppamenti viene eseguita la funzione 
+aggregata specificata. Quando si raggruppa su un attributo, e per lo stesso valore sono presenti più di un valore, è presente un'ambiguita su quale valore da visualizzare. Su SQLite viene mostrato uno scelto 
+casualmente tra questi attributi. Questa rappresenta una delle scorrettezze di SQLite, ed il motivo per cui utilizzare spesso raggruppamenti viene sconsigliato. 
+
+Per ordinare una relazione si può utilizzare la clausola \verb|ORDER BY|, seguita dall'attributo su cui si deve effettuare l'ordinamento. 
 
 Esiste un altra clausola \verb|HAVING| per definire una condizione su raggruppamenti, mentre la \verb|WHERE| si usa sulle singole ennuple. 
 
 %% TODO problema di trovare il max (fine lezione 14 ott)
 
-%% TODO inserire meglio
-In SQLite online l'inserimento di una ennupla in una tabella non controlla se gli attributi che si vogliono aggiungere sono presenti nella tabella, infatti 
-potrebbe causare dei danni all'intera tabella. Questa reference dovrebbe essere controllata ad ogni inserimento. 
-
-Su SQLite si può attivare il controllo della chiave esterna con il comando:
-\begin{minted}{sql}
-PRAGMA foreign_keys=on
-\end{minted}
-%% ^^^^
+\subsubsection{Interrogazioni Nidificate e Viste}
 
 La funzioni di aggregazione effettuano l'operazione sulla target list, raggruppando i campi, quindi in alcuni casi non permettono di scegliere di quale ennupla mostrare 
 l'attributo. Si applicano al gruppo di ennuple che soddisfano la condizione imposta dal \verb|GROUP BY|. 
@@ -554,17 +699,5 @@ ennupla della interrogazione esterna.
 
 Le interrogazioni nidificate erano nella versione base di SQL, fin dalla sua nascita, poiché non si credeva di poter utilizzare la join. Quindi ogni interrogazioni 
 veniva realizzata con valori distinti, ma si capì molto presto la necessità di introdurre la join per effettuare interrogazioni più semplicemente. 
-
-
-In SQL si possono scrivere operazioni di aggiornamento del database, tramite il comando \verb|INSERT INTO|, allo stesso modo si possono eliminare dei valori con 
-\verb|REMOVE FROM|. Per modificare una tabella già creata, si può utilizzare il comando \verb|ALTER TABLE|. 
-
-
-
-
-
-
-
-
 
 \end{document}
