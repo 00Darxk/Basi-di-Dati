@@ -458,6 +458,16 @@ WHERE p1.codice!=p2.codice
 GROUP BY p1.titolo, p1.codice
 \end{minted}
 
+Per dare priorità ad una delle due coppie, ottenendo un risultato deterministico, si può utilizzare invece del costrutto \verb|GROUP BY| una 
+disuguaglianza nella \verb|WHERE|, in questo modo si privilegia solo una delle due coppie:
+\begin{minted}{sql}
+SELECT p1.titolo, p1.codice pezzo1, p2.codice pezzo2
+FROM pezzi p1 JOIN pezzi p2 ON p1.titolo=p2.titolo
+WHERE p1.codice>p2.codice
+\end{minted}
+    
+
+
 \subsection*{Domanda 11}
 Determinare per ogni concerto, la durata totale (somma delle durate dei pezzi). Supporre che per tutti i concerti ci sia almeno un pezzo. Mostrare codice e titolo del concerto e durata totale. Ordinare per codice. 
 Per ottenere le informazioni necessarie si usa una join tra le relazioni \verb|Programmazione|, \verb|Pezzi| e \verb|Concerti|. Si utilizza il comando \verb|SUM(durata)| per sommare tutte le durate dei pezzi, nello 
@@ -520,5 +530,68 @@ SELECT DISTINCT codice, nome, cognome FROM Compositori EXCEPT
             JOIN Compositori ON Pezzi.autore=Compositori.codice)
 ORDER BY Compositori.codice
 \end{minted}
+
+\clearpage
+
+\section{Esercitazione del 28/10/24}
+
+Sulla base del seguente schema di una base di dati:
+\begin{minted}{sql}
+CREATE TABLE IF NOT EXISTS volo_reale (
+    id_volo_reale integer PRIMARY KEY NOT NULL,
+    data_partenza_programmata date,
+    numero_volo text REFERENCES volo(numero_volo),
+    codice_tipo_aeromobile character(3) REFERENCES tipo_aeromobile(codice_tipo_aeromobile),
+    data_partenza_reale date,
+    data_arrivo_reale date,
+    orario_arrivo_reale time ,
+    orario_partenza_reale time ,
+    UNIQUE (numero_volo, data_partenza_programmata))
+
+CREATE TABLE IF NOT EXISTS volo (
+    numero_volo text PRIMARY KEY NOT NULL,
+    aeroporto_partenza character(3) REFERENCES aeroporto(codice_aeroporto),
+    aeroporto_arrivo character(3) REFERENCES aeroporto(codice_aeroporto),
+    orario_partenza_previsto time ,
+    orario_arrivo_previsto time)
+\end{minted}
+
+\subsection*{Domanda 1}
+
+Determinare per ogni aeroporto il volo di durata massima in partenza il giorno `2023-07-04', mostrare codice aeroporto di partenza, codice aeroporto di arrivo, 
+numero volo, durata prevista ordinati per codice aeroporto di partenza e numero volo. Si crea una vista con tutti i voli con durata, per ogni aeroporto, in partenza 
+il giorno specificato. In seguito su questa vista si considerano tutti i voli con durata uguale alla durata massima per ogni aeroporto. In seguito si ordina rispetto 
+al numero del volo, e per ogni aeroporto:
+
+
+\begin{minted}{sql}
+CREATE VIEW voli_con_durata AS
+SELECT aeroporto_partenza, aeroporto_arrivo, volo.numero_volo, orario_arrivo_previsto-orario_partenza_previsto AS durata
+FROM volo_reale JOIN volo ON volo_reale.numero_volo=volo.numero_volo
+WHERE data_partenza_programmata='2023-07-04';
+
+SELECT * FROM voli_con_durata AS v 
+WHERE durata = (SELECT MAX(durata)
+                FROM voli_con_durata
+                WHERE aeroporto_partenza=v.aeroporto_partenza)
+ORDER BY aeroporto_partenza, numero_volo
+\end{minted}
+
+\subsection*{Domanda 2}
+
+Trovare il codice degli aeroporti con più di un volo con data partenza programmata il giorno ``2023-07-06''. Mostrare il codice dell'aeroporto e il numero di voli 
+programmati in partenza il ``2023-07-06'', ordinati per codice dell'aeroporto. Sulla relazione ottenuta dalla join delle due relazioni, si considerano i voli nella 
+data specificata tramite una \verb|WHERE|, si raggruppa per il codice di aeroporto e si conta quanti voli sono presenti per ognuno tramite una \verb|COUNT|. Per 
+includere solamente aeroporti con più di un volo, si specifica con una \verb|HAVING| solo gli aeroporti con più di un volo:
+
+\begin{minted}{sql}
+SELECT aeroporto_partenza, COUNT(*) AS numero_voli
+FROM volo join volo_reale USING(numero_volo)
+WHERE data_partenza_programmata='2023-07-06'
+GROUP BY aeroporto_partenza HAVING numero_voli>1
+ORDER BY aeroporto_partenza
+\end{minted}
+
+Si utilizza la \verb|USING| per evitare di scrivere eccessivamente. 
 
 \end{document}
