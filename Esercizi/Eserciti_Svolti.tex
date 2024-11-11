@@ -15,14 +15,14 @@
 \usepackage{minted}
 %\usepackage{subfig}
 \usepackage[italian]{babel}
-%\usepackage{float}
+\usepackage{float}
 %\usepackage{wrapfig}
 %\usepackage[export]{adjustbox}
 \allowdisplaybreaks
 
 \setlength{\headheight}{12.0pt}
 \addtolength{\topmargin}{-12.0pt}
-\graphicspath{ {./Immagini/} }
+\graphicspath{ {../Immagini/} }
 
 \hypersetup{
     colorlinks=true,
@@ -593,5 +593,132 @@ ORDER BY aeroporto_partenza
 \end{minted}
 
 Si utilizza la \verb|USING| per evitare di scrivere eccessivamente. 
+
+\clearpage
+
+\section{Esercitazione del 11/11/24}
+
+\subsection*{Esercizio 1}
+
+Definire uno schema E-R per una biblioteca con le seguenti specifiche:
+\begin{itemize}
+    \item Oggetto dei prestiti son esemplari, detti anche copie, di singoli volumi, identificati attraverso un numero di inventario: ogni volume
+è relativo ad una specifica edizione, che può essere articolata in più volumi, anche in modo diverso dalle altre edizioni, di un'opera; 
+    \item Un volume può essere presente in più copie;
+    \item Un edizione è caratterizzata dall'opera, dalla collana e dall'anno;
+    \item Ogni collana ha un nome, un codice ed un editore;
+    \item Ogni editore ha un nome e un codice;
+    \item Ogni opera ha un titolo, una autore e un anno di prima pubblicazione;
+    \item Per ogni prestito in corso, non si considerano quelli conclusi, sono rilevanti la data prevista di restituzione e l'utente, che può avere più volumi in 
+prestito contemporaneamente, con codice identificativo, nome, cognome e recapito telefonico. 
+\end{itemize}
+
+
+Questo modello si riferisce genericamente a libri, ma per libri si intende una copia fisica, caratterizzato dal suo contenuto, dal titolo, dall'autore, dall'editore, etc. 
+Questo è diverso dal concetto di libro come opera letteraria, correlati, ma non coincidenti. In questo modello si ha il concetto di opera, di edizione, di copia e di 
+volume relativo ad un libro, si hanno quindi quattro entità diverse, poiché rappresentano quattro concetti diversi. 
+
+Se fosse presente la data di nascita di un autore, questo non sarebbe più un attributo ma un'altra entità a sé. Non è indispensabile definire gli identificatori 
+all'inizio della scrittura dello schema. La prima entità da rappresentare è l'opera, con i suoi attributi, in seguito si potrebbe definire l'entità opera, edizione o 
+volume. Bisogna capire quale è più direttamente legato all'opera, in modo da definirlo prima. La risposta che permette di rappresentare meglio la realtà è l'edizione, 
+poiché un volume si riferisce ad una specifica edizione, così come la copia si riferisce ad uno specifico volume, per cui è necessario prima definire l'entità 
+edizione. Queste sono legate da una relationship, di cui non viene definito il nome, dove un'opera può avere nessuna edizione o più edizioni. 
+
+Per ogni edizione si ha l'anno, il numero di volumi e la collana, si rappresenta come entità a sé. %% TODO vincolo non citato
+Per ogni edizione può esserci un volume, identificato dal suo numero, il numero di pagine e la sua edizione, analogamente ogni volume può avere una o più copie, 
+caratterizzate dal numero di copia e numero di inventario. 
+
+Un utente avendo molte proprietà si rappresenta sicuramente come entità, mentre un prestito si rappresenta come unica relationship, poiché un utente deve essere 
+collegato al concetto libro una sola volta, quindi per evitare errori nella rappresentazione si utilizza questa singola relationship per definire un prestito. 
+Questo prestito ha un attributo data di restituzione, prevista. Se si dovessero rappresentare anche i prestiti conclusi, sarebbe necessaria un'altra entità, poiché 
+una relationship tra copia ed utente potrebbe produrre più copie, quindi si promuoverebbe la relationship prestito ad entità. 
+
+Ogni edizione potrebbe essere identificata dall'opera l'anno e la collana, ma per semplificare è possibile inserire un altro attributo codice all'edizione per 
+identificarla, un codice ISBN. Per ogni collana ci deve essere almeno un editore, identificato da un codice, con un attributo nome. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{schema_er_es_1.pdf}%
+\end{figure}
+
+\subsection*{Esercizio 2}
+
+Data la schematizzazione delle informazioni sulle automobili mostrate:
+\begin{minted}[escapeinside=||]{c}
+FIAT
+    Corso Giovanni Agnelli 200-Torino
+    www.fiat.it
+    Modelli
+        Panda
+            Segmento: B
+            Posti: 4
+            Versioni:
+                1.1 Cilindrata 1098 Prezzo 8.900
+                1.2 4x4 Cilindrata 1250 Prezzo 13.000
+                |\dots|        
+        Punto
+            Segmento: C
+            Posti: 5
+            Versioni:
+                1.2 base Cilindrata 1212 Prezzo 11.100
+                1.3 JT Cilindrata 1250 Prezzo 13.100
+                |\dots|
+        |\dots|
+|\dots|
+----------------------------------------------------
+Segmenti
+    A: super-compatte
+    B: compatte
+    C: medie
+    D: grandi
+    E: SW
+\end{minted}
+
+\subsubsection*{Domanda 1}
+
+
+Definire uno schema concettuale (nel modello ER) che descriva la realtà di interesse; limitarsi agli aspetti che vengono espressamente mostrati, introducendo tutt'al più, 
+ove lo si ritenga necessario, opportuni codici identificativi; mostrare le cardinalità delle relationship e gli identificatori delle entità:
+
+
+Sono necessarie tre entità per la casa produttrice, per il modello prodotto e per la versione di un certo modello. Per ogni casa produttrice può non esistere un 
+modello oppure un numero arbitrario di modelli. Analogamente per le versioni di un modello. Una casa produttrice può essere identificata sia dal 
+codice e sia dal loro nome. Molti anni fa i modelli non erano registrati, mentre oggi i modelli hanno un nome registrato, quindi il loro nome è sufficiente per 
+poterli identificare. 
+
+Il segmento viene rappresentato tramite un'entità identificato da un codice, ed un attributo descrizione. Ogni modello deve essere legato ad un unico segmento tramite 
+una relationship, e si può inserire un attributo posti. 
+
+Le versioni hanno un nome, un prezzo, una cilindrata e possono essere identificati dal modello e dal nome, quindi si utilizza un identificatore esterno. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.3]{schema_er_es_2.pdf}%
+\end{figure}
+
+\subsubsection*{Domanda 2}
+
+Considerare le seguenti specifiche aggiuntive:
+\begin{itemize}
+    \item Per ogni versione è importante rappresentare le informazioni sui motori; ogni motore ha numero cilindri, cilindrata e potenza e uno stesso motore può essere 
+utilizzato da più versioni (di uno stesso modello o anche di modelli diversi, ma dello stesso costruttore);
+    \item \'{E} di interesse la storia dei prezzi: per ogni versione si deve riportare il prezzo attuale (con indicazione della data di ultimo aggiornamento) e i 
+prezzi precedenti (ognuno con data di inizio e fine validità). 
+\end{itemize}
+
+Si aggiunge una nuova entità motore associata a modello con una relationship, identificato da un codice, con attributi numero di cilindrata cilindrata, da 
+rimuovere dall'entità modello, e la potenza. Uno stesso motore può essere utilizzato da versioni diverse anche dello stesso modello, ma dello stesso costruttore, 
+questo non si può rappresentare semplicemente quindi si inserisce come vincolo aggiuntivo a parole. 
+
+
+Per rappresentare la storia dei prezzi si inserisce una cronologia delle versioni, ognuna associata ad un prezzo, si inserisce quindi un'entità 
+chiamata ``versione con prezzo'', identificata dall'attributo data e la versione associata tramite relationship. Ha un attributo prezzo ed un 
+attributo fine, con una cardinalità massima pari ad uno, che deve essere maggiore dell'attributo data. Quindi si deve togliere l'attributo prezzo 
+dall'entità versione. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.24]{schema_er_es_2_2.pdf}%
+\end{figure}
 
 \end{document}
