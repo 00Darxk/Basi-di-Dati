@@ -91,13 +91,15 @@
     %%* Orchestrale
     (orchestra.270)--++(0,-0.3)node[midway, right]{\scriptsize $(1,1)$}node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=90](r5){}
     (r5.270)--++(0,-0.3)node[midway, right]{\scriptsize $(0,N)$}node[draw, rectangle, anchor=90](orchestrale){Orchestrale}
-    (orchestrale.170)--++(-0.25,0.2) node[draw, circle, inner sep=1pt, fill=black]{}node[left]{\footnotesize Matricola}
-    (orchestrale.175)--++(-0.25,0.05) node[draw, circle, inner sep=1pt, fill=white]{}node[left]{\footnotesize Nome}
-    (orchestrale.185)--++(-0.25,-0.05)node[draw, circle, inner sep=1pt, fill=white]{}node[left]{\footnotesize Cognome}
-    (orchestrale.190)--++(-0.25,-0.2)node[draw, circle, inner sep=1pt, fill=white]{}node[left]{\footnotesize Strumento}
+    (orchestrale.180)--++(-0.25,0)node[draw, circle, inner sep=1pt, fill=white]{}node[left]{\footnotesize Strumento}
     ;
     %%* Artista
     \draw[thick, -{Stealth[open]}](orchestrale.0)--++(2.17,0)node[draw, thin,rectangle, anchor=180](artista){Artista};
     \draw[thick, -{Stealth[open]}](direttore.270)--(artista.90);
+    \draw
+    (artista.10)--++(0.25,0.15)  node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize Matricola}
+    (artista.0)--++(0.25,0)      node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Nome}
+    (artista.350)--++(0.25,-0.15)node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Cognome}
+    ;
 \end{tikzpicture}
 \end{document}
