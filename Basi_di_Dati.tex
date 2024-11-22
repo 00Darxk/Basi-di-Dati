@@ -871,6 +871,48 @@ Alcuni oggetti possono ripetersi in concetti diversi
 
 %% TODO add lezione 15/11/24
 
+\subsection{Progettazione logica}
 
+%% TODO add inizio lezione 22/11/24
+
+
+Molti dei costrutti dello schema E-R sono direttamente associabili ad elementi del modello relazionale. 
+Gli identificatori rappresentano chiavi nel modello relazionale, dove le entità e le relationship rappresentano le singole relazioni. Invece di inserire una relazione per 
+ogni relationship si potrebbe inserire una attributo in una delle relazioni che lega con un vincolo di integrità referenziale ad un attributo dell'altra relazione connessa 
+dalla relationship. Altrimenti se la cardinalità della relationship non lo permette si deve necessariamente realizzare come una relazione, con attributi che legano entrambe 
+le entità della relationship. In questo caso la chiave è costituita da questi attributi, poiché ogni istanza di una relationship deve essere unica. Si realizza in questo 
+modo quando si hanno relationship molti a molti, invece se si hanno relationship uno a molti, non è necessario utilizzare una tabella. 
+Inoltre attributi con una cardinalità massima superiore ad uno si realizzano come relazioni, con un vincolo di integrità referenziale all'entità di appartenenza. 
+
+%% TODO ex corrispondenze 
+
+Nel caso in cui ci siano delle generalizzazioni, non sono presenti costrutti che le traducono direttamente. %% TODO img generalizzazione
+Potrebbero essere presenti ridondanze nei dati, concettualmente si vogliono poche ripetizioni, ma alcune potrebbero essere utili. Queste ridondanze potrebbero essere 
+caratteristiche direttamente calcolabili dalle relazioni già presenti. Se l'attributo ridondante è poco richiesto, si potrebbe non inserire, mentre se bisogna 
+accedere spesso a questa caratteristica, è conveniente utilizzare una attributo. Ma in questo modo è necessario aggiornare l'attributo a ogni aggiornamento dei dati 
+su cui si basa su altre relazioni. Se gli aggiornamenti costano meno delle interrogazioni sono convenienti le ridondanze, ma questo suppone di conoscere il carico sulla 
+base di dati. Bisogna conoscere il tipo di operazioni che verranno applicate sulla base di dati, e quindi il modello logico che si vuole utilizzare, in in questo caso 
+il modello relazionale. 
+
+Si considerano degli indicatori, lo spazio che occupa in memoria la base di dati, ed il tempo delle occorrenze. %% TODO add indicatori
+
+Ci possono essere ridondanze anche nelle relationship. %% TODO add
+per calcolare il costo complessivo si moltiplica la frequenza di una singola operazione per il costo di quell'operazione, per ognuna delle singole operazioni. Quindi 
+bisogna fornire la frequenza delle operazioni che si applicano alla base di dati, per la sua progettazione. Considerando questo operazioni ed il suo 
+carico in memoria ed in frequenza si realizzano relazioni diverse, mantenendo o eliminando ridondanze. 
+
+Si può decidere di aggregare ciò che viene acceduto insieme e separare ciò che viene acceduto separatamente. In un modello E-R ristrutturato vengono eliminate le 
+generalizzazioni sostituendole in entità e relationship. Si può effettuare in tre modi diversi. %% TODO  
+
+%% TODO entità e relationship molti a molti
+
+Come convenzione, sui nomi degli attributi della relazione create da una relationship si utilizzano i nomi delle entità di partenza. Ogni azienda ha le sue convenzioni 
+per definire nomi diversi per gli attributi. 
+
+La traduzione non riesce a tener conto delle cardinalità minime, si dovrebbero aggiungere ulteriori vincoli, tramite \verb|CHECK|, non sono molto usati, ma è possibile 
+realizzarli in modo molto preciso e rigoroso. Possono esistere relationship ricorsive, dove la relationship viene tradotta in una relazione, con due nomi diversi per 
+entrambe le ricorrenze della stessa relazione. 
+Se la cardinalità minima è zero, l'attributo deve ammettere valori nulli. 
+Se l'identificatore esterno è anche la relationship si inserisce come attributo nella relazione. 
 
 \end{document}
