@@ -20,5 +20,5 @@ Appunti tratti dal corso di Basi di Dati, Anno Accademico 2024/25, Dipartimento 
 - [Sito del Corso](http://atzeni.dia.uniroma3.it/didattica/BDN/20242025/BDNindex.html), con i lucidi delle lezioni, esercizi, esoneri ed esami passati
 - [Notion](https://certain-sweater-2c3.notion.site/Basi-di-Dati-I-37bbf59ff5804f32a1a5e4d2b6856501) relativo al corso. 
 
-
+#
 Per segnalare eventuali refusi, correzioni o integrazioni aprite una [nuova issue](https://github.com/00Darxk/Basi-di-Dati/issues/new/choose) o [pull request](https://github.com/00Darxk/Basi-di-Dati/pulls), con le relative modifiche, nella repository.

@@ -112,7 +112,7 @@ alla cardinalità di $R_3$, $M_3$:
 
 La proiezione sugli attributi $H$ e $Q$ di $R_3$:
 \begin{equation*}
-    \pi_{H,P}(R_3)
+    \pi_{H,Q}(R_3)
 \end{equation*}
 
 Questi due attributi insieme non formano una superchiave, quindi potrebbero i valori potrebbero fra loro collassare, quindi produrre una singola ennupla di attributi distinti. Invece è 
@@ -278,7 +278,7 @@ tramite una differenza tra insiemi alla vista capi. Rimangono sicuramente tutti 
 
 \clearpage
 
-\section{Esercitazione del 18 Ottobre e 25 Ottobre}
+\section{Esercitazione del 18 e 25 Ottobre}
 
 
 Si considera la seguente base di dati:
@@ -383,7 +383,7 @@ JOIN Compositori ON autore=Compositori.codice
 Determinare il titolo e descrizione dei concerti in cui sono presenti pezzi di Mozart. Per ottenere questi risultati è sufficiente effettuare un'operazione di join tra tutte le relazioni del database, 
 considerando solo le ennuple di valore specificato per l'attributo \verb|cognome|:
 \begin{minted}{sql}
-SELECT DISTINCT concerti.titolo, descrizione 
+SELECT DISTINCT Concerti.titolo, descrizione 
 FROM Concerti JOIN Programmazione ON Concerti.codice=Programmazione.concerto
 JOIN pezzi ON pezzi.codice=pezzo
 JOIN Compositori ON autore=Compositori.codice
@@ -397,7 +397,7 @@ pezzi di Beethoven, come nella domanda precedente, ed in seguito rimuoverli dall
 SELECT DISTINCT concerti.titolo, descrizione
 FROM Concerti EXCEPT
 -- concerti contenenti pezzi di Beethoven
-SELECT DISTINCT concerti.titolo, descrizione 
+SELECT DISTINCT Concerti.titolo, descrizione 
 FROM Concerti join Programmazione ON Concerti.codice=Programmazione.concerto
 JOIN pezzi ON pezzi.codice=pezzo
 JOIN Compositori ON autore=Compositori.codice
@@ -409,11 +409,11 @@ Determinare il codice ed il titolo dei pezzi che non sono presenti in nessun con
 concerti tramite un join tra le relazioni \verb|Programmazione| e \verb|Pezzi|. Si rimuove quindi questo risultato dalla relazione \verb|Pezzi|, tenendo conto di selezionare solamente gli attributi in comune, ed 
 in seguito ordinando in base al codice con il comando \verb|ORDER BY|, seguito dall'attributo su cui si vuole effettuare l'ordinamento: 
 \begin{minted}{sql}
-SELECT DISTINCT pezzi.codice, titolo
+SELECT DISTINCT Pezzi.codice, titolo
 FROM Pezzi EXCEPT
-SELECT DISTINCT pezzi.codice, titolo
+SELECT DISTINCT Pezzi.codice, titolo
 FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=codice
-ORDER BY pezzi.codice 
+ORDER BY Pezzi.codice 
 \end{minted}
 
 \subsection*{Domanda 8}
@@ -428,10 +428,10 @@ GROUP BY Programmazione.concerto
 Da questa vista si possono ottenere le informazioni richieste con i singoli pezzi effettuando una join con le relazioni \verb|Pezzi| e \verb|Compositori|, ed ordinando con \verb|ORDER BY| rispetto al codice dei 
 pezzi:
 \begin{minted}{sql}
-SELECT DISTINCT pezzi.codice, pezzi.titolo, cognome, durata
+SELECT DISTINCT Pezzi.codice, Pezzi.titolo, cognome, durata
 FROM Pezzi JOIN Compositori ON Compositori.codice=autore
-JOIN ultimi_pezzi ON pezzi.codice=pezzo
-ORDER BY pezzi.codice
+JOIN ultimi_pezzi ON Pezzi.codice=pezzo
+ORDER BY Pezzi.codice
 \end{minted}
 
 \subsection*{Domanda 9}
@@ -439,9 +439,9 @@ Determinare i pezzi che compaiono in ultima posizione in tutti i concerti. Mostr
 alla domanda precedente, e si utilizza la stessa interrogazione alla domanda precedente, inserendo una condizione nel \verb|WHERE| dove viene controllato che la vista \verb|ultimi_pezzi| contenga solo un'ennupla, 
 ovvero il pezzo che compare in ultima posizione in tutti i concerti:
 \begin{minted}{sql}
-SELECT DISTINCT pezzi.codice, pezzi.titolo, cognome, durata
-FROM pezzi JOIN Compositori ON Compositori.codice=autore
-JOIN ultimi_pezzi ON pezzi.codice=pezzo
+SELECT DISTINCT Pezzi.codice, Pezzi.titolo, cognome, durata
+FROM Pezzi JOIN Compositori ON Compositori.codice=autore
+JOIN ultimi_pezzi ON Pezzi.codice=pezzo
 WHERE (SELECT COUNT(pezzo) FROM ultimi_pezzi)=1
 ORDER BY pezzi.codice
 \end{minted}
@@ -453,20 +453,18 @@ presenti due volte le stesse coppie. Per ovviare a questo problema, si può util
 un'ennupla casualmente tra le due, senza poter scegliere quale:
 \begin{minted}{sql}
 SELECT p1.titolo, p1.codice pezzo1, p2.codice pezzo2
-FROM pezzi p1 JOIN pezzi p2 ON p1.titolo=p2.titolo
+FROM Pezzi p1 JOIN Pezzi p2 ON p1.titolo=p2.titolo
 WHERE p1.codice!=p2.codice
 GROUP BY p1.titolo, p1.codice
 \end{minted}
 
 Per dare priorità ad una delle due coppie, ottenendo un risultato deterministico, si può utilizzare invece del costrutto \verb|GROUP BY| una 
-disuguaglianza nella \verb|WHERE|, in questo modo si privilegia solo una delle due coppie:
+disuguaglianza nella \verb|WHERE|, in questo modo si privilegia solo una delle due coppie, in modo deterministico:
 \begin{minted}{sql}
 SELECT p1.titolo, p1.codice pezzo1, p2.codice pezzo2
-FROM pezzi p1 JOIN pezzi p2 ON p1.titolo=p2.titolo
+FROM Pezzi p1 JOIN Pezzi p2 ON p1.titolo=p2.titolo
 WHERE p1.codice>p2.codice
 \end{minted}
-    
-
 
 \subsection*{Domanda 11}
 Determinare per ogni concerto, la durata totale (somma delle durate dei pezzi). Supporre che per tutti i concerti ci sia almeno un pezzo. Mostrare codice e titolo del concerto e durata totale. Ordinare per codice. 
@@ -723,9 +721,42 @@ dall'entità versione.
 
 \clearpage
 
-\section{Esercitazione del 18 Novembre}
+\section{Esercizio dell'8 Novembre}
 
-%% prova parziale 11 gennaio 2010
+Considerare i quattro schemi seguenti:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.4]{domanda_8-11-24.pdf}%
+\end{figure}
+
+Rispondere alle domande seguenti con un sì o un no nella casella:
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        & S. 1 & S. 2 & S. 3 & S. 4\\
+        \hline
+        Possono esistere due divisioni con lo stesso nome, in reparti diversi? & Sì & No & No & No\\
+        \hline
+        Possono esistere due reparti con lo stesso nome, in divisioni diverse? & No & No & Sì & No\\
+        \hline
+        Possono due divisioni appartenere ad uno stesso reparto? & Sì & No & No & Sì\\
+        \hline
+        Possono due reparti appartenere alla stessa divisione? & No & Sì & Sì & Sì\\
+        \hline        
+    \end{tabular}
+\end{center}
+
+\begin{enumerate}
+    \item Negli ultimi tre schemi la divisione viene identificata univocamente dal nome, quindi non è possibile. Al contrario per il primo schema dove una divisione viene identificata dal proprio nome e dall'appartenenza ad un reparto. 
+    \item Per il terzo schema, un reparto viene identificato sia dal nome che dall'appartenenza ad una certa divisione quindi è possibile. Per tutti gli altri schemi invece ciò non è possibile poiché sono identificati unicamente dal loro nome. 
+    \item Per gli schemi due e tre questo non è possibile poiché la cardinalità della relationship non permette l'appartenenza di più di una divisione ad un reparto. Negli schemi uno e quattro invece è possibile poiché la cardinalità è uno a molti, la prima, e molti a molti, la seconda. 
+    \item Per gli ultimi tre schemi questo è possibile poiché la cardinalità è sempre molti ad uno o a molti, per l'entità ``Divisione''. Mentre nel primo schema può avere solo un'appartenenza a reparto. 
+\end{enumerate}
+
+
+\clearpage
+
+\section{Esercitazione del 18 Novembre}
 
 \subsection*{Domanda 1}
 
@@ -762,7 +793,6 @@ dalla data e dall'entità concerto in relazione.
     \includegraphics[scale=1.25]{schema_er_es_3.pdf}%
 \end{figure}
 
-
 \subsection*{Domanda 2}
 
 Modificare lo schema prodotto in risposta alla domanda precedente con riferimento alle seguenti specifiche che modificano le precedenti 
@@ -785,12 +815,14 @@ quindi ad entità questa relazione chiamata ``Pezzo in Scaletta''. Questo ha un 
 relazione concerto. 
 
 Inoltre bisogna inserire un'entità teatro in relazione con concerto. Questa tuttavia deve essere legata a sala e deve essere comunque legata agli 
-eventi. %% TODO relazione teatro con concerto 
+eventi. Si crea in questo modo un ciclo e bisogna inserire un ulteriore vincolo non rappresentabile nello schema ER. Altrimenti non bisogna legare teatro e concerto tramite una relationship. 
+
 
 \begin{figure}[H]%
     \centering%
     \includegraphics[scale=1.25]{schema_er_es_4.pdf}%
 \end{figure}
 
+\clearpage
 
 \end{document}

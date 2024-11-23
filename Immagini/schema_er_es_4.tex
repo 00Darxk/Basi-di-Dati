@@ -16,11 +16,11 @@
     %%  node[midway, above]{\scriptsize $(0,N)$}
 
     %%* Relazione:
-    %% node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=90](r1){}
-    %% node[draw, diamond, shape aspect=2, inner sep=0.2pt, anchor=180](r2){R2}
+    %%  node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=90](r1){}
+    %%  node[draw, diamond, shape aspect=2, inner sep=0.2pt, anchor=180](r2){R2}
 
     %%* Entità:
-    %% node[draw, rectangle, anchor=90](e1){}
+    %%  node[draw, rectangle, anchor=90](e1){}
     %%? Distanza verticale: E -(0.3)- R -(0.3) E
     %%? Distanza orizzontale: E -(0.75)- R -(0.75)- E
 
@@ -34,7 +34,7 @@
     %%* Pezzo in Scaletta
     (pezzo.270)--++(0,-0.3)node[midway, right]{\scriptsize $(0,N)$}node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=90](r10){}
     (r10.270)--++(0,-0.3)node[midway, right]{\scriptsize $(1,1)$}node[draw, rectangle, anchor=90, align=center](pezzo2){Pezzo\\in Scaletta}
-    (pezzo2.180)--++(-0.1,0)node[draw, circle, inner sep=1pt, fill=black](a){}--++(-0.15,0)node[draw, circle, inner sep=1pt, fill=white]{}node[left]{\footnotesize Posizione}
+    (pezzo2.180)--++(-0.1,0)node[draw, circle, inner sep=0.5pt, fill=black](a){}--++(-0.15,0)node[draw, circle, inner sep=1pt, fill=white]{}node[left]{\footnotesize Posizione}
 
     %%* Musicista
     (pezzo.0)--++(0.75,0)node[midway, above]{\scriptsize $(1,1)$}node[draw, diamond, shape aspect=2, inner sep=0.2pt, anchor=180](r3){\footnotesize Autore}
@@ -44,8 +44,8 @@
 
 
     %%* Concerto
-    (pezzo2.270)node[below left]{\scriptsize $(1,1)$}--++(0,-0.1)node[draw, circle, inner sep=1pt, fill=black](b){}--++(0,-0.2)node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=90](r1){}
-    (r1.270)--++(0,-0.3)node[midway, right]{\scriptsize $(0,N)$}node[draw, rectangle, anchor=90](concerto){Concerto}
+    (pezzo2.270)node[below left]{\scriptsize $(1,1)$}--++(0,-0.1)node[draw, circle, inner sep=0.5pt, fill=black](b){}--++(0,-0.2)node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=90](r1){}
+    (r1.270)--++(0,-0.3)node[midway, left]{\scriptsize $(0,N)$}node[draw, rectangle, anchor=125](concerto){Concerto}
     (concerto.170)--++(-0.25,0.15) node[draw, circle, inner sep=1pt, fill=black]{}node[left]{\footnotesize Codice}
     (concerto.180)--++(-0.25,0)    node[draw, circle, inner sep=1pt, fill=white]{}node[left]{\footnotesize Titolo}
     (concerto.190)--++(-0.25,-0.15)node[draw, circle, inner sep=1pt, fill=white]{}node[left]{\footnotesize Autore}
@@ -53,29 +53,30 @@
 
 
     %%* Evento
-    (concerto.0)--++(0.75,0)node[midway, above]{\scriptsize $(0,N)$}node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=180](r9){}
-    (r9.0)--++(0.65,0)node[midway, above]{\scriptsize $(1,1)$}node[draw, circle, inner sep=1pt, fill=black](a){}--++(0.10,0)node[draw, rectangle, anchor=180](evento){Evento}
-    (evento.270)--++(0,-0.1)node[draw, circle, inner sep=1pt, fill=black](b){}--++(0,-0.15)node[draw, circle, inner sep=1pt, fill=white]{}node[below]{\footnotesize Data}
-    (b)++(0.2,0)node[draw, circle, inner sep=1pt, fill=black]{}-|(a)++(0,0.1)
+    (concerto.0)--++(0.75,0)node[midway, below]{\scriptsize $(0,N)$}node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=180](r9){}
+    (r9.0)--++(0.65,0)node[midway, below]{\scriptsize $(1,1)$}node[draw, circle, inner sep=0.5pt, fill=black](a){}--++(0.10,0)node[draw, rectangle, anchor=180](evento){Evento}
+    (evento.270)--++(0,-0.1)node[draw, circle, inner sep=0.5pt, fill=black](b){}--++(0,-0.15)node[draw, circle, inner sep=1pt, fill=white]{}node[below]{\footnotesize Data}
+    (b)++(0.2,0)node[draw, circle, inner sep=1pt, fill=black]{}-|(a)--++(0,0.1)
 
     
     %%* Sala
     (evento.0)--++(0.75,0)node[midway, above]{\scriptsize $(1,1)$}node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=180](r8){}
-    (r8.0)--++(0.75,0)node[midway, above]{\scriptsize $(0,N)$}node[draw, rectangle, anchor=180](sala){Sala}
-    (sala.10)--++(0.25,0.15)  node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize Codice}
-    (sala.0)--++(0.25,0)      node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Nome}
-    (sala.350)--++(0.25,-0.15)node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Capienza}
+    (r8.90)--++(0,0.3)node[midway, right]{\scriptsize $(0,N)$}node[draw, rectangle, anchor=270](sala){Sala}
+    (sala.120)--++(0,0.68) node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize Codice}
+    (sala.90)--++(0,0.46)  node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Nome}
+    (sala.60)--++(0,0.24)  node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Capienza}
 
 
     %%* Teatro
-    (sala.90)--++(0,0.3)node[midway, right]{\scriptsize $(1,1)$}node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=270](r11){}
-    (r11.90)--++(0,0.3)node[midway, right]{\scriptsize $(1,1)$}node[draw, rectangle, anchor=270](teatro){Teatro}
-    (teatro.10)--++(0.25,0.15)  node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize Codice}
-    (teatro.0)--++(0.25,0)      node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Nome}
-    (teatro.350)--++(0.25,-0.15)node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Indirizzo}
+    (sala.180)--++(-0.75,0)node[midway, above]{\scriptsize $(1,1)$}node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=0](r11){}
+    (r11.180)--++(-0.75,0)node[midway, above]{\scriptsize $(1,1)$}node[draw, rectangle, anchor=0](teatro){Teatro}
+    (teatro.120)--++(0,0.68) node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize Codice}
+    (teatro.90)--++(0,0.46)  node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Nome}
+    (teatro.60)--++(0,0.24)  node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Indirizzo}
 
-    %% TODO relazione con concerto
-
+    (teatro.180)node[above left]{\scriptsize $(0,N)$}--++(-0.65,0)node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=0](r12){}
+    (r12.270)--++(0,-0.3)node[midway, right]{\scriptsize $(1,1)$}
+    
     %%* Orchestra
     (concerto.270)--++(0,-0.3)node[midway, right]{\scriptsize $(1,1)$}node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=90](r2){}
     (r2.270)--++(0,-0.3)node[midway, right]{\scriptsize $(0,N)$}node[draw, rectangle, anchor=90](orchestra){Orchestra}
@@ -94,8 +95,8 @@
     (orchestrale.180)--++(-0.25,0)node[draw, circle, inner sep=1pt, fill=white]{}node[left]{\footnotesize Strumento}
     ;
     %%* Artista
-    \draw[thick, -{Stealth[open]}](orchestrale.0)--++(2.17,0)node[draw, thin,rectangle, anchor=180](artista){Artista};
-    \draw[thick, -{Stealth[open]}](direttore.270)--(artista.90);
+    \draw[-{Stealth[open, round, length=5mm]}](orchestrale.0)--++(2.17,0)node[draw, thin,rectangle, anchor=180](artista){Artista};
+    \draw[-{Stealth[open, round, length=5mm]}](direttore.270)--(artista.90);
     \draw
     (artista.10)--++(0.25,0.15)  node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize Matricola}
     (artista.0)--++(0.25,0)      node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Nome}
