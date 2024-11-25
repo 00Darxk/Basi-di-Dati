@@ -334,14 +334,14 @@ insert into programmazione values(7, 2,1);
 
 Vengono proposti una serie di esercizi su questo database. 
 
-\subsection*{Domanda 1}
+\subsection{Domanda 1}
 Determinare il titolo dei pezzi che hanno durata compresa tra 40 e 60 minuti. Per effettuare quest'operazione è sufficiente operare sulla singola tabella \verb|Pezzi|:
 \begin{minted}{sql}
 SELECT titolo FROM Pezzi
 WHERE durata>40 AND durata<60
 \end{minted}
 
-\subsection*{Domanda 2}
+\subsection{Domanda 2}
 Determinare il titolo, nome e cognome dell'autore dei pezzi che hanno durata compresa tra 40 e 60 minuti. Oltre alla tabella \verb|Pezzi|, è necessario ottenere i campi 
 \verb|nome| e \verb|cognome| della tabella \verb|Compositori|. Si effettua mediante un join, specificando come vengono associate le due relazioni, infatti il campo \verb|autore| 
 di \verb|Pezzi| si riferisce alla chiave primaria della relazione \verb|Compositori|:
@@ -351,7 +351,7 @@ FROM Pezzi JOIN Compositori ON Pezzi.autore=Compositori.codice
 WHERE durata>40 and durata<60
 \end{minted}
 
-\subsection*{Domanda 3}
+\subsection{Domanda 3}
 Determinare il nome e cognome dei compositori dei pezzi presenti nel ``Concerto di Giugno''. Per ottenere questo si utilizza una vista. Nei database industriali 
 la vista p contenuta nella cache. La vista può essere utilizzata come fosse un'altra tabella nel database, ed è possibile utilizzarla per effettuare altre 
 interrogazioni nella stessa query. Si crea quindi una vista di tutti i pezzi presenti nel concerto di Giugno:
@@ -368,7 +368,7 @@ FROM pezzi_giugno JOIN Pezzi ON pezzi_giugno.pezzo=Pezzi.codice
 JOIN Compositori ON Compositori.codice=autore
 \end{minted}
 
-\subsection*{Domanda 4}
+\subsection{Domanda 4}
 Determinare il nome e cognome dei compositori che non hanno pezzi nel ``Concerto di Giugno''. Utilizzando la stessa vista \verb|pezzi_giugno|, è possibile utilizzare una semplice \verb|EXCEPT| sulla 
 relazione dei compositori per rimuovere quelli presenti nel concerto di Giugno:
 \begin{minted}{sql}
@@ -379,7 +379,7 @@ FROM pezzi_giugno JOIN pezzi ON pezzo=pezzi.codice
 JOIN Compositori ON autore=Compositori.codice
 \end{minted}
 
-\subsection*{Domanda 5}
+\subsection{Domanda 5}
 Determinare il titolo e descrizione dei concerti in cui sono presenti pezzi di Mozart. Per ottenere questi risultati è sufficiente effettuare un'operazione di join tra tutte le relazioni del database, 
 considerando solo le ennuple di valore specificato per l'attributo \verb|cognome|:
 \begin{minted}{sql}
@@ -390,7 +390,7 @@ JOIN Compositori ON autore=Compositori.codice
 WHERE cognome='Mozart'
 \end{minted}
 
-\subsection*{Domanda 6}
+\subsection{Domanda 6}
 Determinare il titolo e descrizione dei concerti in cui non sono presenti pezzi di Beethoven. Per effettuare quest'operazione è sufficiente trovare tutti i concerti dove sono presenti 
 pezzi di Beethoven, come nella domanda precedente, ed in seguito rimuoverli dalla lista di tutti i concerti con un \verb|EXCEPT| iniziale:
 \begin{minted}{sql}
@@ -404,7 +404,7 @@ JOIN Compositori ON autore=Compositori.codice
 WHERE cognome='Beethoven'
 \end{minted}
 
-\subsection*{Domanda 7}
+\subsection{Domanda 7}
 Determinare il codice ed il titolo dei pezzi che non sono presenti in nessun concerto. Ordinare per codice. Si può effettuare in modo analogo alla precedente domanda, si ottengono i pezzi contenuti in tutti i 
 concerti tramite un join tra le relazioni \verb|Programmazione| e \verb|Pezzi|. Si rimuove quindi questo risultato dalla relazione \verb|Pezzi|, tenendo conto di selezionare solamente gli attributi in comune, ed 
 in seguito ordinando in base al codice con il comando \verb|ORDER BY|, seguito dall'attributo su cui si vuole effettuare l'ordinamento: 
@@ -416,7 +416,7 @@ FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=codice
 ORDER BY Pezzi.codice 
 \end{minted}
 
-\subsection*{Domanda 8}
+\subsection{Domanda 8}
 Determinare i pezzi che compaiono in ultima posizione in almeno un concerto. Mostrare codice, titolo, cognome dell'autore e durata del pezzo. Ordinare per codice. Si può utilizzare una vista \verb|ultimi_pezzi|, 
 dove vengono salvati i pezzi in ultima posizione nei concerti con il comando \verb|MAX(posizione)|, raggruppandoli rispetto all'attributo \verb|concerto|. 
 \begin{minted}{sql}
@@ -434,7 +434,7 @@ JOIN ultimi_pezzi ON Pezzi.codice=pezzo
 ORDER BY Pezzi.codice
 \end{minted}
 
-\subsection*{Domanda 9}
+\subsection{Domanda 9}
 Determinare i pezzi che compaiono in ultima posizione in tutti i concerti. Mostrare codice, titolo, cognome dell'autore e durata del pezzo. Ordinare per codice. Si può utilizzare la stessa vista realizzata 
 alla domanda precedente, e si utilizza la stessa interrogazione alla domanda precedente, inserendo una condizione nel \verb|WHERE| dove viene controllato che la vista \verb|ultimi_pezzi| contenga solo un'ennupla, 
 ovvero il pezzo che compare in ultima posizione in tutti i concerti:
@@ -446,7 +446,7 @@ WHERE (SELECT COUNT(pezzo) FROM ultimi_pezzi)=1
 ORDER BY pezzi.codice
 \end{minted}
 
-\subsection*{Domanda 10}
+\subsection{Domanda 10}
 Determinare coppie di pezzi con lo stesso titolo. Mostrare il titolo e i due codici (ordinando il risultato sul titolo). Nota bene: ogni coppia va mostrata una sola volta 
 (ad esempio, se i pezzi 3 e 5 hanno stesso titolo, va mostrata solo la coppia 3,5 e non la coppia 5,3). Effettuando un'operazione di join sulla relazione \verb|Pezzi| con sé stessa si ottiene una relazione dove sono 
 presenti due volte le stesse coppie. Per ovviare a questo problema, si può utilizzare una \verb|GROUP BY| rispetto al titolo dei pezzi, anche se questo tipo di operazioni vengono sconsigliate poiché mostrano 
@@ -466,7 +466,7 @@ FROM Pezzi p1 JOIN Pezzi p2 ON p1.titolo=p2.titolo
 WHERE p1.codice>p2.codice
 \end{minted}
 
-\subsection*{Domanda 11}
+\subsection{Domanda 11}
 Determinare per ogni concerto, la durata totale (somma delle durate dei pezzi). Supporre che per tutti i concerti ci sia almeno un pezzo. Mostrare codice e titolo del concerto e durata totale. Ordinare per codice. 
 Per ottenere le informazioni necessarie si usa una join tra le relazioni \verb|Programmazione|, \verb|Pezzi| e \verb|Concerti|. Si utilizza il comando \verb|SUM(durata)| per sommare tutte le durate dei pezzi, nello 
 stesso concerto tramite \verb|GROUP BY concerto|  
@@ -478,7 +478,7 @@ GROUP BY concerto
 ORDER BY Concerti.codice
 \end{minted}
 
-\subsection*{Domanda 12}
+\subsection{Domanda 12}
 Determinare i concerti che hanno durata totale minore di 90 minuti; per ogni concerto, mostrare codice e durata totale. Ordinare per codice. Questa domanda è essenzialmente identica alla precedente, è 
 sufficiente inserire la nuova condizione tramite il comando \verb|HAVING|, che opera su tutte le ennuple della relazione: 
 \begin{minted}{sql}
@@ -504,7 +504,7 @@ SELECT * FROM concerti_con_durata
 SELECT * FROM concerti_con_durata WHERE durata_concerto < 90
 \end{minted}
 
-\subsection*{Domanda 13}
+\subsection{Domanda 13}
 Determinare codice, nome e cognome dei compositori che sono presenti in tutti i concerti. Ordinare per codice. Si può realizzare in modo poco elegante tramite una serie di \verb|EXCEPT|. Si ottiene la 
 relazione dei compositori per concerto effettuando una join tra \verb|Programmazione|, \verb|Pezzi| e \verb|Compositori|, si ottiene il suo complementare effettuando una \verb|EXCEPT| tra la join di \verb|Programmazione| e 
 \verb|Compositori| per la relazione appena calcolata. Se un compositore è presente in tutti i concerti, non sarà presente in questa tabella. Quindi essenzialmente raggruppando per concerto, senza \verb|GROUP BY|, si 
@@ -554,7 +554,7 @@ CREATE TABLE IF NOT EXISTS volo (
     orario_arrivo_previsto time)
 \end{minted}
 
-\subsection*{Domanda 1}
+\subsection{Domanda 1}
 
 Determinare per ogni aeroporto il volo di durata massima in partenza il giorno `2023-07-04', mostrare codice aeroporto di partenza, codice aeroporto di arrivo, 
 numero volo, durata prevista ordinati per codice aeroporto di partenza e numero volo. Si crea una vista con tutti i voli con durata, per ogni aeroporto, in partenza 
@@ -575,7 +575,7 @@ WHERE durata = (SELECT MAX(durata)
 ORDER BY aeroporto_partenza, numero_volo
 \end{minted}
 
-\subsection*{Domanda 2}
+\subsection{Domanda 2}
 
 Trovare il codice degli aeroporti con più di un volo con data partenza programmata il giorno ``2023-07-06''. Mostrare il codice dell'aeroporto e il numero di voli 
 programmati in partenza il ``2023-07-06'', ordinati per codice dell'aeroporto. Sulla relazione ottenuta dalla join delle due relazioni, si considerano i voli nella 
@@ -596,7 +596,7 @@ Si utilizza la \verb|USING| per evitare di scrivere eccessivamente.
 
 \section{Esercitazione dell'11 Novembre}
 
-\subsection*{Esercizio 1}
+\subsection{Esercizio 1}
 
 Definire uno schema E-R per una biblioteca con le seguenti specifiche:
 \begin{itemize}
@@ -639,7 +639,7 @@ identificarla, un codice ISBN. Per ogni collana ci deve essere almeno un editore
     \includegraphics[scale=1.25]{schema_er_es_1.pdf}%
 \end{figure}
 
-\subsection*{Esercizio 2}
+\subsection{Esercizio 2}
 
 Data la schematizzazione delle informazioni sulle automobili mostrate:
 \begin{minted}[escapeinside=||]{c}
@@ -758,7 +758,7 @@ Rispondere alle domande seguenti con un sì o un no nella casella:
 
 \section{Esercitazione del 18 Novembre}
 
-\subsection*{Domanda 1}
+\subsection{Domanda 1}
 
 Mostrare lo schema concettuale per una base di dati per il programma di una stazione presso un teatro, secondo le seguenti specifiche:
 \begin{itemize}
@@ -793,7 +793,7 @@ dalla data e dall'entità concerto in relazione.
     \includegraphics[scale=1.25]{schema_er_es_3.pdf}%
 \end{figure}
 
-\subsection*{Domanda 2}
+\subsection{Domanda 2}
 
 Modificare lo schema prodotto in risposta alla domanda precedente con riferimento alle seguenti specifiche che modificano le precedenti 
 (mostrare l'intero schema modificato):
@@ -822,6 +822,249 @@ eventi. Si crea in questo modo un ciclo e bisogna inserire un ulteriore vincolo 
     \centering%
     \includegraphics[scale=1.25]{schema_er_es_4.pdf}%
 \end{figure}
+
+\clearpage
+
+\section{Esercitazione del 25 Novembre}
+
+\subsection{Esercizio 1}
+
+Si considera il modello ER seguente:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{schema_voli_25-11-24_2.pdf}%
+\end{figure}
+
+Rappresentare un modello logico corrispondente. \\
+Si considera l'entità compagnia per prima, dato che non ha identificatori esterni, come una relazione con chiave codice e diversi 
+attributi. Mentre l'entità volo si realizza come una relazione, dove la chiave è composta dal numero di volo e la compagnia di appartenenza del 
+volo, con un vincolo di integrità referenziale tra l'attributo codice e la relazione compagnia.  
+\begin{itemize}
+    \item Compagnia(\underline{Codice}, $\cdots$)
+    \item Volo(\underline{Codice}, \underline{Numero}, $\cdots$)
+\end{itemize}
+
+\subsection{Esercizio 2}
+
+Analogamente per questo schema ER:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{schema_banca_25-11-24.pdf}%
+\end{figure}
+
+Si rappresenta con una relazione banca, con chiave ABI; una relazione agenzia con chiave ABI e CAB con vincolo di integrità referenziale tra 
+il suo attributo ABI e la relazione banca; una relazione conto corrente con chiave ABI, CAB e numero di conto, con un vincolo di integrità 
+referenziale tra ABI e banca e CAB e agenzia
+\begin{itemize}
+    \item Banca(\underline{ABI}, $\cdots$)
+    \item Agenzia(\underline{ABI}, \underline{CAB}, $\cdots$)
+    \item CC(\underline{ABI}, \underline{CAB}, \underline{NUM}, $\cdots$)
+\end{itemize}
+
+Ci sono alcuni casi nei quali l'identificazione esterna ha un significato particolare e necessario. 
+
+\subsection{Esercizio 3}
+
+Si considera questo schema concettuale:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{schema_azienda_25-11-24.pdf}%
+\end{figure}
+
+Si comincia dalle entità senza identificazione esterna. Partendo dall'entità impiegato, si crea una relazione impiegato con una chiave codice, 
+ed un attributo cognome. Analogamente per le entità progetto e sede. L'entità dipartimento ha un identificatore esterno composto dal nome del dipartimento e 
+la partecipazione alla relationship composizione, la sua chiave è composta dall'attributo nome e la chiave dell'entità sede. Si deve utilizzare una tabella 
+per rappresentare la relationship partecipazione, con una chiave data dalla chiave delle due relazioni che identificano le due entità. Su questi 
+due attributo c'è un vincolo di integrità referenziale con le relazioni impiegato e progetto. Inoltre è presente un vincolo 
+di integrità referenziale tra dipartimento e sede sull'attributo città. Per rappresentare la relationship uno a molti tra impiegato e 
+dipartimento si inserisce l'attributo nome dipartimento e città, con un vincolo di integrità referenziale con la chiave di dipartimento. Si 
+inseriscono questi attributo all'0interno della relazione impiegato, poiché se fossero presenti dentro dipartimento, sarebbero presenti 
+più valori di impiegato, mentre un impiegato afferisce ad un singolo dipartimento, ed è possibile rappresentarlo senza tabelle aggiuntive. 
+La relationship afferenza ha anche un attributo data con una cardinalità minima zero, quindi dovrà poter ammettere valori nulli, al contrario 
+degli altri attributi descritti, nella relazione impiegato. Poiché la relationship direzione ha una cardinalità massima pari ad uno, si potrete 
+inserire come attributo all'interno di impiegato e dipartimento. Conviene scegliere l'opzione più intuitivamente sensata, quindi si inserisce dentro 
+la relazione dipartimento, poiché è più corretto dato che rappresenta una proprietà di dipartimento più di una proprietà di impiegato. 
+
+\begin{itemize}
+    \item Impiegato(\underline{Codice}, Cognome, Data Afferenza*)
+    \item Progetto(\underline{Nome}, Budget)
+    \item Sede(\underline{Città}, Indirizzo)
+    \item Dipartimento(\underline{Nome}, \underline{Città}, Telefono, Direttore*)
+    \item Partecipazione(\underline{Progetto}, \underline{Impiegato})
+\end{itemize}
+
+\subsection{Esercizio 4}
+
+Si considera questo schema simile al precedente, ma con un identificatore esterno sull'entità sede, invece che sull'entità dipartimento. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{schema_azienda_25-11-24_2.pdf}%
+\end{figure}
+
+In questo caso la relazione dipartimento viene identificata solamente da nome. Mentre per quanto riguarda sede, ha il nome del dipartimento e 
+città come chiave, con un vincolo di integrità referenziale sull'attributo nome del dipartimento con la relazione. Inoltre l'attributo impiegato 
+ha solo l'attributo dipartimento con un vincolo di integrità referenziale con la relazione dipartimento. In caso ogni impiegato possa essere 
+direttore di un unico dipartimento non sarebbe un vincolo esprimibile, ma si potrebbe rappresentare questo attributo come chiave per la 
+relazione dipartimento, ma in caso fossero presenti due dipartimenti con lo stesso direttore questo non funzionerebbe. 
+
+\begin{itemize}
+    \item Impiegato(\underline{Codice}, Cognome, Data Afferenza*)
+    \item Progetto(\underline{Nome}, Budget )
+    \item Sede(\underline{Nome Dipartimento}, \underline{Città}, Indirizzo )
+    \item Dipartimento(\underline{Nome}, Telefono, Direttore)
+    \item Partecipazione(\underline{Progetto}, \underline{Impiegato})
+\end{itemize}
+
+\subsection{Esercizio 5}
+
+Con riferimento a ciascuno dei seguenti schemi concettuali mostrare una base di dati relazionale ottenuta per traduzione del 
+modello ER, che evidenzi le caratteristiche dello schema. Per ciascuna relazione, mostrare anche solo poche ennuple, che 
+evidenzino appunto le caratteristiche interessanti. Indicare in qualunque modo, purché comprensibile, 
+anche i vincoli di chiave e di integrità referenziale. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{schema_elezioni_25-11-24.pdf}%
+\end{figure}
+
+Per lo schema A si ha una relazione seggio con chiave numero, attributo nome e comune con un vincolo di integrità referenziale con la chiave nome 
+della relazione comune, con un altro attributo altitudine. 
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline 
+        \underline{Numero} & Nome & Comune\\
+        \hline
+        1 & x & Castello\\
+        \hline
+        2 & y & Riva\\
+        \hline
+        3 & z & Riva\\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \underline{Nome} & Altitudine\\
+        \hline
+        Castello & 300\\
+        \hline
+        Riva & 200\\
+        \hline
+    \end{tabular}
+\end{center}
+Il caso B a differenza del caso A ha la chiave primaria di seggio composta da numero e comune, mentre i vincoli e la struttura della relatone 
+comune sono invariati. 
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline 
+        \underline{Numero} & Nome & \underline{Comune}\\
+        \hline
+        1 & x & Castello\\
+        \hline
+        2 & y & Riva\\
+        \hline
+        1 & z & Riva\\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \underline{Nome} & Altitudine\\
+        \hline
+        Castello & 300\\
+        \hline
+        Riva & 200\\
+        \hline
+    \end{tabular}
+\end{center}
+In questo caso nei dati si inserisce un seggio con lo stesso numero, ma in un comune differente per mostrare che si identificano seggi per lo 
+stesso numero, nello stesso comune. 
+
+Nel caso C la relationship è invertita, e la relazione seggio contiene solamente la chiave numero ed il suo nome, mentre la relazione comune 
+contiene anche un attribuito seggio con un vincolo di integrità referenziale con la chiave della relazione seggio. 
+\begin{center}
+    \begin{tabular}{|c|c|}
+        \hline 
+        \underline{Numero} & Nome \\
+        \hline
+        1 & x \\
+        \hline
+        2 & y \\
+        \hline
+        3 & z \\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \underline{Nome} & Altitudine & Seggio\\
+        \hline
+        Castello & 300 & 1\\
+        \hline
+        Riva & 200 & 2\\
+        \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Esercizio 6}
+
+Mostrare uno schema concettuale per una realtà i cui dati siano organizzati per mezzo del seguente schema relazionale:
+\begin{itemize}
+    \item Nazioni(\underline{Codice}, Nome);
+    \item Compagnie(\underline{Codice}, Nome, Nazione), con un vincolo di integrità referenziale fra l'attributo nazione e la relazione nazioni;
+    \item Aeroporti(\underline{Codice}, Nome, Città), con un vincolo di integrità referenziale fra città e la relazione città;
+    \item Città(\underline{Codice}, Nome);
+    \item Voli(\underline{Compagnia}, \underline{Numero}, Aeroporto Partenza, Aeroporto Arrivo, Ora Partenza Prevista, Ora Arrivo Previsto, Tipo Aeromobile), con vincoli 
+    di integrità referenziale tra compagnia e la relazione compagnie, aeroporto partenza e aeroporti, aeroporto arrivo e aeroporti, e tipo aeromobile con tipo aeromobili;
+    \item VoliEffettivi(\underline{Compagnia}, \underline{Numero}, \underline{Data}, Ora Partenza Effettiva, Ora Arrivo Effettivo), un vincolo di integrità referenziale fra compagnia e numero e la relazione voli;
+    \item TipoAeroMobile(\underline{Codice}, Nome).
+\end{itemize}
+
+Si comincia dalle entità senza vincoli di integrità referenziale. Si comincia dal'entità nazioni, in relazione con compagnie. Analogamente l'entità 
+città in relazione con aeroporto, ed i relativi attributi per queste entità. Si inserisce l'entità tipo aeromobile con i relativi attributi non 
+ancora legata con relationship. Un relazione rappresenta una relationship quando contiene due attributi come chiavi, in vincoli di integrità 
+referenziale con due relazioni diverse, poiché le uniche relationship che generano una tabella separata sono quelle molti a molti. Si hanno due 
+relazioni tra volo ed aeroporto per gli aeroporti di partenza e di arrivo. Inoltre si ha una relationship tra l'entità volo e 
+compagnie con un identificatore esterno sulla compagnia e l'attributo numero del volo. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{schema_voli_25-11-24.pdf}%
+\end{figure}
+
+\subsection{Esercizio 7}
+
+Considerare lo schema concettuale seguente:
+\begin{figure}[H]%
+    \centering
+    \includegraphics[scale=1.25]{schema_es_7_25-11-24.pdf}%
+\end{figure}
+
+Vallare la convenienza dell'introduzione di una relationship C-B fra Cliente e Banca. Tale relationship è ridondante in quanto derivabile dalla 
+concatenazione  delle relationship esistenti. Considerare un carico applicativo che includa come operazioni principali le leggenti:
+\begin{itemize}
+    \item Ricerca delle Banche di un Cliente, di uci è dato il codice, con frequenza $f_!=200$;
+    \item Inserimento di una nuova occorrenza della relationship C-A, dati i codici identificativi di Cliente e Agenzia, assumendo 
+    per semplicità che le occorrenze di Cliente e Agenzia siano già nella base di dati, e che il Cliente non 
+    abbia ancora legami né con l'Agenzia n* con la relativa Banca, con frequenza $f_2=10000$. 
+\end{itemize}
+
+Considerare i costi delle letture e scritture delle entità e della relationship molti a molti, ignorando quelli della relationship uno a molti e 
+considerare il costo delle scritture doppio di quello delle letture. Assumere che ogni Cliente abbia rapporti, relationship C-A, mediamente con $k=10$ Agenzie. 
+
+In generale la ridondanze aumenta le prestazioni in lettura, ma la peggiore in scrittura. 
+
+Il costo complessivo è dato da $c_1f_2+c_2f_2$, dove il costo della prima operazione si ottiene con la ridondanza pari ad una singola lettura di 
+costo $k=10$, mentre senza ridondanza bisogna effettuare tre letture con un costo $3k=30$. 
+Mentre per la seconda operazione con la ridondanza bisogna effettuare una lettura per verificare l'occorrenza ed in caso inserirla con due 
+scritture di costo $5$, mentre senza ridondanza è sufficiente una singola scrittura con costo $2$. 
+Si ha quindi:
+\begin{gather*}
+    c_{\mathrm{r}}=10\cdot200+5\cdot10000=52000\\
+    c_{\mathrm{s}}=30\cdot200+2\cdot10000=26000\\
+    c_{\mathrm{r}}>c_{\mathrm{s}}\tageq
+\end{gather*}
+Quindi non è conveniente avere ridondanza. 
 
 \clearpage
 
