@@ -1068,4 +1068,124 @@ Quindi non è conveniente avere ridondanza.
 
 \clearpage
 
+\section{Esercitazione del 29 Novembre}
+
+\subsection{Esercizio 1}
+
+Progettare lo schema della base di dati relazionale per gestire i dati della realtà descritta dallo schema concettuale in figura:
+%% TODO img ex 1 compito B 25 gen 2018
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Si comincia dall'entità nazione senza identificatori esterni, come relazione con con gli stessi attributi e chiave CN. L'entità città rappresenta una 
+relazione con chiave CC e CN con un vincolo di integrità referenziale con nazione. La relationship C-N è già implicitamente descritta 
+da queste due relazioni. Si segue con l'entità istituzione, con una relationship uno a molti con città, ogni istituzione ha una sola 
+sede per ogni città, quindi si ha un vincolo di integrità referenziale tra la chiave di città e gli attributi CC e CN di istituzione. Si passa 
+all'entità persona con affiliazione, senza attributi, ma un identificatore esterno sia con istituzione che con città. Si inserisce quindi 
+la relazione persona, con un codice chiave ed un nome, la relazione persona con affiliazione ha come chiave persona ed istituzione, con un vincolo di 
+integrità referenziale alle chiavi di persona ed istituzione. Questo schema rappresenta una ristrutturazione, per permettere questa traduzione, 
+infatti quest'entità persona con affiliazione poteva essere uan generalizzazione di persona. Si procede con l'entità sessione, questa è collegata 
+da una relazione molti a molti con persona con affiliazione, quindi è necessaria un'altra relazione chiamata intervento. 
+Si ha un'entità convegno con un'identificatore esterno con l'entità serie tramite la relazione S-C, quindi si inserisce prima quest'ultima 
+relazione. Dentro la relazione sessione va inserita anche la chiave di convegno. La relazione convegno ha attributi data, chiave anno e codice serie, 
+ed attributi codice città e codice nazione, con un vincolo di integrità referenziale con la città e nazione. La relazione serie ha una chiave codice, 
+un titolo, ed un attributo materia, vincolo di integrità referenziale con la relazione materia. Questa relazione ha chiave codice e attributo 
+materia. 
+
+\begin{itemize}
+    \item Nazione(\underline{CN}, Nazione);
+    \item Città(\underline{CC},\underline{CN});
+    \item Istituzione(\underline{Codice}, Nome, Città, Nazione);
+    \item Persona(\underline{Codice}, Nome);
+    \item Persona Con Affiliazione(\underline{Persona}, \underline{Istituzione})
+    \item Sessione(\underline{Codice}, Titolo, Ora);
+    \item Intervento(\underline{Sessione}, \underline{Persona}, \underline{Istituzione});
+    \item Convegno(Data, \underline{Anno}, \underline{Serie}, Città, Nazione)
+    \item Serie(\underline{Codice}, Titolo, Materia)
+    \item Materia(\underline{Codice}, Materia)
+\end{itemize}
+
+\subsection{Esercizio 2}
+
+Con riferimento all'esercizio precedente, per le due porzioni di schema in figura mostrare le tabelle risultati dalla progettazione logica con 
+alcune istanze(ennuple):
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+%% TODO fare prima parte ex
+
+Si considerano le tabelle corrispondenti alla relazioni del secondo schema:
+\begin{center}
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{Istituzione}\\
+        \hline
+        \underline{Codice} & Nome\\
+        \hline
+        1 & A\\\hline 2&B\\\hline 3&C\\\hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{Persona}\\
+        \hline
+        \underline{Codice}& Nome\\
+        \hline
+        00&Anna\\\hline 01&Lino\\\hline 02&Bob\\\hline 03&Eric\\\hline 04 & Sam\\\hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{Persona con Aff.}\\
+        \hline
+        \underline{Persona} & \underline{Istituzione}\\
+        \hline
+        00&1\\\hline 01 & 1\\\hline 02&2\\\hline 00&2\\\hline
+    \end{tabular}
+\end{center}
+
+\subsection{Esercizio 3}
+
+%% 25 gen 2018 A
+
+Lo schema concettuale seguente rappresenta un insieme di corsi ed un insieme di iscrizioni a tali cosi. ello schema l'attributo ricavo è 
+ridondante, poiché può essere ottenuto moltiplicando il costo del corso per il numero di iscritti, cioè il prodotto del valore dell'attributo costo di ogni 
+occorrenza dell'entità corso per il numero di occorrenze dell'entità persona a cui essa è correlata tramite la relationship iscrizione:
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Valutare se convenga o meno mantenere la ridondanza, assumendo corso abbia $C_c=1000$ occorrenze, persona ne abbia $C_p=3000$ ed iscrizione 
+$C_i=30000$, e quindi che ogni corso abbia mediamente $C_{ci}=30$ iscritti, e che il carico applicativo includa le operazioni principali seguenti:
+\begin{itemize}
+    \item Calcolo del ricavo di un corso, dato il codice, con frequenza $f_1=50$;
+    \item Iscrizione di una persona, già nella base di dati e di cui è dato il codice fiscale, ad un corso, di cui è dato il codice, con 
+    frequenza $f_2=20000$, in sostanza, questa operazione richiede l'inserimento di un'occorrenza di iscrizione. 
+\end{itemize}
+
+Considerando i costi delle letture e scritture delle occorrenze e considerare il costo delle scrittura pari a quello delle letture. 
+
+
+La prima operazione con ridondanza consiste in una singola lettura sulla relazione corso, la seconda operazione consiste in una 
+lettura e scrittura su corso ed una scrittura su iscrizione. Il costo totale delle operazioni con ridondanza è quindi:
+\begin{equation*}
+    C=c_1\cdot f_1+c_2\cdot f_2=1_{\mathrm{r}}\cdot50+(1_{\mathrm{r}}+2_{\mathrm{w}})\cdot20000=60050
+\end{equation*}
+Senza ridondanza è necessario oltre alla lettura su corso per conoscere il costo, leggere tutte le 30 occorrenze di iscrizione. Nella seconda operazione, 
+è sufficiente inserire l'occorrenza in iscrizione:
+\begin{equation*}
+    C=c_1\cdot f_1+c_2\cdot f_2=(1_{\mathrm{r}}+30_\mathrm{r})\cdot50+1_\mathrm{w}\cdot20000=21550
+\end{equation*}
+
+Quindi non è conveniente avere ridondanza. 
+
+\subsection{Esercizio 4}
+
+%% TODO 7 feb 2017 compito A ex 3
+
+%% alternativa alla generalizzazione con relazione e identificatore esterno tra dipendente e professore 
+
 \end{document}
