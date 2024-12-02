@@ -721,7 +721,9 @@ dall'entità versione.
 
 \clearpage
 
-\section{Esercizio dell'8 Novembre}
+\section{Esercitazione dell'8 Novembre e 2 Dicembre}
+
+\subsection{Domanda 1}
 
 Considerare i quattro schemi seguenti:
 \begin{figure}[H]%
@@ -753,6 +755,25 @@ Rispondere alle domande seguenti con un sì o un no nella casella:
     \item Per gli ultimi tre schemi questo è possibile poiché la cardinalità è sempre molti ad uno o a molti, per l'entità ``Divisione''. Mentre nel primo schema può avere solo un'appartenenza a reparto. 
 \end{enumerate}
 
+\subsection{Domanda 2}
+
+In relazione agli schemi precedenti, realizzare un modello relazionale:
+\begin{enumerate}
+    \item Divisione(\underline{Nome}, \underline{Reparto}), Reparto(\underline{Nome});
+    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}, Divisione);
+    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}, \underline{Divisione});
+    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}), Appartenenza(\underline{Divisione}, \underline{Reparto})
+\end{enumerate}
+
+Nel primo schema si utilizza una relazione divisione con chiave nome ed il reparto di appartenenza con cui ha un vincolo di integrità referenziale, 
+mentre la relazione reparto contiene solo la chiave nome. Nel secondo schema si ha una relazione divisione con chiave nome, ed una relazione reparto 
+con chiave nome, ed un vincolo di integrità referenziale divisione con la relazione divisione. Il terzo schema produce una relazione identica, 
+ma con l'attributo divisione della relazione reparto anch'esso chiave. Nell'ultimo schema sono necessarie tre relazioni poiché la relationship ha 
+cardinalità molti a molti, e bisogna rappresentarla mediante un'ulteriore relazione appartenenza, con chiave divisione e reparto, con un 
+vincolo di integrità referenziale con le rispettive relazioni. Non si inserisce l'attributo divisione in reparto, poiché essendo una relazione 
+molti a molti, rappresenterebbe una sola delle divisioni in relazione. 
+
+%% TODO add 19 luglio 2021 domanda 3 spettacolo - persona: ridondanza (rec 2/12)
 
 \clearpage
 
