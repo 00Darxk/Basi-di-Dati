@@ -3,7 +3,8 @@ Appunti tratti dal corso di Basi di Dati, Anno Accademico 2024/25, Dipartimento 
 
 ## Contenuti:
 - [Appunti](Basi_di_Dati.pdf) delle lezioni, tenute l'anno accademico 2024/25 dai professori Paolo Merialdo e Paolo Atzeni;
-- [Esercizi](Esercizi/) svolti durante il corso;
+- [Esercizi](Esercizi/Esercizi_Svolti.pdf) svolti durante il corso;
+- [Immagini](Immagini/) necessarie per compilare i file TeX. 
 
 ## Contenuti del Corso
 - Sistemi di Basi di Dati: Proprietà Fondamentali;
