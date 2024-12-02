@@ -900,22 +900,29 @@ Analogamente alle entità si ha una descrizione delle relazioni, i suoi componen
 
 \subsection{Progettazione Concettuale}
 
-%% TODO inizio lezione 15/11/24
+Questa prima fase della progettazione di una base di dati comprende attività interconnesse di acquisizione ed analisi dei requisiti, costruzione dello schema concettuale e costruzione del glossario. 
+Per ottenere le informazioni ed i requisiti si consultano diverse fonti, queste possono essere utenti e committenti della base di dati, attraversi interviste o documentazione apposita. Altrimenti si può 
+consultare la documentazione esistente che siano normative o regolamenti interni, realizzazione preesistenti oppure modulistica e reportistica. 
 
 Questa fase di acquisizione ed analisi dei requisiti è difficile, anche difficile da standardizzare e da insegnare. Non è un'operazione che segue 
 passi strettamente tecnici, richiede molta esperienza. 
 
-Si effettua una raccolta di dati preliminare. Gli utenti possono fornire informazioni e possono fornire una visione ad alto livello, ma non dettagliata, oppure 
-dettagliata, ma di basso livello. Queste interviste portano ad un acquisizione che richiede un ulteriore acquisizione per raffinare i dati ottenuti. 
 
+Si effettua una raccolta di dati preliminare. Gli utenti possono fornire informazioni e possono fornire una visione ad alto livello, ma non dettagliata, oppure 
+dettagliata, ma di basso livello, poiché questi utenti possono essere più o meno operativi, avendo a conoscenza dettagliata di un particolare aspetto, ma non una visione d'insieme e viceversa. 
+
+Queste interviste portano ad un acquisizione che richiede un ulteriore acquisizione per raffinare i dati ottenuti, quindi è necessario gestire accuratamente quello che 
+si raccoglie da diverse tipologie di utenti. \`{E} utile realizzare esempi, ovvero analisi 
+di consuetudine e coerenza, per mettere in evidenza le possibili inconsistenze in ciò che viene descritto e si prova a chiedere al cliente definizioni e classificazioni per disambiguare più concetti, cercando di 
+evidenziare aspetti fondamentali da aspetti marginali. 
 Insieme al cliente si chiede di determinare definizioni e classificazioni, e si prova a determinare aspetti essenziali rispetto a quelli marginali. 
 
 Tutto ciò che viene raccolto da queste interrogazioni viene essere inserito in una documentazione descrittiva, scegliendo il giusto livello di astrazione. 
-Standardizzando la struttura delle frasi, suddividendole in frasi semplice. Si separano le frasi sui dati dalle operazioni sui dati. Una volta ottenuti i dati ci si 
+Standardizzando la struttura delle frasi, suddividendole in frasi semplice. Si separano le frasi sui dati dalle operazioni sui dati. Una volta ottenuti i dati che si vuole gestire ci si 
 preoccupa che i dati siano definiti in maniera corretta. 
 
-Vanno organizzati termini e concetti tramite un glossario. Questi rappresentano entità e relazioni nel modello. Si individuano sinonimi ed omonimi per semplificare il 
-linguaggio. Si rende esplicito il riferimento tra i vari termini. E si riorganizza tra concetti. 
+Vanno organizzati termini e concetti tramite un glossario. Questi rappresentano entità e relazioni nel modello concettuale. Si individuano sinonimi ed omonimi per semplificare ed unificare il 
+linguaggio. Si rende esplicito il riferimento tra i vari termini e si riorganizza tra i concetti. 
 
 Per ristruttura in gruppi omogenei la documentazione si individuano frasi di carattere generale, e si cercano di individuare tutte le frasi relative ad uno specifico 
 concetto, e si dividono rispetto a questi concetti. 
@@ -923,12 +930,142 @@ concetto, e si dividono rispetto a questi concetti.
 Sulla base di questo si prova a determinare quale costrutti assegnare in base alle caratteristiche dei concetti. Se hanno proprietà significative e 
 descrive oggetti con esistenza autonoma si rappresentano con entità. 
 
+Si strutturano i requisiti in gruppi di frasi omogenee differenziando frasi di carattere generale, cercando tra i requisiti informazioni che si riferiscono allo stesso concetto ed unendole nello stesso gruppo. Si prova 
+quindi a mettere insieme una descrizione per provare ad individuare macro-concetti e proprietà relative. Dopo aver identificato le frasi relative a questi concetti ed averle messe in ordine nei rispettivi 
+gruppi, bisogna definire un modello entità-relationship, realizzando un glossario dei termini per provare a schematizzare questo modello. Per ciascuno di questi si realizza una concisa e precisa descrizione, 
+tenendo conto dei termini usati per identificare il concetto. Si può iniziare ad identificare i collegamenti tra i vari concetti, cominciando a coordinare tra di loro le varie informazioni. 
+Bisogna in seguito determinare quale costrutto del modello ER rispecchia al meglio le specifiche di questi determinati concetti individuati. Si pul rispondere solamente se sono definiti i costrutti e le loro 
+relazioni. 
+Se un costrutto ha proprietà significative e descrive oggetti con esistenza autonoma, viene rappresentato da un'entità. Se è semplice e non ha proprietà è un attributo. Se correla due o più concetti, sarà una 
+relationship. Se un concetto descrive un caso particolare di un altro si rappresenta come generalizzazione. 
 
-Alcuni oggetti possono ripetersi in concetti diversi 
+\subsubsection{Pattern su Schemi Concettuali}
 
-%% TODO add lezione 15/11/24
+A questo punto si comincia a costruire lo schema ER, si può pensare alla presenza di pattern che si ripetono in contesi diversi, soluzioni progettuali a problemi comuni, largamente usati nell'ingegneria software. 
+Permettono di semplificare questo processo, poiché si possono adattare a realtà diverse, se si riesce ad identificare il pattern corretto. 
+Un concetto con un attributo che si rivela essere un'esistenza autonoma può essere reificato realizzando un entità collegata con una relationship a quella di partenza:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{reificazione_attributo.pdf}%
+\end{figure}
 
-\subsection{Progettazione logica}
+Inizialmente senza abbastanza requisiti si può pensare che il concetto non ha proprietà autonome e quindi si realizza come un attributo, mentre in seguito ad ulteriori acquisizioni si 
+considera un'esistenza autonoma quindi si implementa in questo modo, per tenere conto della relazione al concetto di partenza. 
+
+
+Un altro costrutto molto comune è chiamato ``part-of'', dove una delle entità è parte dell'altra, la prima entità è composta da più occorrenze della seconda entità:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{part_of.pdf}%
+\end{figure}
+
+La seconda entità può avere un identificatore esterno rappresentato dall'entità di cui è parte, oppure può avere un identificatore interno, e quindi non necessariamente appartenere ad un'occorrenza 
+dell'altra entità, ovvero quando ha un'esistenza autonoma. 
+
+L'identificatore esterno ha senso solo se la relazione è obbligatoria, se ha cardinalità $(1,1)$. 
+
+
+Un altro pattern simile si applica quando un concetto astratto viene concretizzato da un altro concetto. Quindi si ha un'entità che rappresenta il concetto astratto ed un altra entità che 
+rappresenta il concetto reale, quest'ultima è un'occorrenza della prima entità. Questo pattern si chiama ``istance-of'':
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{istance_of.pdf}%
+\end{figure}
+
+In molti casi si comincia ad identificare una relationship binaria, con un certo numeri di attributi, ma è possibile che questa non modelli correttamente la realtà di interesse, poiché è possibile 
+che sia necessaria un'istanza della relationship tra le stesse due occorrenze delle entità, ma con valore di attributi differenti. Questo comporta una reificazione della relationship binaria, 
+in un'entità con un identificatore esterno composto dalle due relazioni alle due entità di partenza, ed all'attributo per cui differiscono. Oppure tramite identificatore interno solamente da un 
+valore univoco inserito, diverso dall'attributo per cui si vogliono differenziare. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{reificazione_relationship.pdf}%
+\end{figure}
+
+
+Analogamente al caso precedente, se è presente una relationship ricorsiva, non è possibile esistano due istanze della relationship con le stesse due occorrenze dell'entità, questo si può 
+risolvere promuovendo la relationship ad entità ed inserendo due nuove relazioni per i due ruoli che può assumere l'entità di partenza rispetto alla vecchia relationship. La relationship 
+promossa può avere un identificatore esterno oppure interno come nel caso precedente. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[trim={0.4cm 0 0 0},scale=1.2]{reificazione_relationship_ricorsiva.pdf}%
+\end{figure}
+
+Analogamente ad un'entità è possibile reificare un attributo di una relationship, 
+quando per la stessa relazione tra due occorrenze bisogna diversi valori 
+per l'attributo. Si effettua promuovendo la relazione ad un'entità, collegandola 
+all'attributo promosso ad entità tramite un'ulteriore relazione:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{reificazione_attributo_relationship.pdf}%
+\end{figure}
+
+Per realizzare un caso particolare di un concetto, si può utilizzare la generalizzazione. La 
+generalizzazione è molto utile per definire la storicizzazione di un concetto, permette 
+di esprimere diverse versioni dello stesso concetto, specificando un campo attributo per 
+le entità storiche la loro data di fine validità:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{storicizzazione_concetto.pdf}%
+\end{figure}
+
+Questo può verificarsi anche con due relazioni che rappresentano una un legame corrente, mentre 
+l'altra un legame passato tra le due entità. Per risolvere questo problema con la storicizzazione 
+bisogna prima reificare queste due relazioni ad entità e poi effettuare la generalizzazione. Utilizzare 
+una relazione che tiene conto del legame passato tra queste due entità non è sufficiente poiché 
+è possibile che abbiano avuto un legame più volte in passato, ed una relazione non può 
+rappresentare questo particolare. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{storicizzazione_concetto_relazione.pdf}%
+\end{figure}
+
+Un concetto può evolversi nel tempo e cambiare in modo considerevole da dover essere rappresentato 
+come un concetto a sé. Si può rappresentare come un sottoinsieme del concetto originario, 
+tramite una generalizzazione parziale. 
+
+Una relazione ternaria molto probabilmente è un errore del modello, bisogna verificare 
+se la relazione non stia verificando un'entità che ha relazioni con le tre entità della 
+relazione. Oppure se è possibile scomporla in due relazioni tra le tre entità. 
+
+\begin{figure}[H]%
+    \centering
+    \includegraphics[scale=1.25]{reificazione_relationship_ternaria.pdf}%
+\end{figure}
+
+\subsubsection{Strategie di Progetto}
+
+Avendo a disposizione tutte queste informazioni ottenuto tramite interviste ed 
+approfondimenti, bisogna definire un criterio con il quale si realizza questo schema 
+concettuale. Si possono utilizzare diverse strategie:
+\begin{itemize}
+    \item ``Top-Down'': dal generale o astratto si espande verso i dettagli;
+    \item ``Bottom-Up'': dai dettagli risale per avere una visione d'insieme;
+    \item ``Inside-Out'': la strategia più semplice per piccoli progetti. Si comincia dagli elementi centrali per poi espandere verso l'esterno. 
+\end{itemize}
+
+Una strategia inside-out è la strategia utilizzata negli esercizi proposti durante il corso. 
+Nella pratica si utilizza una strategia mista, che richiede molta esperienza. Si parte da 
+uno schema scheletro che si decompone, in seguito si raffina e si espande in varie direzioni per 
+espandere tra di loro i veri pezzi. In questo schema scheletro vengono individuati gli 
+elementi pià importanti, definiti dai committenti come concetti cruciali oppure individuati durante le interviste ed ulteriori analisi. Questi sono i concetti più importanti e viene realizzato 
+un semplice schema concettuale con questi elementi generali. Dopo averlo generato si effettuano diversi passi iterativi aggiungendo e raffinando questo schema iniziale sulla base delle 
+specifiche dei concetti, aggiungendoli in caso per descrivere specifiche non rappresentate. 
+Dopo aver generato lo schema bisogna verificarne la qualità ed eventualmente modificarlo. Lo schema deve essere corretto, non ci devono essere elementi paradossali, deve essere completo, in 
+grado di rappresentare tutta la realtà in modo minimale, ovvero con il numero minore di elementi. Inoltre deve essere leggibile poiché è uno strumento di interazione con il committente. 
+
+Sono presenti molti requisiti, e può essere utile procedere in maniera procedurale. Si decompongono i requisiti con riferimento nello schema scheletro, ed in seguito integrare i vari 
+sottoschemi realizzati con riferimento a questi diversi requisiti, sempre riferendosi allo schema scheletro, mettendoli in relazione tra di loro. Per ognuno di questi settori bisogna identificare 
+un passo base decomponendo i requisiti e dei successivi passi iterativi per effettuare queste integrazioni. 
+
+Spesso dopo aver identificato uno schema scheletro ci si concentra su una sua porzione, identificando a sua volta un ulteriore schema scheletro. 
+
+%% TODO ?? esempio fine lezione 15/11 (rec & ppt: esempio "società di formazione")
+
+\subsection{Progettazione Logica}
 
 %% TODO add inizio lezione 22/11/24
 

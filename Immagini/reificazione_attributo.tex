@@ -1,0 +1,42 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows.meta}
+\begin{document}
+\begin{tikzpicture}
+    \draw
+
+    %%* Attributi:
+    %%  node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize A}
+    %%? Distanza orizzontale: E -(0.25,0.x)- A
+    %%? Distanza verticale: E -(0,x * 0.22)- A
+
+    %%* Cardinalità:
+    %%  node[below right]{\scriptsize $(0,N)$}
+    %%  node[above right]{\scriptsize $(0,N)$}
+    %%  node[midway, above]{\scriptsize $(0,N)$}
+
+    %%* Relazione:
+    %%  node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=90](r1){}
+    %%  node[draw, diamond, shape aspect=2, inner sep=0.2pt, anchor=180](r2){R2}
+
+    %%* Entità:
+    %%  node[draw, rectangle, anchor=90](e1){}
+    %%? Distanza verticale: E -(0.3)- R -(0.3) E
+    %%? Distanza orizzontale: E -(0.75)- R -(0.75)- E
+
+    (0,0)node[draw, rectangle, anchor=90](e1){Entità}
+    (e1.110)--++(0,0.66)node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize Attributo 1}
+    (e1.90)--++(0,0.44)node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Attributo 2}
+    (e1.70)--++(0,0.22)node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Attributo 3}
+
+
+    (0,-1.5)node[draw, diamond, shape aspect=2, inner sep=0.2pt, anchor=90](r1){\small E-A}
+    (r1.180)--++(-0.65,0)node[draw, rectangle, anchor=0](e1){Entità}
+    (e1.100)--++(0,0.44)node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize Attributo 1}
+    (e1.80)--++(0,0.22)node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Attributo 2}
+    (r1.0)--++(0.65,0)node[draw, rectangle, anchor=180](e1){Attributo 3}
+    (e1.100)--++(0,0.44)node[draw, circle, inner sep=1pt, fill=black]{}node[above]{\footnotesize Attributo 4}
+
+    ;
+\end{tikzpicture}
+\end{document}
