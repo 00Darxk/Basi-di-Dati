@@ -721,62 +721,6 @@ dall'entità versione.
 
 \clearpage
 
-\section{Esercitazione dell'8 Novembre e 2 Dicembre}
-
-\subsection{Domanda 1}
-
-Considerare i quattro schemi seguenti:
-\begin{figure}[H]%
-    \centering%
-    \includegraphics[scale=1.4]{domanda_8-11-24.pdf}%
-\end{figure}
-
-Rispondere alle domande seguenti con un sì o un no nella casella:
-\begin{center}
-    \begin{tabular}{|c|c|c|c|c|}
-        \hline
-        & S. 1 & S. 2 & S. 3 & S. 4\\
-        \hline
-        Possono esistere due divisioni con lo stesso nome, in reparti diversi? & Sì & No & No & No\\
-        \hline
-        Possono esistere due reparti con lo stesso nome, in divisioni diverse? & No & No & Sì & No\\
-        \hline
-        Possono due divisioni appartenere ad uno stesso reparto? & Sì & No & No & Sì\\
-        \hline
-        Possono due reparti appartenere alla stessa divisione? & No & Sì & Sì & Sì\\
-        \hline        
-    \end{tabular}
-\end{center}
-
-\begin{enumerate}
-    \item Negli ultimi tre schemi la divisione viene identificata univocamente dal nome, quindi non è possibile. Al contrario per il primo schema dove una divisione viene identificata dal proprio nome e dall'appartenenza ad un reparto. 
-    \item Per il terzo schema, un reparto viene identificato sia dal nome che dall'appartenenza ad una certa divisione quindi è possibile. Per tutti gli altri schemi invece ciò non è possibile poiché sono identificati unicamente dal loro nome. 
-    \item Per gli schemi due e tre questo non è possibile poiché la cardinalità della relationship non permette l'appartenenza di più di una divisione ad un reparto. Negli schemi uno e quattro invece è possibile poiché la cardinalità è uno a molti, la prima, e molti a molti, la seconda. 
-    \item Per gli ultimi tre schemi questo è possibile poiché la cardinalità è sempre molti ad uno o a molti, per l'entità ``Divisione''. Mentre nel primo schema può avere solo un'appartenenza a reparto. 
-\end{enumerate}
-
-\subsection{Domanda 2}
-
-In relazione agli schemi precedenti, realizzare un modello relazionale:
-\begin{enumerate}
-    \item Divisione(\underline{Nome}, \underline{Reparto}), Reparto(\underline{Nome});
-    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}, Divisione);
-    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}, \underline{Divisione});
-    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}), Appartenenza(\underline{Divisione}, \underline{Reparto})
-\end{enumerate}
-
-Nel primo schema si utilizza una relazione divisione con chiave nome ed il reparto di appartenenza con cui ha un vincolo di integrità referenziale, 
-mentre la relazione reparto contiene solo la chiave nome. Nel secondo schema si ha una relazione divisione con chiave nome, ed una relazione reparto 
-con chiave nome, ed un vincolo di integrità referenziale divisione con la relazione divisione. Il terzo schema produce una relazione identica, 
-ma con l'attributo divisione della relazione reparto anch'esso chiave. Nell'ultimo schema sono necessarie tre relazioni poiché la relationship ha 
-cardinalità molti a molti, e bisogna rappresentarla mediante un'ulteriore relazione appartenenza, con chiave divisione e reparto, con un 
-vincolo di integrità referenziale con le rispettive relazioni. Non si inserisce l'attributo divisione in reparto, poiché essendo una relazione 
-molti a molti, rappresenterebbe una sola delle divisioni in relazione. 
-
-%% TODO add 19 luglio 2021 domanda 3 spettacolo - persona: ridondanza (rec 2/12)
-
-\clearpage
-
 \section{Esercitazione del 18 Novembre}
 
 \subsection{Domanda 1}
@@ -1094,11 +1038,11 @@ Quindi non è conveniente avere ridondanza.
 \subsection{Esercizio 1}
 
 Progettare lo schema della base di dati relazionale per gestire i dati della realtà descritta dallo schema concettuale in figura:
-%% TODO img ex 1 compito B 25 gen 2018
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{esercizio_1_29-11-24.pdf}%
+\end{figure}
 
 Si comincia dall'entità nazione senza identificatori esterni, come relazione con con gli stessi attributi e chiave CN. L'entità città rappresenta una 
 relazione con chiave CC e CN con un vincolo di integrità referenziale con nazione. La relationship C-N è già implicitamente descritta 
@@ -1107,7 +1051,7 @@ sede per ogni città, quindi si ha un vincolo di integrità referenziale tra la 
 all'entità persona con affiliazione, senza attributi, ma un identificatore esterno sia con istituzione che con città. Si inserisce quindi 
 la relazione persona, con un codice chiave ed un nome, la relazione persona con affiliazione ha come chiave persona ed istituzione, con un vincolo di 
 integrità referenziale alle chiavi di persona ed istituzione. Questo schema rappresenta una ristrutturazione, per permettere questa traduzione, 
-infatti quest'entità persona con affiliazione poteva essere uan generalizzazione di persona. Si procede con l'entità sessione, questa è collegata 
+infatti quest'entità persona con affiliazione poteva essere una generalizzazione di persona. Si procede con l'entità sessione, questa è collegata 
 da una relazione molti a molti con persona con affiliazione, quindi è necessaria un'altra relazione chiamata intervento. 
 Si ha un'entità convegno con un'identificatore esterno con l'entità serie tramite la relazione S-C, quindi si inserisce prima quest'ultima 
 relazione. Dentro la relazione sessione va inserita anche la chiave di convegno. La relazione convegno ha attributi data, chiave anno e codice serie, 
@@ -1123,21 +1067,53 @@ materia.
     \item Persona Con Affiliazione(\underline{Persona}, \underline{Istituzione})
     \item Sessione(\underline{Codice}, Titolo, Ora);
     \item Intervento(\underline{Sessione}, \underline{Persona}, \underline{Istituzione});
-    \item Convegno(Data, \underline{Anno}, \underline{Serie}, Città, Nazione)
-    \item Serie(\underline{Codice}, Titolo, Materia)
-    \item Materia(\underline{Codice}, Materia)
+    \item Convegno(Data, \underline{Anno}, \underline{Serie}, CC, CN)
+    \item Serie(\underline{Codice}, Titolo, CM)
+    \item Materia(\underline{CM}, Materia)
 \end{itemize}
 
 \subsection{Esercizio 2}
 
 Con riferimento all'esercizio precedente, per le due porzioni di schema in figura mostrare le tabelle risultati dalla progettazione logica con 
 alcune istanze(ennuple):
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{esercizio_2_29-11-24.pdf}%
+\end{figure}
 
-%% TODO fare prima parte ex
+Per il primo schema si hanno:
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline\multicolumn{3}{|c|}{Serie}\\
+        \hline
+        \underline{Codice} & Titolo & CM \\
+        \hline
+        1 & A & 00\\
+        \hline
+        2 & A & 00\\
+        \hline
+        3 & A & 01\\
+        \hline
+        4 & B & 01\\
+        \hline
+        5 & C & 02\\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline\multicolumn{2}{|c|}{Materia}\\
+        \hline
+        \underline{CM} & Materia\\
+        \hline
+        00 & a\\
+        \hline
+        01 & b\\
+        \hline
+        02 & c\\
+        \hline
+        03 & d\\
+        \hline
+    \end{tabular}
+\end{center}
 
 Si considerano le tabelle corrispondenti alla relazioni del secondo schema:
 \begin{center}
@@ -1169,15 +1145,13 @@ Si considerano le tabelle corrispondenti alla relazioni del secondo schema:
 
 \subsection{Esercizio 3}
 
-%% 25 gen 2018 A
-
 Lo schema concettuale seguente rappresenta un insieme di corsi ed un insieme di iscrizioni a tali cosi. ello schema l'attributo ricavo è 
 ridondante, poiché può essere ottenuto moltiplicando il costo del corso per il numero di iscritti, cioè il prodotto del valore dell'attributo costo di ogni 
 occorrenza dell'entità corso per il numero di occorrenze dell'entità persona a cui essa è correlata tramite la relationship iscrizione:
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{esercizio_3_29-11-24.pdf}%
+\end{figure}
 
 Valutare se convenga o meno mantenere la ridondanza, assumendo corso abbia $C_c=1000$ occorrenze, persona ne abbia $C_p=3000$ ed iscrizione 
 $C_i=30000$, e quindi che ogni corso abbia mediamente $C_{ci}=30$ iscritti, e che il carico applicativo includa le operazioni principali seguenti:
@@ -1205,8 +1179,121 @@ Quindi non è conveniente avere ridondanza.
 
 \subsection{Esercizio 4}
 
-%% TODO 7 feb 2017 compito A ex 3
+Mostrare uno schema concettuale per una realtà i cui dati siano organizzati per mezzo del seguente 
+schema relazionale. Si utilizza l'asterisco per indicare la ammissibilità dei valori nulli.
 
-%% alternativa alla generalizzazione con relazione e identificatore esterno tra dipendente e professore 
+\begin{itemize}
+    \item Dipendente(\underline{Codice Fiscale}, Cognome, Nome);
+    \item Professore(\underline{Codice Fiscale}, Qualifica, Anzianità, Dipartimento*), con vincolo di integrità referenziale fra Codice Fiscale e la relazione Dipendente e fra Dipartimento e la relazione Dipartimento;
+    \item Dipartimento(\underline{Codice}, Nome, Indirizzo);
+    \item Corso di Studio(\underline{Codice}, Nome, Dipartimento, Coordinatore), con vincolo di integrità referenziale fra Dipartimento e la relazione Dipartimento e fra Coordinatore e la relazione Professore;
+    \item Collaborazione(\underline{Corso di Studio}, \underline{Dipartimento}, \underline{Professore}, Tipo), con vincolo di integrità referenziale fra Corso di Studio, Dipartimento e la relazione Corso di Studio e fra Professore e la relazione Professore;
+    \item Corso(\underline{Codice}, Materia, Docente), con vincolo di integrità referenziale fra Materia e la relazione Materia e fra Docente e la relazione Professore;
+    \item Materia(\underline{Sigla}, Nome, Semestre);
+\end{itemize}
+
+Partendo dalla relazione materia, si rappresenta un'entità con tre attributi di sigla, nome e semestre, di cui sigla è chiave. Si mette in relazione con l'entità corso, di attributi codice, con cardinalità 
+molti ad uno, obbligatoria, poiché non viene specificato che l'attributo materia possa contenere valori nulli. Analogamente per l'entità docente da creare, si considerano docente e professore sinonimi, di 
+attributi codice fiscale, qualifica ed anzianità, l'attributo dipartimento nel modello relazionale verrà realizzato in seguito con una relationship con l'entità dipartimento. L'entità professore condivide la 
+chiave con l'entità dipendente, che non è legata a nessun'altra entità del modello, questi inoltre rappresentano due concetti di cui uno è sottoinsieme dell'altro, poiché ogni professore è un dipendente, ma 
+non ogni dipendente è professore. Questo si pul implementare utilizzando una generalizzazione. Alternativamente si potrebbe utilizzare una relazione tra queste due entità con un identificatore esterno tra 
+professore e dipendente. Si inserisce l'entità dipartimento, in relazione con professore con una cardinalità molti ad uno. Si può rappresentare l'entità corso di studio legata da una relationship uno a molti, obbligatoria 
+con l'entità dipartimento. L'attributo coordinatore si rappresenta come una relationship tra corso di studio e professore, con cardinalità uno a molti, obbligatoria, poiché non ammette valori nulli. La relazione 
+collaborazione si può rappresentare facilmente come relationship molti a molti per permettere di avere possibili ennuple diverse, tra professore e corso di studio, con una attributo tipo. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{esercizio_4_29-11-24.pdf}%
+\end{figure}
+
+\clearpage
+
+\section{Esercitazione dell'8 Novembre e 2 Dicembre}
+
+\subsection{Esercizio 1}
+
+Considerare i quattro schemi seguenti:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.4]{domanda_8-11-24.pdf}%
+\end{figure}
+
+Rispondere alle domande seguenti con un sì o un no nella casella:
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        & S. 1 & S. 2 & S. 3 & S. 4\\
+        \hline
+        Possono esistere due divisioni con lo stesso nome, in reparti diversi? & Sì & No & No & No\\
+        \hline
+        Possono esistere due reparti con lo stesso nome, in divisioni diverse? & No & No & Sì & No\\
+        \hline
+        Possono due divisioni appartenere ad uno stesso reparto? & Sì & No & No & Sì\\
+        \hline
+        Possono due reparti appartenere alla stessa divisione? & No & Sì & Sì & Sì\\
+        \hline        
+    \end{tabular}
+\end{center}
+
+\begin{enumerate}
+    \item Negli ultimi tre schemi la divisione viene identificata univocamente dal nome, quindi non è possibile. Al contrario per il primo schema dove una divisione viene identificata dal proprio nome e dall'appartenenza ad un reparto. 
+    \item Per il terzo schema, un reparto viene identificato sia dal nome che dall'appartenenza ad una certa divisione quindi è possibile. Per tutti gli altri schemi invece ciò non è possibile poiché sono identificati unicamente dal loro nome. 
+    \item Per gli schemi due e tre questo non è possibile poiché la cardinalità della relationship non permette l'appartenenza di più di una divisione ad un reparto. Negli schemi uno e quattro invece è possibile poiché la cardinalità è uno a molti, la prima, e molti a molti, la seconda. 
+    \item Per gli ultimi tre schemi questo è possibile poiché la cardinalità è sempre molti ad uno o a molti, per l'entità ``Divisione''. Mentre nel primo schema può avere solo un'appartenenza a reparto. 
+\end{enumerate}
+
+\subsection{Esercizio 2}
+
+In relazione agli schemi precedenti, realizzare un modello relazionale:
+\begin{enumerate}
+    \item Divisione(\underline{Nome}, \underline{Reparto}), Reparto(\underline{Nome});
+    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}, Divisione);
+    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}, \underline{Divisione});
+    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}), Appartenenza(\underline{Divisione}, \underline{Reparto})
+\end{enumerate}
+
+Nel primo schema si utilizza una relazione divisione con chiave nome ed il reparto di appartenenza con cui ha un vincolo di integrità referenziale, 
+mentre la relazione reparto contiene solo la chiave nome. Nel secondo schema si ha una relazione divisione con chiave nome, ed una relazione reparto 
+con chiave nome, ed un vincolo di integrità referenziale divisione con la relazione divisione. Il terzo schema produce una relazione identica, 
+ma con l'attributo divisione della relazione reparto anch'esso chiave. Nell'ultimo schema sono necessarie tre relazioni poiché la relationship ha 
+cardinalità molti a molti, e bisogna rappresentarla mediante un'ulteriore relazione appartenenza, con chiave divisione e reparto, con un 
+vincolo di integrità referenziale con le rispettive relazioni. Non si inserisce l'attributo divisione in reparto, poiché essendo una relazione 
+molti a molti, rappresenterebbe una sola delle divisioni in relazione. 
+
+\subsection{Esercizio 3}
+
+Nello schema seguente l'attributo ricavo è ridondante, poiché può essere calcolato dalle relative prenotazioni: 
+
+\begin{figure}[H]%
+    \centering
+    \includegraphics[scale=1.25]{domanda_2-12-24.pdf}%
+\end{figure}
+
+Valutare se convenga o meno mantenere la ridondanza, assumendo che ogni occorrenza di Spettacolo partecipi mediamente a $N=10$ occorrenze di Prenotazione e che il carico applicativo includa 
+come operazioni principali le seguenti:
+\begin{enumerate}
+    \item Calcolo del ricavo di uno spettacolo, dato il codice, con frequenza $f_1 = 10$;
+    \item Inserimento di una prenotazione, per una persona già nella base di dati e di cui è dato il codice fiscale, per uno spettacolo di cui è dato il codice, con frequenza $f_2 = 10000$. 
+    In sostanza, questa operazione richiede l'inserimento di una occorrenza di Prenotazione. 
+\end{enumerate}
+Considerare i costi delle letture e scritture delle occorrenze di entità e relationship e considerare il costo delle scritture pari a quello delle letture. 
+
+La prima operazione con ridondanza consiste nella singola lettura dell'attributo ricavo dell'entità spettacolo, la seconda 
+operazione consiste in una lettura di spettacolo ed una scrittura su prenotazione ed una su spettacolo. Il 
+costo complessivo delle operazione con ridondanza è quindi:
+\begin{equation*}
+    C=c_1f_1+c_2f_2=1_\mathrm{r}\cdot10+(1_\mathrm{r}+2_\mathrm{w})\cdot10000=30010
+\end{equation*}
+
+Senza ridondanza la prima operazione necessita di leggere il prezzo, e le dieci occorrenze di 
+prenotazione per leggerne il numero dei biglietti acquistati. Mentre la 
+seconda operazione richiede solamente una scrittura dell'occorrenza di prenotazione:
+\begin{equation*}
+    C=c_1f_1+c_2f_2=(1_\mathrm{r}+10\cdot1_\mathrm{r})\cdot10+1_\mathrm{w}\cdot10000=10110
+\end{equation*}
+
+Quindi è più conveniente rimuovere la ridondanza. 
+
+\clearpage
 
 \end{document}
