@@ -1109,4 +1109,84 @@ entrambe le ricorrenze della stessa relazione.
 Se la cardinalità minima è zero, l'attributo deve ammettere valori nulli. 
 Se l'identificatore esterno è anche la relationship si inserisce come attributo nella relazione. 
 
+\subsection{Normalizzazione}
+
+\`{E} possibile definire forme normali per basi di dati relazionali per garantire qualità, o meglio garantiscono l'assenza di certi difetti. 
+Potrebbe essere necessario utilizzare tabelle molto grandi e quindi si utilizzano strumenti di calcolo come fogli Excel. Anche su questi strumenti di calcolo si può 
+incorrere in problemi come per ogni basi di dati. 
+Alcuni tipi di anomalie sono la ridondanza di informazioni, tra varie ennuple che si riferiscono allo stesso concetto. 
+Quando bisogna aggiornare questo attributo su una ennupla, è necessario quindi aggiornare il suo valore in tutte le ennuple in cui compare, poiché è ridondante. Una modifica 
+atomica viene quindi realizzata in più modifiche. Quando si elimina un'ennupla, bisogna esprimere il valore della chiave altrimenti non sarebbe possibile inserirlo, e 
+se si elimina uno di questi valori non è più possibile rappresentare l'ennupla, e quindi non si può descrivere una parte della realtà di interesse. Analogamente non si 
+può inserire un'ennupla senza conoscere i valori delle sue chiavi. 
+
+Problemi di questo tipo si generano quando si rappresentano concetti di diverso tipo in una stessa relazione. Le forme normali consentono la separazione dei vari 
+concetti su relazioni diverse. La presenza di problemi deve essere formalizzata. 
+
+Data una relazione $r$ su $R(X)$, dove si ha $Y,Z\subseteq X$, si definisce il vincolo di dipendenza funzionale $Y\to Z$ se è soddisfatta per ogni 
+coppia di ennuple $t_1$ e $t_2$ in $r$ tali che se $t_1[Y]=t_2[Y]$ allora sono uguali anche su $Z$: $t_1[Z]=t_2[Z]$. 
+Una dipendenza funzionale è sempre soddisfatta su una chiave poiché i valori sono sempre diversi tra di loro. 
+
+In una relazione alcune di queste dipendenze funzionali potrebbero creare problemi, le anomalie su chiavi non generano problemi nella relazione, poiché si possono 
+ripetere una singola volta, poiché appunto sono chiavi. 
+In questo corso si considerano solo relazioni in forma normale di Boyce e Codd, BCNF, ovvero relazioni dove non si verificano anomalie descritte precedentemente, 
+ovvero quando tutte le dipendenze, FD, sono legate alle chiavi. 
+
+Per ogni chiave si può pensare che nella relazione c'è una dipendenza funzionale tra la chiave e tutti gli attributi, in alcuni casi per ``transitività''. 
+\`{E} sufficiente considerare dipendenze non ``banali'', dove gli insiemi $Y$ e $Z$ sono disgiunti tra di loro. 
+Si può definire formalmente la forma normale di Boyce e Codd se per ogni dipendenza funzionale non banale $X\to Y$, definita su $r$, l'insieme $X$ contiene 
+una chiave $K$ di $r$. 
+
+Ma su relazioni molto grandi non è semplice individuare chiavi o superchiavi della relazione. Questo si può effettuare in due modi, con una verifica o con una ricerca. 
+
+Nella verifica si considera un insieme $Y$, e si individua quali attributi dipendono da questo insieme, ovvero su quali attributi le due ennuple hanno gli stessi valori, 
+se hanno gli stessi valori su $Y$. 
+
+La ricerca delle chiavi non è sempre semplice, su relazioni complesse algoritmi di ricerca di chiavi si possono dimostrare avere una complessità esponenziale. 
+Normalmente per la ricerca delle chiavi conviene procedere con l'intuizione, sull'ordine degli attributi, oppure da ``suggerimenti'' che vengono da 
+una comprensione del dominio applicativo. 
+
+Per rendere una relazione in forma normale si può sperare sulla base delle forme normali, effettuando una decomposizione per ogni dipendenza funzionale, non 
+banale. Il processo che permette di trasformare schemi relazioni, che presentano certe anomalie, in forme normali si chiama normalizzazione. Queste non rappresenta 
+una metodologia di progettazione, ma come una tecnica di verifica dei risultati di progettazione. Poiché fornisce una chiave di interpretazione delle scelte nella 
+definizione di uno schema concettuale ed anche nella traduzione. 
+Un modo semplice per normalizzare una relazione si tratta di introdurre una nuova relazione per ogni dipendenza funzionale. Più precisamente si può realizzare una nuova 
+relazione per ogni dipendenza funzionale con lo stesso primo membro. 
+
+Si conviene partire dalla relazione data ed effettuare operazioni di decomposizione, più complessa di un processo di sintesi di nuove relazioni. 
+Una procedura intuitiva è valida solo in casi semplici, dove per ogni dipendenza $X\to Y$, che viola la BCNF, si definire una relazione $XY$, e si elimina il secondo membro  
+dalla relazione originaria. Si procede iterativamente su ogni nuova relazione create fino ad ottenere un insieme di relazioni in forma normale, equivalente alla 
+relazione originaria. 
+
+%% TODO add to ex ?
+Si considera la relazione con le dipendenze funzionali seguenti:
+\begin{itemize}
+    \item $R$(Codice Corso, Anno, Titolo, Crediti, Docente, Nome Docente, Semestre, Dipartimento, Indirizzo);
+    \item Codice Corso $\to$ Titolo, Crediti, Dipartimento;
+    \item Codice Corso, ANno $\to$ Docente, Semestre;
+    \item Docente $\to$ Nome Docente;
+    \item Dipartimento $\to$ Indirizzo. 
+\end{itemize}
+
+Se si adottasse la tecnica precedente su questa relazione, si creerebbe una relazione dove si perde la relazione fra gli attributi Dipartimento ed Indirizzero, di 
+interesse. Quindi bisogna modificare la procedura. 
+Si considera una procedura dove per ogni dipendenza $X\to Y$ che viola la BCNF si genera una relazione $XZ$ dove $Z$ è l'insieme degli attributi che 
+dipendono da $X$, eventualmente per transitività, e si eliminano dalla relazione originaria. Anche il concetto di transitività andrebbe a sua volte definito 
+formalmente, ma in molti casi è intuitivo. 
+%% TODO stesso ex con procedura sopra elencata
+%% TODO add esercizi schema a lezione
+
+Ma questa procedura non conserva le dipendenze, quindi non è una procedura perfetta ed in alcuni casi non funziona. La normalizzatone non funziona sempre. Una 
+decomposizione in BCNF, senza perdita e che conserva le dipendenze non è sempre realizzabile. Ci sono realtà difficili da modellare. Per questo la normalizzazione è 
+uno strumento di verifica e non di progettazione. 
+
+Una condizione sufficiente per la decomposizione senza perdita è che gli attributi comuni nelle decomposizione sono chiave per almeno una delle proiezioni. Questa è 
+solo una condizione sufficiente, non necessaria. La seconda condizione sufficiente impone che le componenti 
+delle ennuple siano indipendenti tra di loro. 
+
+%% !! corvo 
+
+\clearpage
+
+
 \end{document}
