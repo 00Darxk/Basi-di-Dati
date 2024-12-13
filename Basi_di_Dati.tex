@@ -28,6 +28,8 @@
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
+    pdftitle={Apppunti di Basi di Dati},
+    pdfauthor={Giacomo Sturm}
 }
 
 \newsavebox{\tempbox} %{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}}
@@ -1168,7 +1170,12 @@ Si considera la relazione con le dipendenze funzionali seguenti:
     \item Dipartimento $\to$ Indirizzo. 
 \end{itemize}
 
-Se si adottasse la tecnica precedente su questa relazione, si creerebbe una relazione dove si perde la relazione fra gli attributi Dipartimento ed Indirizzero, di 
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{esempio_9-12-24.pdf}%s    
+\end{figure}
+
+Se si adottasse la tecnica precedente su questa relazione, si creerebbe una relazione dove si perde il legame fra gli attributi Dipartimento ed Indirizzo, di 
 interesse. Quindi bisogna modificare la procedura. 
 Si considera una procedura dove per ogni dipendenza $X\to Y$ che viola la BCNF si genera una relazione $XZ$ dove $Z$ è l'insieme degli attributi che 
 dipendono da $X$, eventualmente per transitività, e si eliminano dalla relazione originaria. Anche il concetto di transitività andrebbe a sua volte definito 

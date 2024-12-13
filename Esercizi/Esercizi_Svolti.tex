@@ -27,6 +27,8 @@
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
+    pdftitle={Esercizi Svolti di Basi di Dati},
+    pdfauthor={Giacomo Sturm}
 }
 
 \newsavebox{\tempbox} %{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}}
@@ -1295,5 +1297,144 @@ seconda operazione richiede solamente una scrittura dell'occorrenza di prenotazi
 Quindi è più conveniente rimuovere la ridondanza. 
 
 \clearpage
+
+\section{Esercitazione del 13 Dicembre}
+
+%% TODO terzo esonero 14 feb 2019
+
+\subsection{Esercizio 1}
+
+Considerare lo schema concettuale seguente:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{ridondanza_13-12-24.pdf}%
+\end{figure}
+
+Valutare la convenienza dell'introduzione di una relationship C-F fra Cliente e Filiale oppure di una relationship 
+C-B fra Cliente e Banca oppure di entrambe. Tali relationship sono ridondanti in quanto derivabili dalla 
+concatenazione delle relationship esistenti. Considerare un carico applicativo che includa come operazioni 
+principali le seguenti:
+\begin{enumerate}
+    \item Inserimento di un nuovo rapporto fra cliente e agenzia (cioè di una occorrenza della relationship C-A), 
+    dati il codice del cliente e quello dell'agenzia, assumendo per semplicità che il cliente sia già presente e il
+    rapporto sia con una agenzia di una filiale e di una banca con cui il cliente non ha ancora rapporti (cliente,
+    agenzia, filiale e banca sono invece gi`a nella base di dati), con frequenza $f1 = 100$;
+    \item Ricerca delle filiali con cui un cliente (di cui `e dato il codice) ha rapporti, con frequenza $f_2 = 10000$;
+    \item Ricerca delle banche con cui un cliente (di cui `e dato il codice) ha rapporti, con frequenza $f_3 = 10000$ 
+\end{enumerate}
+Supporre che, mediamente, un cliente abbia rapporti con $N = 10$ agenzie, di filiali diverse di banche diverse. 
+Considerare i costi delle letture e scritture delle entità e delle relationship molti a molti (ignorando quelli delle 
+relationship uno a molti) e considerare il costo delle scritture doppio di quello delle letture. 
+
+%% TODO img con aggiunte relazioni 
+
+Per la prima operazione con ridondanza C-F bisogna effettuare due scritture ed una lettura, per la seconda operazione se è sufficiente il codice, si suppone sia 
+sufficiente se non viene specificato, sono necessarie $N$ letture, poiché mediamente ogni cliente ha rapporti con 10 filiali. Per la terza operazione bisogna 
+cercare per ogni filiale quale banche sono associate quindi bisogna effettuare 20 letture:
+
+\begin{gather*}
+    c_1=2_\text{w}+1_\text{r}=5\\
+    c_2=10_\text{r}=10\\
+    c_3=10_\text{r}+10_\text{r}=20
+\end{gather*}
+
+Si calcolano gli stessi per la ridondanza C-B, per la prima operazione bisogna scrivere l'occorrenza di C-A, e leggere la filiale corrispondente, e la banca corrispondente 
+per poi scrivere l'occorrenza di C-B, quindi due letture e due scritture. Per la seconda operazione bisogna leggere le agenzie corrispondenti per un cliente e poi leggere 
+le filiali, in media sono entrambe 10. Nell'ultimo caso bisogna effettuare solamente 10 letture sulla relazione C-B. 
+
+\begin{gather*}
+    c_1=2_\text{w}+2_\text{r}=6\\
+    c_2=20_\text{r}=20\\
+    c_3=10_\text{r}
+\end{gather*}
+
+%% TODO add senza ridondanza o entrambe 
+
+\subsection{Esercizio 2}
+
+Considera la relazione seguente:
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        Cod & Titolo & CC & Città & CN & Nazione & CM & Materia & CA & Area\\
+        \hline
+        1 & Art. & C1 & Milano & N1 & Italia & M1&Ort.&A1&Med.\\
+        \hline
+        2&Fratture&C2&Roma&N1&Italia&M1&Ort.&A1&Med.\\\hline
+        3&Cuore1028&C1&Milano&N1&Italia&M2&Card.&A1&Med.\\\hline
+        4&DB2018&C1&Monaco&N2&Germania&M3&Basi di Dati&A2&Inf.\\\hline
+    \end{tabular}
+\end{center}
+
+La relazione mostra (in forma non normalizzata) i dati di interesse in un certo anno per un insieme di convegni
+scientifici, secondo le seguenti specifiche:
+\begin{itemize}
+    \item Ogni convegno ha un codice e un titolo e si tiene una città;
+    \item Ogni città ha un nome, si trova in una nazione e ha un codice che la identifica nell'ambito della nazione;
+    \item Ogni nazione ha un codice e un nome;
+    \item Ogni convegno è relativo ad una materia specifica (ad esempio l'ortopedia) che a sua volta appartiene
+    ad un'area scientifica (ad esempio la medicina); ogni materia ha un nome e un codice che la identifica
+    univocamente;
+    \item Ogni area scientifica ha un codice e un nome. 
+\end{itemize}
+Con riferimento alle specifiche e ai dati nell'esempio:
+\begin{enumerate}
+    \item Mostrare uno schema concettuale per la realtà di interesse (rispettando le specifiche per i vari codici);
+    \item Mostrare una buona decomposizione della relazione originaria che soddisfi la BCNF (mostrare le tabelle, indicando la chiave di ciascuna con la sottolineatura)
+\end{enumerate}
+
+\subsubsection*{Domanda 2}
+La chiave sembra essere il codice, si considerano quindi le dipendenze funzionali presenti:
+\begin{itemize}
+    \item Codice $\to$ Titolo;
+    \item Codice Area $\to$ Area;
+    \item Codice Città, Codice Nazione $\to$ Città;
+    \item Codice Nazione $\to$ Nazione;
+    \item Codice Materia $\to$ Materia
+\end{itemize}
+
+\subsection{Esercizio 3}
+
+Considerare la relazione seguente:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.8]{relazione_13-12-24.pdf}%
+\end{figure}
+
+La relazione mostra (in forma non normalizzata) i dati relativi ad un insieme di voli in partenza da un aeroporto.
+Su di essa sono definite le seguenti dipendenze funzionali (ce ne sono anche altre, ma possono essere ignorate):
+\begin{itemize}
+    \item IdComp $\to$ NomeComp;
+    \item IdComp, Volo $\to$ CodDest, Orario;
+    \item IdComp, Volo, NGiorno $\to$ TipoAereo;
+    \item CodDest $\to$ Dest;
+    \item NGiorno $\to$ Giorno;
+    \item TipoAero $\to$ Costruttore. 
+\end{itemize}
+
+Con riferimento alle specifiche e ai dati nell'esempio:
+\begin{enumerate}
+    \item Mostrare la chiave o le chiavi della relazione (sulla base delle dipendenze sopra mostrate);
+    \item Mostrare uno schema concettuale per la realtà di interesse (senza aggiungere attributi);
+    \item Mostrare una buona decomposizione della relazione originaria che soddisfi la BCNF (mostrare le tabelle,
+con i dati, indicando la chiave di ciascuna con la sottolineatura).
+\end{enumerate}
+
+\subsubsection*{Domanda 1}
+
+\begin{itemize}
+    \item $R_1$(\underline{IdComp}, NomeComp);
+    \item $R_2$(\underline{IdComp}, \underline{Volo}, CodDest, Orario);
+    \item $R_3$(\underline{CodDest}, Dest);
+    \item $R_4$(\underline{IdCompt}, \underline{Volo}, \underline{NGiorno}, TipoAereo);
+    \item $R_5$(\underline{TipoAereo}, Costruttore);
+    \item $R_6$(\underline{Ngiorno}, Giorno). 
+\end{itemize}
+
+\subsection{Esercizio 4}
+
+%% TODO 14/2/19/A/1
+
 
 \end{document}
