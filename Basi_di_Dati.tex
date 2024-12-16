@@ -1191,7 +1191,38 @@ Una condizione sufficiente per la decomposizione senza perdita è che gli attrib
 solo una condizione sufficiente, non necessaria. La seconda condizione sufficiente impone che le componenti 
 delle ennuple siano indipendenti tra di loro. 
 
-%% !! corvo 
+L'uso della normalizzazione è quindi come strumento di verifica degli schemi prodotti, o come criterio di progettazione da cui si può derivare lo schema logico. 
+
+%% TODO img entità con molto attributi non omogenei
+
+Si possono effettuare analisi analoghe su schemi ER, date entità con attributi eterogenei, allo stesso modo di una relazione con molto attribuiti, è possibile 
+identificare questi attributi come una violazione della normalizzazione delle entità. 
+Quindi si possono identificare dipendenze funzionale tra gli attributi di una stessa entità e reificare questi attributi normalizzando l'entità considerata. 
+
+%% ex Fornitore: PartitaIVA $\to$ NomeFornitore, Indirizzo
+
+Si può effettuare un'analisi di normalizzazione su relationship non binarie, in modo da rappresentarla tramite entità e relationship binarie, ma questo caso è 
+più complesso rispetto a quello descritto precedente. 
+
+%% TODO img ex ppt
+
+Si possono analizzare le dipendenze funzionali della relationship come se fosse una relazione. Partendo dalla realtà di interesse si possono determinare delle ipotesi 
+per verificare la validità delle dipendenze funzionali individuate. Inoltre bisogna individuare la chiave associata alla relationship, per determinare se viola 
+la forma normale BCNF. Intuitivamente la ``chiave'' di una relationship corrisponde all'entità presenti connesse con cardinalità $(x,1)$ alla relationship. 
+
+Ragionando solo sulla normalizzazione si potrebbe arrivare a relationship ternarie, che rispettano tuttavia la forma normale. Bisogna quindi effettuare ulteriori 
+analisi, non solo sugli aspetti formali della normalizzazione, ma osservando la realtà di interesse per determinare come rappresentare eventuali relationship a più 
+di due entità. 
+Queste entità si possono dividere poiché rappresentano informazioni eterogenee su una stessa relationship, se la relazione contiene cardinalità non obbligatorie, 
+allora è possibile che questa relationship non mantenga il legame tra due entità in dipendenza funzionale. Quindi bisogna rappresentarlo come due legami diversi 
+poiché rappresentano concetti diversi. 
+
+%% TODO img ex ppt
+
+Ci possono essere decomposizioni suggerite da motivazioni diverse rispetto alla forma normale, ma comunque corrette, poiché sono decomposizioni senza perdita. 
+Questo caso considerava una relationship con una cardinalità pari ad uno con una entità. Invece può esistere una realtà dove una relationship ha cardinalità 
+molti a molti con più di due entità. Quindi in questi casi la decomposizione non avviene mediante la chiave della relationship, ma analizzando la realtà di 
+interesse ed invidiando legami più adatti per descrivere la realtà. 
 
 \clearpage
 
