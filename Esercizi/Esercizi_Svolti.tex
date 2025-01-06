@@ -18,6 +18,8 @@
 \usepackage{float}
 %\usepackage{wrapfig}
 %\usepackage[export]{adjustbox}
+\usepackage{contour}
+\usepackage[normalem]{ulem}
 \allowdisplaybreaks
 
 \setlength{\headheight}{12.0pt}
@@ -40,6 +42,12 @@
 \newcommand{\tageq}{\tag{\stepcounter{equation}\theequation}}
 \AtBeginDocument{%
   \renewcommand{\figurename}{Fig.}
+}
+\renewcommand{\ULdepth}{1.8pt}
+\contourlength{0.6pt}
+\newcommand{\myuline}[1]{%
+  \uline{\phantom{#1}}%
+  \llap{\contour{white}{#1}}%
 }
 \fancypagestyle{link}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{Sorgente del file LaTeX disponibile al seguente link: \url{https://github.com/00Darxk/Basi-di-Dati/}}}
 
@@ -70,15 +78,17 @@ Università degli Studi ``Roma Tre"}}
 \clearpage
 \pagenumbering{arabic}
 
+%% TODO ordinare rispetto ad argomenti (ex: algebra relazionale/relax, sql, e-r, normalizzazione)
+
 \section{Esercitazione del 7 Ottobre}
 
 \subsection{Esercizio 1}
 
 Si considerano le seguenti relazioni, senza valori nulli:
 \begin{itemize}
-    \item $R_1(\underline{A},B)$ con vincolo di integrità referenziale, tra $B$ e la chiave $D$ di $R_2$. Con cardinalità $M_1=500$;
-    \item $R_2(\underline{D},E,F,G)$, con vincolo di integrità referenziale, tra $F$ e $G$ e la chiave $H,P$ di $R_3$. Con cardinalità $M_2=1000$;
-    \item $R_3(\underline{H},\underline{P},Q)$, con cardinalità $M_3=200$.
+    \item $R_1(\myuline{A},B)$ con vincolo di integrità referenziale, tra $B$ e la chiave $D$ di $R_2$. Con cardinalità $M_1=500$;
+    \item $R_2(\myuline{D},E,F,G)$, con vincolo di integrità referenziale, tra $F$ e $G$ e la chiave $H,P$ di $R_3$. Con cardinalità $M_2=1000$;
+    \item $R_3(\myuline{H},\myuline{P},Q)$, con cardinalità $M_3=200$.
 \end{itemize}
 
 Determinare la cardinalità (numero di ennuple) massima e minima delle seguenti relazioni derivate:
@@ -807,8 +817,8 @@ Si considera l'entità compagnia per prima, dato che non ha identificatori ester
 attributi. Mentre l'entità volo si realizza come una relazione, dove la chiave è composta dal numero di volo e la compagnia di appartenenza del 
 volo, con un vincolo di integrità referenziale tra l'attributo codice e la relazione compagnia.  
 \begin{itemize}
-    \item Compagnia(\underline{Codice}, $\cdots$)
-    \item Volo(\underline{Codice}, \underline{Numero}, $\cdots$)
+    \item Compagnia(\myuline{Codice}, $\cdots$)
+    \item Volo(\myuline{Codice}, \myuline{Numero}, $\cdots$)
 \end{itemize}
 
 \subsection{Esercizio 2}
@@ -824,9 +834,9 @@ Si rappresenta con una relazione banca, con chiave ABI; una relazione agenzia co
 il suo attributo ABI e la relazione banca; una relazione conto corrente con chiave ABI, CAB e numero di conto, con un vincolo di integrità 
 referenziale tra ABI e banca e CAB e agenzia
 \begin{itemize}
-    \item Banca(\underline{ABI}, $\cdots$)
-    \item Agenzia(\underline{ABI}, \underline{CAB}, $\cdots$)
-    \item CC(\underline{ABI}, \underline{CAB}, \underline{NUM}, $\cdots$)
+    \item Banca(\myuline{ABI}, $\cdots$)
+    \item Agenzia(\myuline{ABI}, \myuline{CAB}, $\cdots$)
+    \item CC(\myuline{ABI}, \myuline{CAB}, \myuline{NUM}, $\cdots$)
 \end{itemize}
 
 Ci sono alcuni casi nei quali l'identificazione esterna ha un significato particolare e necessario. 
@@ -855,11 +865,11 @@ inserire come attributo all'interno di impiegato e dipartimento. Conviene scegli
 la relazione dipartimento, poiché è più corretto dato che rappresenta una proprietà di dipartimento più di una proprietà di impiegato. 
 
 \begin{itemize}
-    \item Impiegato(\underline{Codice}, Cognome, Data Afferenza*)
-    \item Progetto(\underline{Nome}, Budget)
-    \item Sede(\underline{Città}, Indirizzo)
-    \item Dipartimento(\underline{Nome}, \underline{Città}, Telefono, Direttore*)
-    \item Partecipazione(\underline{Progetto}, \underline{Impiegato})
+    \item Impiegato(\myuline{Codice}, Cognome, Data Afferenza*)
+    \item Progetto(\myuline{Nome}, Budget)
+    \item Sede(\myuline{Città}, Indirizzo)
+    \item Dipartimento(\myuline{Nome}, \myuline{Città}, Telefono, Direttore*)
+    \item Partecipazione(\myuline{Progetto}, \myuline{Impiegato})
 \end{itemize}
 
 \subsection{Esercizio 4}
@@ -878,11 +888,11 @@ direttore di un unico dipartimento non sarebbe un vincolo esprimibile, ma si pot
 relazione dipartimento, ma in caso fossero presenti due dipartimenti con lo stesso direttore questo non funzionerebbe. 
 
 \begin{itemize}
-    \item Impiegato(\underline{Codice}, Cognome, Data Afferenza*)
-    \item Progetto(\underline{Nome}, Budget )
-    \item Sede(\underline{Nome Dipartimento}, \underline{Città}, Indirizzo )
-    \item Dipartimento(\underline{Nome}, Telefono, Direttore)
-    \item Partecipazione(\underline{Progetto}, \underline{Impiegato})
+    \item Impiegato(\myuline{Codice}, Cognome, Data Afferenza*)
+    \item Progetto(\myuline{Nome}, Budget )
+    \item Sede(\myuline{Nome Dipartimento}, \myuline{Città}, Indirizzo )
+    \item Dipartimento(\myuline{Nome}, Telefono, Direttore)
+    \item Partecipazione(\myuline{Progetto}, \myuline{Impiegato})
 \end{itemize}
 
 \subsection{Esercizio 5}
@@ -902,7 +912,7 @@ della relazione comune, con un altro attributo altitudine.
 \begin{center}
     \begin{tabular}{|c|c|c|}
         \hline 
-        \underline{Numero} & Nome & Comune\\
+        \myuline{Numero} & Nome & Comune\\
         \hline
         1 & x & Castello\\
         \hline
@@ -913,7 +923,7 @@ della relazione comune, con un altro attributo altitudine.
     \end{tabular}
     \begin{tabular}{|c|c|}
         \hline
-        \underline{Nome} & Altitudine\\
+        \myuline{Nome} & Altitudine\\
         \hline
         Castello & 300\\
         \hline
@@ -926,7 +936,7 @@ comune sono invariati.
 \begin{center}
     \begin{tabular}{|c|c|c|}
         \hline 
-        \underline{Numero} & Nome & \underline{Comune}\\
+        \myuline{Numero} & Nome & \myuline{Comune}\\
         \hline
         1 & x & Castello\\
         \hline
@@ -937,7 +947,7 @@ comune sono invariati.
     \end{tabular}
     \begin{tabular}{|c|c|}
         \hline
-        \underline{Nome} & Altitudine\\
+        \myuline{Nome} & Altitudine\\
         \hline
         Castello & 300\\
         \hline
@@ -953,7 +963,7 @@ contiene anche un attribuito seggio con un vincolo di integrità referenziale co
 \begin{center}
     \begin{tabular}{|c|c|}
         \hline 
-        \underline{Numero} & Nome \\
+        \myuline{Numero} & Nome \\
         \hline
         1 & x \\
         \hline
@@ -964,7 +974,7 @@ contiene anche un attribuito seggio con un vincolo di integrità referenziale co
     \end{tabular}
     \begin{tabular}{|c|c|c|}
         \hline
-        \underline{Nome} & Altitudine & Seggio\\
+        \myuline{Nome} & Altitudine & Seggio\\
         \hline
         Castello & 300 & 1\\
         \hline
@@ -977,14 +987,14 @@ contiene anche un attribuito seggio con un vincolo di integrità referenziale co
 
 Mostrare uno schema concettuale per una realtà i cui dati siano organizzati per mezzo del seguente schema relazionale:
 \begin{itemize}
-    \item Nazioni(\underline{Codice}, Nome);
-    \item Compagnie(\underline{Codice}, Nome, Nazione), con un vincolo di integrità referenziale fra l'attributo nazione e la relazione nazioni;
-    \item Aeroporti(\underline{Codice}, Nome, Città), con un vincolo di integrità referenziale fra città e la relazione città;
-    \item Città(\underline{Codice}, Nome);
-    \item Voli(\underline{Compagnia}, \underline{Numero}, Aeroporto Partenza, Aeroporto Arrivo, Ora Partenza Prevista, Ora Arrivo Previsto, Tipo Aeromobile), con vincoli 
+    \item Nazioni(\myuline{Codice}, Nome);
+    \item Compagnie(\myuline{Codice}, Nome, Nazione), con un vincolo di integrità referenziale fra l'attributo nazione e la relazione nazioni;
+    \item Aeroporti(\myuline{Codice}, Nome, Città), con un vincolo di integrità referenziale fra città e la relazione città;
+    \item Città(\myuline{Codice}, Nome);
+    \item Voli(\myuline{Compagnia}, \myuline{Numero}, Aeroporto Partenza, Aeroporto Arrivo, Ora Partenza Prevista, Ora Arrivo Previsto, Tipo Aeromobile), con vincoli 
     di integrità referenziale tra compagnia e la relazione compagnie, aeroporto partenza e aeroporti, aeroporto arrivo e aeroporti, e tipo aeromobile con tipo aeromobili;
-    \item VoliEffettivi(\underline{Compagnia}, \underline{Numero}, \underline{Data}, Ora Partenza Effettiva, Ora Arrivo Effettivo), un vincolo di integrità referenziale fra compagnia e numero e la relazione voli;
-    \item TipoAeroMobile(\underline{Codice}, Nome).
+    \item VoliEffettivi(\myuline{Compagnia}, \myuline{Numero}, \myuline{Data}, Ora Partenza Effettiva, Ora Arrivo Effettivo), un vincolo di integrità referenziale fra compagnia e numero e la relazione voli;
+    \item TipoAeroMobile(\myuline{Codice}, Nome).
 \end{itemize}
 
 Si comincia dalle entità senza vincoli di integrità referenziale. Si comincia dal'entità nazioni, in relazione con compagnie. Analogamente l'entità 
@@ -1062,16 +1072,16 @@ un titolo, ed un attributo materia, vincolo di integrità referenziale con la re
 materia. 
 
 \begin{itemize}
-    \item Nazione(\underline{CN}, Nazione);
-    \item Città(\underline{CC},\underline{CN});
-    \item Istituzione(\underline{Codice}, Nome, Città, Nazione);
-    \item Persona(\underline{Codice}, Nome);
-    \item Persona Con Affiliazione(\underline{Persona}, \underline{Istituzione})
-    \item Sessione(\underline{Codice}, Titolo, Ora);
-    \item Intervento(\underline{Sessione}, \underline{Persona}, \underline{Istituzione});
-    \item Convegno(Data, \underline{Anno}, \underline{Serie}, CC, CN)
-    \item Serie(\underline{Codice}, Titolo, CM)
-    \item Materia(\underline{CM}, Materia)
+    \item Nazione(\myuline{CN}, Nazione);
+    \item Città(\myuline{CC},\myuline{CN});
+    \item Istituzione(\myuline{Codice}, Nome, Città, Nazione);
+    \item Persona(\myuline{Codice}, Nome);
+    \item Persona Con Affiliazione(\myuline{Persona}, \myuline{Istituzione})
+    \item Sessione(\myuline{Codice}, Titolo, Ora);
+    \item Intervento(\myuline{Sessione}, \myuline{Persona}, \myuline{Istituzione});
+    \item Convegno(Data, \myuline{Anno}, \myuline{Serie}, CC, CN)
+    \item Serie(\myuline{Codice}, Titolo, CM)
+    \item Materia(\myuline{CM}, Materia)
 \end{itemize}
 
 \subsection{Esercizio 2}
@@ -1088,7 +1098,7 @@ Per il primo schema si hanno:
     \begin{tabular}{|c|c|c|}
         \hline\multicolumn{3}{|c|}{Serie}\\
         \hline
-        \underline{Codice} & Titolo & CM \\
+        \myuline{Codice} & Titolo & CM \\
         \hline
         1 & A & 00\\
         \hline
@@ -1104,7 +1114,7 @@ Per il primo schema si hanno:
     \begin{tabular}{|c|c|}
         \hline\multicolumn{2}{|c|}{Materia}\\
         \hline
-        \underline{CM} & Materia\\
+        \myuline{CM} & Materia\\
         \hline
         00 & a\\
         \hline
@@ -1123,7 +1133,7 @@ Si considerano le tabelle corrispondenti alla relazioni del secondo schema:
         \hline
         \multicolumn{2}{|c|}{Istituzione}\\
         \hline
-        \underline{Codice} & Nome\\
+        \myuline{Codice} & Nome\\
         \hline
         1 & A\\\hline 2&B\\\hline 3&C\\\hline
     \end{tabular}
@@ -1131,7 +1141,7 @@ Si considerano le tabelle corrispondenti alla relazioni del secondo schema:
         \hline
         \multicolumn{2}{|c|}{Persona}\\
         \hline
-        \underline{Codice}& Nome\\
+        \myuline{Codice}& Nome\\
         \hline
         00&Anna\\\hline 01&Lino\\\hline 02&Bob\\\hline 03&Eric\\\hline 04 & Sam\\\hline
     \end{tabular}
@@ -1139,7 +1149,7 @@ Si considerano le tabelle corrispondenti alla relazioni del secondo schema:
         \hline
         \multicolumn{2}{|c|}{Persona con Aff.}\\
         \hline
-        \underline{Persona} & \underline{Istituzione}\\
+        \myuline{Persona} & \myuline{Istituzione}\\
         \hline
         00&1\\\hline 01 & 1\\\hline 02&2\\\hline 00&2\\\hline
     \end{tabular}
@@ -1185,13 +1195,13 @@ Mostrare uno schema concettuale per una realtà i cui dati siano organizzati per
 schema relazionale. Si utilizza l'asterisco per indicare la ammissibilità dei valori nulli.
 
 \begin{itemize}
-    \item Dipendente(\underline{Codice Fiscale}, Cognome, Nome);
-    \item Professore(\underline{Codice Fiscale}, Qualifica, Anzianità, Dipartimento*), con vincolo di integrità referenziale fra Codice Fiscale e la relazione Dipendente e fra Dipartimento e la relazione Dipartimento;
-    \item Dipartimento(\underline{Codice}, Nome, Indirizzo);
-    \item Corso di Studio(\underline{Codice}, Nome, Dipartimento, Coordinatore), con vincolo di integrità referenziale fra Dipartimento e la relazione Dipartimento e fra Coordinatore e la relazione Professore;
-    \item Collaborazione(\underline{Corso di Studio}, \underline{Dipartimento}, \underline{Professore}, Tipo), con vincolo di integrità referenziale fra Corso di Studio, Dipartimento e la relazione Corso di Studio e fra Professore e la relazione Professore;
-    \item Corso(\underline{Codice}, Materia, Docente), con vincolo di integrità referenziale fra Materia e la relazione Materia e fra Docente e la relazione Professore;
-    \item Materia(\underline{Sigla}, Nome, Semestre);
+    \item Dipendente(\myuline{Codice Fiscale}, Cognome, Nome);
+    \item Professore(\myuline{Codice Fiscale}, Qualifica, Anzianità, Dipartimento*), con vincolo di integrità referenziale fra Codice Fiscale e la relazione Dipendente e fra Dipartimento e la relazione Dipartimento;
+    \item Dipartimento(\myuline{Codice}, Nome, Indirizzo);
+    \item Corso di Studio(\myuline{Codice}, Nome, Dipartimento, Coordinatore), con vincolo di integrità referenziale fra Dipartimento e la relazione Dipartimento e fra Coordinatore e la relazione Professore;
+    \item Collaborazione(\myuline{Corso di Studio}, \myuline{Dipartimento}, \myuline{Professore}, Tipo), con vincolo di integrità referenziale fra Corso di Studio, Dipartimento e la relazione Corso di Studio e fra Professore e la relazione Professore;
+    \item Corso(\myuline{Codice}, Materia, Docente), con vincolo di integrità referenziale fra Materia e la relazione Materia e fra Docente e la relazione Professore;
+    \item Materia(\myuline{Sigla}, Nome, Semestre);
 \end{itemize}
 
 Partendo dalla relazione materia, si rappresenta un'entità con tre attributi di sigla, nome e semestre, di cui sigla è chiave. Si mette in relazione con l'entità corso, di attributi codice, con cardinalità 
@@ -1248,10 +1258,10 @@ Rispondere alle domande seguenti con un sì o un no nella casella:
 
 In relazione agli schemi precedenti, realizzare un modello relazionale:
 \begin{enumerate}
-    \item Divisione(\underline{Nome}, \underline{Reparto}), Reparto(\underline{Nome});
-    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}, Divisione);
-    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}, \underline{Divisione});
-    \item Divisione(\underline{Nome}), Reparto(\underline{Nome}), Appartenenza(\underline{Divisione}, \underline{Reparto})
+    \item Divisione(\myuline{Nome}, \myuline{Reparto}), Reparto(\myuline{Nome});
+    \item Divisione(\myuline{Nome}), Reparto(\myuline{Nome}, Divisione);
+    \item Divisione(\myuline{Nome}), Reparto(\myuline{Nome}, \myuline{Divisione});
+    \item Divisione(\myuline{Nome}), Reparto(\myuline{Nome}), Appartenenza(\myuline{Divisione}, \myuline{Reparto})
 \end{enumerate}
 
 Nel primo schema si utilizza una relazione divisione con chiave nome ed il reparto di appartenenza con cui ha un vincolo di integrità referenziale, 
@@ -1300,33 +1310,46 @@ Quindi è più conveniente rimuovere la ridondanza.
 
 \section{Esercitazione del 13 Dicembre}
 
-%% TODO terzo esonero 14 feb 2019
-
 \subsection{Esercizio 1}
 
 Considerare lo schema concettuale seguente:
 \begin{figure}[H]%
     \centering%
-    \includegraphics{ridondanza_13-12-24.pdf}%
+    \includegraphics[scale=1.1]{ridondanza_13-12-24.pdf}%
 \end{figure}
 
 Valutare la convenienza dell'introduzione di una relationship C-F fra Cliente e Filiale oppure di una relationship 
-C-B fra Cliente e Banca oppure di entrambe. Tali relationship sono ridondanti in quanto derivabili dalla 
+C-B fra Cliente e Banca oppure di entrambe:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.1]{ridondanza_aggiunte_13-12-24.pdf}%
+\end{figure}
+
+Tali relationship sono ridondanti in quanto derivabili dalla 
 concatenazione delle relationship esistenti. Considerare un carico applicativo che includa come operazioni 
 principali le seguenti:
 \begin{enumerate}
-    \item Inserimento di un nuovo rapporto fra cliente e agenzia (cioè di una occorrenza della relationship C-A), 
+    \item Inserimento di un nuovo rapporto fra cliente e agenzia, cioè di una occorrenza della relationship C-A, 
     dati il codice del cliente e quello dell'agenzia, assumendo per semplicità che il cliente sia già presente e il
     rapporto sia con una agenzia di una filiale e di una banca con cui il cliente non ha ancora rapporti (cliente,
-    agenzia, filiale e banca sono invece gi`a nella base di dati), con frequenza $f1 = 100$;
-    \item Ricerca delle filiali con cui un cliente (di cui `e dato il codice) ha rapporti, con frequenza $f_2 = 10000$;
-    \item Ricerca delle banche con cui un cliente (di cui `e dato il codice) ha rapporti, con frequenza $f_3 = 10000$ 
+    agenzia, filiale e banca sono invece già nella base di dati), con frequenza $f_1 = 100$;
+    \item Ricerca delle filiali con cui un cliente (di cui è dato il codice) ha rapporti, con frequenza $f_2 = 10000$;
+    \item Ricerca delle banche con cui un cliente (di cui è dato il codice) ha rapporti, con frequenza $f_3 = 10000$ 
 \end{enumerate}
 Supporre che, mediamente, un cliente abbia rapporti con $N = 10$ agenzie, di filiali diverse di banche diverse. 
-Considerare i costi delle letture e scritture delle entità e delle relationship molti a molti (ignorando quelli delle 
-relationship uno a molti) e considerare il costo delle scritture doppio di quello delle letture. 
+Considerare i costi delle letture e scritture delle entità e delle relationship molti a molti, ignorando quelli delle 
+relationship uno a molti, e considerare il costo delle scritture doppio di quello delle letture. 
 
-%% TODO img con aggiunte relazioni 
+Senza ridondanza per la prima operazione, noto il cliente e l'agenzia, bisogna inserire solamente una nuova occorrenza di C-A, quindi si ha una sola scrittura. Per la seconda operazione bisogna leggere ognuna delle $N$ occorrenze di agenzia in relazione con cliente, e le loro rispettive filiali, quindi bisogna effettuare due letture $N$ volte. Per la terza operazione bisogna effettuare un processo analogo al precedente, quindi si effettuano tre letture $N$ volte:
+\begin{gather*}
+    c_1=1_\text{w}=2\\
+    c_2=2_\text{r}\cdot10=20\\
+    c_3=3_\text{r}\cdot10=30\\
+    C=c_1\cdot f_1+c_2\cdot f_2+c_3\cdot f_3=2\cdot100+20\cdot10000+30\cdot10000=500200
+\end{gather*}
+
+
 
 Per la prima operazione con ridondanza C-F bisogna effettuare due scritture ed una lettura, per la seconda operazione se è sufficiente il codice, si suppone sia 
 sufficiente se non viene specificato, sono necessarie $N$ letture, poiché mediamente ogni cliente ha rapporti con 10 filiali. Per la terza operazione bisogna 
@@ -1334,8 +1357,9 @@ cercare per ogni filiale quale banche sono associate quindi bisogna effettuare 2
 
 \begin{gather*}
     c_1=2_\text{w}+1_\text{r}=5\\
-    c_2=10_\text{r}=10\\
-    c_3=10_\text{r}+10_\text{r}=20
+    c_2=1_\text{r}\cdot10=10\\
+    c_3=2_\text{r}\cdot10=20\\
+    C=c_1\cdot f_1+c_2\cdot f_2+c_3\cdot f_3=5\cdot100+10\cdot10000+20\cdot10000=300500
 \end{gather*}
 
 Si calcolano gli stessi per la ridondanza C-B, per la prima operazione bisogna scrivere l'occorrenza di C-A, e leggere la filiale corrispondente, e la banca corrispondente 
@@ -1344,15 +1368,24 @@ le filiali, in media sono entrambe 10. Nell'ultimo caso bisogna effettuare solam
 
 \begin{gather*}
     c_1=2_\text{w}+2_\text{r}=6\\
-    c_2=20_\text{r}=20\\
-    c_3=10_\text{r}
+    c_2=2_\text{r}\cdot10=20\\
+    c_3=1_\text{r}\cdot10=10\\
+    C=c_1\cdot f_1+c_2\cdot f_2+c_3\cdot f_3=6\cdot100+20\cdot10000+10\cdot10000=300600
 \end{gather*}
 
-%% TODO add senza ridondanza o entrambe 
+Con entrambe le relationship ridondanti C-F e C-B, per la prima operazione bisogna inserire l'occorrenza di C-A, leggere la filiale corrispondente e la banca corrispondente, per inserire l'occorrenza di C-F e di C-B. Per la seconda operazione è sufficiente leggere le 10 occorrenze di C-F, mentre per la terza le 10 occorrenze di C-B:
+\begin{gather*}
+    c_1=2_\text{w}+3_\text{r}=8\\
+    c_2=1_\text{r}\cdot10=10\\
+    c_3=1_\text{r}\cdot10=10\\
+    C=c_1\cdot f_1+c_2\cdot f_2+c_3\cdot f_3=8\cdot100+10\cdot10000+10\cdot10000=200800
+\end{gather*}
+
+Quindi è più conveniente utilizzare entrambe le ridondanze. 
 
 \subsection{Esercizio 2}
 
-Considera la relazione seguente:
+Considerare la relazione seguente:
 
 \begin{center}
     \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
@@ -1362,7 +1395,7 @@ Considera la relazione seguente:
         1 & Art. & C1 & Milano & N1 & Italia & M1&Ort.&A1&Med.\\
         \hline
         2&Fratture&C2&Roma&N1&Italia&M1&Ort.&A1&Med.\\\hline
-        3&Cuore1028&C1&Milano&N1&Italia&M2&Card.&A1&Med.\\\hline
+        3&Cuore2018&C1&Milano&N1&Italia&M2&Card.&A1&Med.\\\hline
         4&DB2018&C1&Monaco&N2&Germania&M3&Basi di Dati&A2&Inf.\\\hline
     \end{tabular}
 \end{center}
@@ -1370,19 +1403,27 @@ Considera la relazione seguente:
 La relazione mostra (in forma non normalizzata) i dati di interesse in un certo anno per un insieme di convegni
 scientifici, secondo le seguenti specifiche:
 \begin{itemize}
-    \item Ogni convegno ha un codice e un titolo e si tiene una città;
-    \item Ogni città ha un nome, si trova in una nazione e ha un codice che la identifica nell'ambito della nazione;
-    \item Ogni nazione ha un codice e un nome;
+    \item Ogni convegno ha un codice (Cod) e un titolo e si tiene una città;
+    \item Ogni città ha un nome, si trova in una nazione e ha un codice che la identifica nell'ambito della nazione (CC);
+    \item Ogni nazione ha un codice (CN) e un nome;
     \item Ogni convegno è relativo ad una materia specifica (ad esempio l'ortopedia) che a sua volta appartiene
-    ad un'area scientifica (ad esempio la medicina); ogni materia ha un nome e un codice che la identifica
-    univocamente;
-    \item Ogni area scientifica ha un codice e un nome. 
+    ad un'area scientifica (ad esempio la medicina); 
+    \item Ogni materia ha un nome e un codice che la identifica
+    univocamente (CM);
+    \item Ogni area scientifica ha un codice (CA) e un nome. 
 \end{itemize}
 Con riferimento alle specifiche e ai dati nell'esempio:
 \begin{enumerate}
     \item Mostrare uno schema concettuale per la realtà di interesse (rispettando le specifiche per i vari codici);
     \item Mostrare una buona decomposizione della relazione originaria che soddisfi la BCNF (mostrare le tabelle, indicando la chiave di ciascuna con la sottolineatura)
 \end{enumerate}
+
+\subsubsection*{Domanda 1}
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.1]{schema_13-12-24.pdf}%
+\end{figure}
 
 \subsubsection*{Domanda 2}
 La chiave sembra essere il codice, si considerano quindi le dipendenze funzionali presenti:
@@ -1391,15 +1432,81 @@ La chiave sembra essere il codice, si considerano quindi le dipendenze funzional
     \item Codice Area $\to$ Area;
     \item Codice Città, Codice Nazione $\to$ Città;
     \item Codice Nazione $\to$ Nazione;
-    \item Codice Materia $\to$ Materia
+    \item Codice Materia $\to$ Materia.
 \end{itemize}
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        \multicolumn{5}{|c|}{Convegni}\\
+        \hline
+        \myuline{Cod}&Titolo&CC&CN&CM\\
+        \hline
+        1&Art.&C1&N1&M1\\
+        \hline
+        2&Fratture&C2&N1&M1\\
+        \hline
+        3&Cuore2018&C3&N1&M1\\
+        \hline
+        4&DB2018&C4&N2&M2\\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \multicolumn{3}{|c|}{Città}\\
+        \hline
+        \myuline{CC}&\myuline{CN}&Città\\
+        \hline
+        C1&N1&Milano\\
+        \hline
+        C2&N1&Roma\\
+        \hline
+        C1&N2&Monaco\\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \multicolumn{3}{|c|}{Materie}\\
+        \hline
+        \myuline{CM}&Materia&CA\\
+        \hline
+        M1&Ort.&A1\\
+        \hline
+        M2&Card.&A1\\
+        \hline
+        M3&BD&A2\\
+        \hline       
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{Nazioni}\\
+        \hline
+        \myuline{CN}&Nazioni\\
+        \hline
+        N1&Italia\\
+        \hline
+        N2&Germania\\
+        \hline        
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{Aree}\\
+        \hline
+        \myuline{CA}&Area\\
+        \hline
+        A1&Med.\\
+        \hline
+        A2&Inf.\\
+        \hline        
+    \end{tabular}
+\end{center}
 
 \subsection{Esercizio 3}
 
 Considerare la relazione seguente:
 \begin{figure}[H]%
     \centering%
-    \includegraphics[scale=0.8]{relazione_13-12-24.pdf}%
+    \includegraphics[scale=0.85]{relazione_13-12-24.pdf}%
 \end{figure}
 
 La relazione mostra (in forma non normalizzata) i dati relativi ad un insieme di voli in partenza da un aeroporto.
@@ -1423,47 +1530,537 @@ con i dati, indicando la chiave di ciascuna con la sottolineatura).
 
 \subsubsection*{Domanda 1}
 
-\begin{itemize}
-    \item $R_1$(\underline{IdComp}, NomeComp);
-    \item $R_2$(\underline{IdComp}, \underline{Volo}, CodDest, Orario);
-    \item $R_3$(\underline{CodDest}, Dest);
-    \item $R_4$(\underline{IdComp}, \underline{Volo}, \underline{NGiorno}, TipoAereo);
-    \item $R_5$(\underline{TipoAereo}, Costruttore);
-    \item $R_6$(\underline{Ngiorno}, Giorno). 
-\end{itemize}
-
-\subsection{Esercizio 4}
-
-%% TODO 14/2/19/A/1
-
-\clearpage
-
-\section{Correzione Esonero 6 Dic}
-
-%% TODO aggiungere correzione esonero 6 dic $\to$ esercizi
-
-\subsection{Compito A}
-
-\subsubsection*{Domanda 1}
-
-La differenza tra i vari compiti consiste nella presenta in alcuni dell'entità Sport, mentre in altri dell'entità Continente. 
-
-%% TODO img tel / sol sito
+La chiave si suppone sia composta da IdComp, Volo e NGiorno, poiché si suppone che uno stesso numero di volo possa essere associato a due compagnie diverse, ed uno stesso volo si differenzia in base al giorno in cui viene effettuato:
+\begin{center}
+    $R$(\myuline{IdComp}, NomeComp, \myuline{Volo}, CodDest, Dest, \myuline{NGiorno}, Giorno, Orario, TipoAereo, Costruttore)
+\end{center}
 
 \subsubsection*{Domanda 2}
 
+Per realizzare lo schema concettuale si divide in due entità il volo ed il volo effettivo, poiché uno stesso volo può essere effettuato in più date diverse, per cui la prima entità volo avrà come chiave il numero di volo e la compagnia, e sarà in relazione con la destinazione. Mentre la seconda entità volo effettivo avrà come chiave il giorno in cui viene effettuato ed il volo a cui corrisponde. Poiché uno stesso volo può essere effettuato da aerei diversi in giorni diversi, l'entità tipo aeromobile deve essere messa in relazione con l'entità volo effettivo:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{schema_2_13-12-24.pdf}%    
+\end{figure}
+
 \subsubsection*{Domanda 3}
 
-%% 4: no no sì
+Dalle dipendenze funzionali si possono costruire le seguenti relazioni:
 
-\subsubsection*{Domanda 4}
+\begin{itemize}
+    \item $R_1$(\myuline{IdComp}, NomeComp);
+    \item $R_2$(\myuline{IdComp}, \myuline{Volo}, CodDest, Orario);
+    \item $R_3$(\myuline{IdComp}, \myuline{Volo}, \myuline{NGiorno}, TipoAereo);
+    \item $R_4$(\myuline{CodDest}, Dest);
+    \item $R_5$(\myuline{TipoAereo}, Costruttore);
+    \item $R_6$(\myuline{NGiorno}, Giorno). 
+\end{itemize}
+
+\begin{center}
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{$R_1$}\\
+        \hline
+        \myuline{IdComp}&NomeComp\\
+        \hline
+        AB&AirBoh\\
+        \hline
+        FW&FlyGold\\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{$R_2$}\\
+        \hline
+        \myuline{IdComp}&\myuline{Volo}&CodDest&Orario\\
+        \hline
+        AB&1112&LIN&13:00\\
+        \hline
+        AB&1114&LIN&17:00\\
+        \hline
+        FW&2001&CDG&09:00\\
+        \hline
+        FW&1031&BRU&11:00\\
+        \hline        
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline\multicolumn{2}{|c|}{$R_4$}\\
+        \hline
+        \myuline{CodDest}&Dest\\
+        \hline
+        LIN&Milano\\
+        \hline
+        CDG&Parigi\\
+        \hline
+        BRU&Bruxelles\\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|c|}
+        \hline\multicolumn{4}{|c|}{$R_3$}\\
+        \hline
+        \myuline{IdComp}&\myuline{Volo}&\myuline{NGiorno}&TipoAereo\\
+        \hline
+        AB&1112&1&A320\\
+        \hline
+        AB&1112&2&A321\\
+        \hline
+        AB&1114&1&A321\\
+        \hline
+        FW&2001&5&A320\\
+        \hline
+        FW&1031&2&B737\\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline\multicolumn{2}{|c|}{$R_5$}\\
+        \hline
+        \myuline{TipoAereo}&Costruttore\\
+        \hline
+        A320&AirBus\\
+        \hline
+        A321&AirBus\\
+        \hline
+        B737&Boeing\\
+        \hline        
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{$R_6$}\\
+        \hline
+        \myuline{NGiorno}&Giorno\\
+        \hline
+        1&Lunedì\\
+        \hline
+        2&Martedì\\
+        \hline
+        5&Venerdì\\
+        \hline        
+    \end{tabular}
+\end{center}
+
+\subsection{Esercizio 4}
+
+Considerare la relazione seguente:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.88]{relazione_2_13-12-24.pdf}%
+\end{figure}
+
+La relazione mostra, in forma non normalizzata, i dati relativi ad un insieme di spedizioni, secondo le seguenti
+specifiche:
+\begin{itemize}
+    \item Ogni spedizione ha un codice (ID), un mittente, una destinazione e un tipo;
+    \item Ogni mittente ha un codice (CM), un nome (attributo Mittente) e una categoria, con codice (CCM) e descrizione (Categoria);
+    \item Ogni destinazione ha un codice (CDes) e una descrizione (attributo Destinazione);
+    \item Ogni tipo di spedizione ha un codice (CT) e una descrizione (attributo Tipo);
+    \item Ogni spedizione comprende uno o più pacchi;
+    \item Ogni pacco ha un numero progressivo (NP) che lo identifica nell'ambito della spedizione e ha una dimensione, con codice (CDim) e descrizione (attributo Dim.).
+\end{itemize}
+
+Con riferimento alle specifiche e ai dati nell'esempio:
+\begin{enumerate}
+    \item Mostrare le dipendenze funzionali rilevate (limitarsi a quelle che hanno a primo membro ID, codici e
+    numeri) e la chiave della relazione;
+    \item Mostrare uno schema concettuale per la realtà di interesse (rispettando le specifiche per i vari codici e
+    senza aggiungere altri attributi);
+    \item Mostrare una buona decomposizione della relazione originaria che soddisfi la BCNF (mostrare le tabelle,
+    con i dati, indicando la chiave di ciascuna con la sottolineatura).    
+\end{enumerate}
+
+\subsubsection*{Domanda 1}
+
+La chiave della relazione è composta dagli attributi ID e NP. Considerando solo i codici si possono individuare le seguenti dipendenze funzionali:
+\begin{itemize}
+    \item ID $\to$ CM, CDes, CT;
+    \item CM $\to$ Mittente, CCM;
+    \item CCM $\to$ Categoria;
+    \item CDes $\to$ Destinazione;
+    \item CT $\to$ Tipo;
+    \item ID, NP $\to$ CDim;
+    \item CDim $\to$ Dimensione.
+\end{itemize}
+
+\subsubsection*{Domanda 2}
+
+Per rappresentare la possibilità di avere più pacchi nella stessa spedizione, si realizza un'entità pacco, associata ad un'unica spedizione, identificata univocamente dalla posizione in quella spedizione. L'entità spedizione viene identificata dal suo ID, ed è collegata alle altre entità destinazione, tipo e mittente. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{schema_3_13-12-24.pdf}%
+\end{figure}
+
+\subsubsection*{Domanda 3}
+
+Dalle dipendenze funzionali individuate alla prima domanda si possono realizzare le seguenti tabelle:
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \myuline{ID}&CM&CDes&CT\\
+        \hline
+        11&M1&D1&T1\\
+        \hline
+        12&M1&D2&T2\\
+        \hline
+        13&M2&D2&T2\\
+        \hline
+        14&M3&D3&T1\\
+        \hline       
+    \end{tabular}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \myuline{CM}&Mittente&CCM\\
+        \hline
+        M1&M. Rossi&A\\
+        \hline
+        M2&G. Bruno&B\\
+        \hline
+        M3&S. Verdi&A\\
+        \hline       
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \myuline{CCM}&Categoria\\
+        \hline
+        A&Elite\\
+        \hline
+        B&Normal\\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \myuline{CDes}&Destinazione\\
+        \hline
+        D1&Neri Via \dots\\
+        \hline
+        D2&Bisi Via \dots\\
+        \hline
+        D3&Cini P.zza \dots\\
+        \hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \myuline{CT}&Tipo\\
+        \hline
+        T1&Normale\\
+        \hline
+        T2&Celere\\
+        \hline        
+    \end{tabular}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \myuline{ID}&\myuline{NP}&CDim\\
+        \hline
+        11&1&P\\
+        \hline
+        11&2&M\\
+        \hline
+        12&1&M\\
+        \hline
+        13&1&G\\
+        \hline
+        13&2&G\\
+        \hline
+        14&1&G\\
+        \hline        
+    \end{tabular}
+\end{center}
+
 
 \clearpage
 
-\section{Esercizio del 16 Dicembre}
+\section{Esercitazione del 16 Dicembre}
+
+\subsection{Correzione Esonero 6 Dicembre: Compito A}
+
+La differenza tra i vari compiti consiste nella presenza in alcuni dell'entità Sport, mentre in altri dell'entità Continente, nelle prime domanda, e nella seconda le manifestazioni sono in una nazione oppure in una città in base ai compiti. 
+
+\subsubsection*{Domanda 1}
+
+Mostrare uno schema concettuale per una realtà i cui dati siano organizzati per mezzo del seguente
+schema relazionale:
+\begin{itemize}
+    \item Nazioni(\myuline{Codice}, Nome);
+    \item Città(\myuline{Codice}, Nome, Nazione): con vincolo di integrità referenziale fra Nazione e la relazione Nazioni;
+    \item Atleti(\myuline{Codice}, Cognome, Nome, LuogoNascita, Cittadinanza): con vincoli di integrità referenziale
+    fra LuogoNascita e la relazione Città e fra Cittadinanza e la relazione Nazioni;
+    \item DisciplinePraticate(\myuline{Atleta}, \myuline{Disciplina}, OriOlimpici): con vincoli di integrità referenziale fra Atleta e la relazione Atleti e fra Disciplina e la relazione Discipline, dove OriOlimpici indica il numero
+    di medaglie d'oro olimpiche vinte dall'atleta nella disciplina;
+    \item Discipline(\myuline{Codice}, Nome, Sport): con vincolo di integrità referenziale fra Sport e la relazione
+    Sport, un esempio di disciplina sono i 100 metri piani;
+    \item Sport(\myuline{Codice}, Nome), un esempio di sport è l'atletica leggera. 
+\end{itemize}
+
+Partendo dall'entità Atleta, si introducono le relationship luogo di nascita e cittadinanza con le entità Città e Nazione. Inoltre si mette in relazione Città con Nazione. 
+Si crea un altra entità Disciplina in relazione con l'entità Sport. 
+La relazione Discipline Praticate si può realizzare sia tramite una relationship che tramite un'entità con una doppia identificazione, poiché sono forme sempre equivalenti, con il suo attributo Ori Olimpici. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{schema_1_16-12-24.pdf}%
+\end{figure}
+
+Non si uniscono le relationship cittadinanza e luogo di nascita, poiché la cittadinanza potrebbe differire dalla nazione relativa al luogo di nascita. 
+
+\subsubsection*{Domanda 2}
+
+Modificare lo schema fornito in risposta alla domanda precedente, tenendo conto delle seguenti specifiche
+aggiuntive, mostrare tutto lo schema:
+\begin{itemize}
+    \item Interessano le singole gare cui l'atleta ha partecipato, con il relativo risultato (ad esempio,
+    Jacobs è arrivato primo nei 100 metri alle Olimpiadi del 2020 e quinto in quelle del 2024 ed è
+    stato eliminato in semifinale ai mondiali del 2022). Per il risultato esistono una serie di valori
+    predefiniti, ciascuno con un codice associato (ad esempio, il codice 1 potrebbe significare primo,
+    2 secondo, 10 eliminato in semifinale e così via);
+    \item Ogni gara si svolge nell'ambito di una manifestazione e ogni manifestazione è nell'ambito di una
+    serie (le Olimpiadi o i Campionati Mondiali di atletica sono serie di manifestazioni mentre le
+    Olimpiadi del 2024 sono una manifestazione);
+    \item Per ogni manifestazione sono di interesse la nazione in cui si svolge (supponiamo una sola) e
+    l'anno (che identifica la manifestazione nell'ambito della serie). Ogni serie di manifestazioni ha
+    un codice e un nome.
+\end{itemize}
+Indicare discorsivamente eventuali vincoli aggiuntivi, non esprimibili con il modello Entity Relationship.
+
+Per la prima modifica si elimina la relationship Discipline Praticate, poiché è ridondante dato che le olimpiadi sono delle manifestazioni, e dal loro risultato è possibile ottenere la stessa informazione, se viene mantenuta bisogna specificare che rappresenta una ridondanza. Bisogna distinguere la gara dalla partecipazione di una atleta ad una specifica gara, sono due concetti diversi e quindi si rappresentano con due entità distinte. 
+Un'occorrenza dell'entità Gara si identifica dalla sua disciplina e manifestazione, quindi con una chiave esterna. Anche per l'entità Partecipazione si ha un'identificazione esterna, tra Atleta e Gara. Ogni partecipazione ha un suo risultato, e poiché questo ha una sua descrizione si promuove ad entità Risultato. 
+
+L'entità Manifestazione viene identificata dall'anno in cui viene svolta e dall'occorrenza dell'entità Serie a cui appartiene, inoltre si inserisce la relationship sede con l'entità Nazione. 
+
+
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{schema_2_16-12-24.pdf}%
+\end{figure}
+
+\subsubsection*{Domanda 3}
+
+Considerare i tre schemi seguenti:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics{schema_3_16-12-24.pdf}%
+\end{figure}
+
+Con riferimento a ciascuno di essi, rispondere alle seguenti domande, con un sì o un no negli spazi
+della tabella:
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        &A&B&C\\
+        \hline
+        Possono esistere due ASL con lo stesso codice, in comuni diversi?&No&Sì&No\\
+        \hline
+        Per ciascun cittadino, si individua univocamente una ASL?&No&No&Sì\\
+        \hline
+        Possono esistere due ASl per lo stesso comune?&Sì&Sì&No\\
+        \hline
+        Possono esistere due comuni con una stessa ASL?& No&No&Sì\\
+        \hline        
+    \end{tabular}
+\end{center}
+
+\subsubsection*{Domanda 4}
+
+Con riferimento a ciascuno dei tre schemi ER nella domanda precedente, mostrare
+una base di dati che mostri le caratteristiche principali. Bastano poche ennuple per ciascuna tabella,
+che debbono però illustrare le differenze. Nelle intestazioni delle tabelle, indicare le chiavi sottolineando
+i nomi degli attributi. 
+
+Schema A:
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{Cittadino}
+        \\\hline
+        \myuline{Codice}&Cognome&Nome&Comune\\
+        \hline
+        1&\dots&\dots&C1\\
+        \hline
+        2&\dots&\dots&C1\\
+        \hline
+        3&\dots&\dots&C2\\
+        \hline       
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{Comune}\\
+        \hline
+        \myuline{Codice}&Nome\\
+        \hline
+        C1&Roma\\
+        \hline
+        C2&Milano\\
+        \hline
+        C3&Como\\
+        \hline        
+    \end{tabular}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{ASL}\\
+        \hline
+        \myuline{Codice}&Nome&Indirizzo&Comune\\
+        \hline
+        A1&\dots&\dots&C1\\
+        \hline
+        A2&\dots&\dots&C3\\
+        \hline
+        A3&\dots&\dots&C3\\
+        \hline        
+    \end{tabular}
+\end{center}
+
+Schema B:
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{Cittadino}
+        \\\hline
+        \myuline{Codice}&Cognome&Nome&Comune\\
+        \hline
+        1&\dots&\dots&C1\\
+        \hline
+        2&\dots&\dots&C1\\
+        \hline
+        3&\dots&\dots&C2\\
+        \hline       
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{Comune}\\
+        \hline
+        \myuline{Codice}&Nome\\
+        \hline
+        C1&Roma\\
+        \hline
+        C2&Milano\\
+        \hline
+        C3&Como\\
+        \hline        
+    \end{tabular}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{ASL}\\
+        \hline
+        \myuline{Codice}&Nome&Indirizzo&\myuline{Comune}\\
+        \hline
+        A1&\dots&\dots&C1\\
+        \hline
+        A2&\dots&\dots&C1\\
+        \hline
+        A1&\dots&\dots&C1\\
+        \hline        
+    \end{tabular}
+\end{center}
+
+Schema C:
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        \multicolumn{4}{|c|}{Cittadino}
+        \\\hline
+        \myuline{Codice}&Cognome&Nome&Comune\\
+        \hline
+        1&\dots&\dots&C1\\
+        \hline
+        2&\dots&\dots&C1\\
+        \hline
+        3&\dots&\dots&C2\\
+        \hline       
+    \end{tabular}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \multicolumn{3}{|c|}{Comune}\\
+        \hline
+        \myuline{Codice}&Nome&ASL\\
+        \hline
+        C1&Roma&A1\\
+        \hline
+        C2&Milano&A2\\
+        \hline
+        C3&Como&A2\\
+        \hline        
+    \end{tabular}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \multicolumn{3}{|c|}{ASL}\\
+        \hline
+        \myuline{Codice}&Nome&Indirizzo\\
+        \hline
+        A1&\dots&\dots\\
+        \hline
+        A2&\dots&\dots\\
+        \hline
+    \end{tabular}
+\end{center}
 
 \subsection{Esercizio 1}
 
-%% TODO terzo esonero 2023/24
+A seguito di una prima, superficiale analisi di una porzione della realtà di interesse per una azienda (con dirigenti,
+assistenti, reparti e sedi), è stato prodotto lo schema ER in figura:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{schema_4_16-12-24.pdf}%
+\end{figure}
+
+Modificare lo schema E-R (decomponendo la relationship e senza introdurre ulteriori entità) tenendo conto delle
+seguenti specifiche:
+
+\begin{itemize}
+    \item Ogni dirigente opera presso uno e un solo reparto e collabora con uno o più assistenti. Gli assistenti che
+    collaborano con un dirigente sono tutti e soli quelli che afferiscono allo specifico reparto presso cui il
+    dirigente opera;
+    \item Ogni reparto ha una e una sola sede, presso un reparto operano uno o più dirigenti e ad esso afferiscono
+    uno o più assistenti;
+    \item Presso una sede ci possono essere più reparti;
+    \item Ogni assistente afferisce ad uno e un solo reparto e ha una sede che è quella del proprio reparto. 
+\end{itemize}
+
+Si noti che certamente ognuna delle entità ha attributi, che non sono mostrati e non vanno inseriti nella soluzione.
+Vanno invece indicate le cardinalità delle relationship.
+
+In questo caso il legame tra assistente e dirigente non è diretto, ma è mediato dal reparto. Per cui Dirigente è in relazione con Reparto e non direttamente con Assistente, con una cardinalità obbligatoria poiché ogni dirigente opera presso uno e un solo reparto. Analogamente il secondo ed il terzo punto indicano che l'entità Sede è legata separatamente all'entità Reparto. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{schema_5_16-12-24.pdf}%
+\end{figure}
+
+\subsection{Esercizio 2}
+
+Procedere come per la domanda precedente, con riferimento alle seguenti specifiche:
+\begin{itemize}
+    \item Ogni dirigente opera presso uno o più reparti e collabora con uno o più assistenti;
+    \item Se un dirigente X collabora con un assistente Y presso un reparto Z e con un altro assistente V presso un
+    altro reparto W, allora X collabora con Y anche presso W e collabora con V presso Z;
+    \item Presso ogni reparto operano uno o più dirigenti e ad esso afferiscono gli assistenti che collaborano con tali
+    dirigenti;
+    \item Ogni assistente collabora con uno o più dirigenti e afferisce ai reparti presso cui tali dirigenti operano;
+    \item Ogni reparto ha una e una sola sede e ogni sede ha più reparti;
+    \item Dirigenti e assistenti hanno legami con le sedi solo attraverso i reparti. 
+\end{itemize}
+
+La differenza consiste che un dirigente opera su più reparti e con più assistenti, quindi si utilizzano due relationship molti a molti. Il secondo punto indica che non è necessaria una relationship ternaria, poiché specifica che i legami sono tra Dirigente e Reparto e separatamente tra Dirigente ed Assistente. 
+
+Il legame tra Assistente e Reparto non c'è ed è presente attraverso Dirigente. Il secondo punto inoltre specifica che Sede ha legame solamente con l'entità Reparto. Per cui lo schema finale risulta essere:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{schema_6_16-12-24.pdf}%
+\end{figure}
+
+
+Se invece fosse stato specificato che se un dirigente X collabora con un assistente Y presso Z, e con V presso W, allora non è garantito che collabori con X presso W o viceversa, sarebbe stata necessaria implementare una relationship ternaria per specificare che solamente alcune terne Dirigente, Assistente e Reparto sono vere. 
+
+\clearpage
+
+\section{Esercitazione del 20 Dicembre}
+
+%% TODO esercitazione 20/12/24: rec (wa)
+
+\clearpage
 
 \end{document}

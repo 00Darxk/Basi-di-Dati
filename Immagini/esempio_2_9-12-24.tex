@@ -1,0 +1,30 @@
+% !TEX TS-program = lualatex
+\documentclass{standalone}
+\usepackage{tikz}
+\usepackage{pgf}
+\usepackage{pgfcore}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{contour}
+\usepackage[normalem]{ulem}
+\usepackage{cancel}
+\usetikzlibrary{graphs,graphdrawing,calc}
+\pgfplotsset{compat=1.18}
+\renewcommand{\ULdepth}{1.8pt}
+\contourlength{0.6pt}
+\newcommand{\myuline}[1]{%
+  \uline{\phantom{#1}}%
+  \llap{\contour{white}{#1}}%
+}
+\begin{document}
+\usegdlibrary{trees}
+    \tikz[tree layout, nodes={thick}, inner sep=1pt]
+    \node[align=center] {$R$(\myuline{Codice Corso}, \myuline{Anno}, Titolo, Crediti, Docente, Nome Docente, Semestre, Dipartimento, Indirizzo)\\Codice Corso $\to$ Titolo, Crediti, Dipartimento\\Codice Corso, Anno $\to$ Docente, Semestre\\Docente $\to$ Nome Docente\\Dipartimento $\to$ Indirizzo}
+        child { node[align=center]{$R_1$(\myuline{Codice Corso}, Titolo, Crediti, Dipartimento)\\Codice Corso $\to$ Titolo, Crediti, Dipartimento} }
+        child { node[align=center]{$R_2$(\myuline{Codice Corso}, \myuline{Anno}, Docente, Nome Docente, Semestre, Indirizzo)\\Codice Corso, Anno $\to$ Docente, Semestre\\Docente $\to$ Nome Docente\\\cancel{Dipartimento $\to$ Indirizzo}} 
+            child { node[align=center] {$R_3$(\myuline{Docente}, Nome Docente)\\Docente $\to$ Nome Docente}}
+            child { node[align=center] {$R_4$(\myuline{Codice Corso}, \myuline{Anno}, Docente, Semestre, Indirizzo)\\Codice Corso, Anno $\to$ Docente, Semestre}}
+        } 
+    ;
+\end{document}

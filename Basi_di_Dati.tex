@@ -19,6 +19,8 @@
 \usepackage{float}
 %\usepackage{wrapfig}
 %\usepackage[export]{adjustbox}
+\usepackage{contour}
+\usepackage[normalem]{ulem}
 \allowdisplaybreaks
 
 \setlength{\headheight}{12.0pt}
@@ -41,6 +43,12 @@
 \newcommand{\tageq}{\tag{\stepcounter{equation}\theequation}}
 \AtBeginDocument{%
   \renewcommand{\figurename}{Fig.}
+}
+\renewcommand{\ULdepth}{1.8pt}
+\contourlength{0.6pt}
+\newcommand{\myuline}[1]{%
+  \uline{\phantom{#1}}%
+  \llap{\contour{white}{#1}}%
 }
 \fancypagestyle{link}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{Sorgente del file LaTeX disponibile al seguente link: \url{https://github.com/00Darxk/Basi-di-Dati/}}}
 
@@ -104,7 +112,6 @@ due.
 I risultati delle transazioni devono essere permanenti ed il loro termine viene identificato da un ``commit'', un impegno che segna una conclusione positiva. Una serie 
 di commit quindi mantiene traccia dei risultati in modo definitivo, anche in presenza di guasti o esecuzioni concorrenti. 
 L'efficacia e l'efficienza del DBMS dipende da sistema a sistema. 
-
 I progettisti e realizzatori di un DBMS compiono un ruolo diverso dai futuri utilizzatori del DBMS. I primi creano un sistema di gestione, mentre la creazione della base 
 di dati è affidati ad altri progettisti. Questa base di dati verrà utilizzata da altri programmatori per realizzare un'applicazione o programma con cui si potranno 
 interfacciare gli utenti. Gli utenti finali si distinguono in utenti finali, per cui è stata realizzata quella specifica applicazione ed eseguono operazioni 
@@ -392,8 +399,6 @@ attributi, non presenti in una delle due relazioni vengono attribuiti pari a nul
 
 Esiste in tre versioni: sinistro, destro e completo. Il tipo di join esterno si indica al pedice del comando \verb|JOIN|. Il join esterno sinistro, considera solo le ennuple della relazione $R_1$ e le aggiunge al 
 risultato, quello esterno analogamente solo $R_2$, mentre quello completo da entrambe. 
-
-%% TODO join e proiezioni
 
 Un join naturale su una relazione senza attributi in comune si definisce prodotto cartesiano, contiene sempre un numero di ennuple pari al prodotto delle cardinalità delle due relazioni. Si suppone che le ennuple 
 sono tutte combinabili tra di loro. Il risultato contiene ogni possibile combinazione tra tutte le ennuple degli operandi. 
@@ -1010,7 +1015,7 @@ le entità storiche la loro data di fine validità:
 
 \begin{figure}[H]%
     \centering%
-    \includegraphics{storicizzazione_concetto.pdf}%
+    \includegraphics[scale=1.25]{storicizzazione_concetto.pdf}%
 \end{figure}
 
 Questo può verificarsi anche con due relazioni che rappresentano una un legame corrente, mentre 
@@ -1035,7 +1040,7 @@ relazione. Oppure se è possibile scomporla in due relazioni tra le tre entità.
 
 \begin{figure}[H]%
     \centering
-    \includegraphics[scale=1.25]{reificazione_relationship_ternaria.pdf}%
+    \includegraphics[scale=1.2]{reificazione_relationship_ternaria.pdf}%
 \end{figure}
 
 \subsubsection{Strategie di Progetto}
@@ -1065,51 +1070,165 @@ un passo base decomponendo i requisiti e dei successivi passi iterativi per effe
 
 Spesso dopo aver identificato uno schema scheletro ci si concentra su una sua porzione, identificando a sua volta un ulteriore schema scheletro. 
 
-%% TODO ?? esempio fine lezione 15/11 (rec & ppt: esempio "società di formazione")
-
 \subsection{Progettazione Logica}
 
-%% TODO add inizio lezione 22/11/24
+Dato uno schema concettuale non si hanno informazioni su come questi dati andranno rappresentati in una base di dati, quest'attività viene affidata alla progettazione logica. 
 
-
+L'obiettivo della progettazione logica è tradurre uno schema concettuale in uno schema relazionale in maniera corretta ed efficiente. 
 Molti dei costrutti dello schema E-R sono direttamente associabili ad elementi del modello relazionale. 
-Gli identificatori rappresentano chiavi nel modello relazionale, dove le entità e le relationship rappresentano le singole relazioni. Invece di inserire una relazione per 
-ogni relationship si potrebbe inserire una attributo in una delle relazioni che lega con un vincolo di integrità referenziale ad un attributo dell'altra relazione connessa 
-dalla relationship. Altrimenti se la cardinalità della relationship non lo permette si deve necessariamente realizzare come una relazione, con attributi che legano entrambe 
-le entità della relationship. In questo caso la chiave è costituita da questi attributi, poiché ogni istanza di una relationship deve essere unica. Si realizza in questo 
-modo quando si hanno relationship molti a molti, invece se si hanno relationship uno a molti, non è necessario utilizzare una tabella. 
-Inoltre attributi con una cardinalità massima superiore ad uno si realizzano come relazioni, con un vincolo di integrità referenziale all'entità di appartenenza. 
+Altri aspetti non hanno una corrispondenza diretta, ma bisogna tenere in considerazione anche le prestazioni. 
 
-%% TODO ex corrispondenze 
+Gli identificatori rappresentano chiavi nel modello relazionale, dove le entità e le relationship rappresentano le singole relazioni. 
+Ogni entità si può tradurre come una relazione, dove i suoi identificatori sono le chiavi e gli attributi dell'entità corrispondono agli attributi della relazione. Analogamente per una relationship, ma in questo caso la chiave sono le chiavi primarie delle entità che legano. 
+Invece di inserire una relazione per 
+ogni relationship si potrebbe inserire una attributo in una delle relazioni, corrispondenti ad una delle entità della relationship, con un vincolo di integrità referenziale alla chiave dalla relazione corrispondente all'altra entità della relationship. Altrimenti se la cardinalità della relationship non lo permette si deve necessariamente implementare come una relazione, con attributi che legano entrambe 
+le entità della relationship. In questo caso la chiave è costituita dalle chiavi primarie delle entità della relationship, poiché ogni istanza di una relationship deve essere unica. Si realizza in questo 
+modo quando si hanno relationship molti a molti, invece se si hanno relationship uno a molti, non è necessario utilizzare un'ulteriore tabella. 
 
-Nel caso in cui ci siano delle generalizzazioni, non sono presenti costrutti che le traducono direttamente. %% TODO img generalizzazione
-Potrebbero essere presenti ridondanze nei dati, concettualmente si vogliono poche ripetizioni, ma alcune potrebbero essere utili. Queste ridondanze potrebbero essere 
+%% TODO img relationship uno a molti e molti a molti + relazioni corrispondenti
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+
+Inoltre attributi con una cardinalità massima superiore ad uno si realizzano come relazioni, con un vincolo di integrità referenziale all'entità di appartenenza. Mentre si suppone questi attributi possano ammettere valori nulli, quindi non si hanno problemi sulla cardinalità minima nella traduzione. 
+
+%% TODO img attributo cardinalità maggiore ad uno + relazione corrispondente
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+
+Nella raccolta dei requisiti potrebbero essere presenti ridondanze nei dati, concettualmente si vogliono poche ripetizioni, ma alcune potrebbero essere utili. Queste ridondanze potrebbero essere 
 caratteristiche direttamente calcolabili dalle relazioni già presenti. Se l'attributo ridondante è poco richiesto, si potrebbe non inserire, mentre se bisogna 
-accedere spesso a questa caratteristica, è conveniente utilizzare una attributo. Ma in questo modo è necessario aggiornare l'attributo a ogni aggiornamento dei dati 
+accedere spesso a questa caratteristica, è conveniente utilizzare un attributo ridondante. Ma in questo modo è necessario aggiornare l'attributo a ogni aggiornamento dei dati 
 su cui si basa su altre relazioni. Se gli aggiornamenti costano meno delle interrogazioni sono convenienti le ridondanze, ma questo suppone di conoscere il carico sulla 
 base di dati. Bisogna conoscere il tipo di operazioni che verranno applicate sulla base di dati, e quindi il modello logico che si vuole utilizzare, in in questo caso 
-il modello relazionale. 
+il modello relazionale, per stimare il carico effettivo. 
+La progettazione logica si divide in due fasi, dove nella prima conoscendo il carico applicativo si effettua una prima ristrutturazione dello schema concettuale, su questo schema viene effettuata la traduzione descritta precedentemente. 
 
-Si considerano degli indicatori, lo spazio che occupa in memoria la base di dati, ed il tempo delle occorrenze. %% TODO add indicatori
+\subsubsection{Ristrutturazione}
 
-Ci possono essere ridondanze anche nelle relationship. %% TODO add
-per calcolare il costo complessivo si moltiplica la frequenza di una singola operazione per il costo di quell'operazione, per ognuna delle singole operazioni. Quindi 
-bisogna fornire la frequenza delle operazioni che si applicano alla base di dati, per la sua progettazione. Considerando questo operazioni ed il suo 
+Si vuole semplificare la traduzione e cominciare a pensare in termini di prestazioni sulla base di dati. Uno schema concettuale ristrutturato non è più uno schema concettuale nel senso stretto del termine, ma questo rappresenta solamente un'osservazione accademica. 
+
+Per analizzare le prestazioni si considerano come indicatori lo spazio in memoria, rispetto al numero di occorrenze previste per ciascun costrutto, ed il tempo, in base al numero di occorrenze che vengono visitate durante un'operazione. 
+
+Una ridondanza è un'informazione significativa dall'analisi dei requisiti, ma che è calcolabile da altre informazioni già presenti. Si può determinare se questa ridondanza è utile o meno, se sono note le operazioni che verranno svolte su questi dati. Le ridondanze semplificano le interrogazioni, ma complicano gli aggiornamenti. Si appesantisce la base di dati con una maggiore occupazione di spazio, trascurabile in quest'analisi, ma soprattutto si rendono più pesanti gli aggiornamenti. 
+
+Ridondanze possono essere attributi di una stessa entità o più entità, ma ci possono essere ridondanze anche nelle relationship. Queste ultime possono essere dovute a cicli presenti nello schema concettuale. 
+%% TODO img attributo derivabile in un'entità, attributo derivabile da altre entità e relationship derivabile 
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Per ogni operazione $i$-esima si considera il suo costo $c_i$ e la sua frequenza $f_i$, 
+il costo di un'operazione $c_i$ dipende dalla media del numero di letture o scritture effettuate. 
+Per calcolare il costo complessivo si moltiplica la frequenza di una singola operazione per il costo di quell'operazione, per ognuna delle singole operazioni previste:
+\begin{equation}
+    C=\displaystyle\sum_{i=1}^nc_i\cdot f_i
+\end{equation}
+Quindi bisogna fornire la frequenza $f_i$ delle operazioni che si applicano alla base di dati, per la sua progettazione. Considerando queste operazioni ed il suo 
 carico in memoria ed in frequenza si realizzano relazioni diverse, mantenendo o eliminando ridondanze. 
+Confrontando uno schema senza ridondanza con uno con ridondanza, se il costo complessivo senza ridondanza è minore, allora è conveniente mantenerla, altrimenti bisogna eliminarla. 
 
-Si può decidere di aggregare ciò che viene acceduto insieme e separare ciò che viene acceduto separatamente. In un modello E-R ristrutturato vengono eliminate le 
-generalizzazioni sostituendole in entità e relationship. Si può effettuare in tre modi diversi. %% TODO  
 
-%% TODO entità e relationship molti a molti
+Nel caso in cui ci siano delle generalizzazioni, non sono presenti costrutti che le traducono direttamente in un modello relazionale. 
+%% TODO img generalizzazione
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Intuitivamente si può decidere di aggregare ciò che viene acceduto insieme e separare ciò che viene acceduto separatamente. In un modello ER ristrutturato vengono eliminate le 
+generalizzazioni sostituendole in entità e relationship. Si può effettuare in tre modi diversi. 
+Si potrebbero accorpare le entità figlie nell'entità genitore poiché si suppone che vengano accedute insieme. Accorpando le entità in questo modo se sono presenti attributi specifici per un certo tipo bisogna indicarli come opzionali con una cardinalità $(0,1)$, ed un ulteriore attributo che specifica il tipo dell'entità 
+%% TODO img generalizzazione ristrutturata accorpamento entità figlie in genitore
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Si potrebbe alternativamente accorpare l'entità genitore nelle entità figlie, introducendo una ridondanza, poiché entrambe le entità figlie hanno gli stessi attributi dell'entità genitore. 
+
+%% TODO img generalizzazione ristrutturata accorpamento entità genitore in figlie
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Alternativamente si potrebbe sostituire la generalizzazione con delle relationship, aventi un'identificatore esterno nelle entità figlie. 
+
+%% TODO img generalizzazione ristrutturata sostituzione generalizzazione con relationship
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+La scelta su quale di questi metodi utilizzare si può scegliere in base a delle semplice condizioni. Se gli accessi all'entità genitore ed alle figlie sono contestuali allora si preferisce il primo metodo. Se gli accessi alle entità figlie sono separati l'uno dall'altro allora è conveniente il secondo metodo. Se gli accessi alle entità figlie sono separati dagli accessi all'entità genitore allora conviene il terzo metodo. 
+Si possono utilizzare soluzioni ibride a seguito di considerazioni di carico, comuni in gerarchie a più livelli. 
+
+Durante la ristrutturazione si possono partizionare o accorpare entità o relationship in seguito a medesime esigenze di prestazioni. 
+Potrebbe essere conveniente un partizionamento verticale se un'entità ha molti attributi eterogenei, separando concetti che vengono acceduti separatamente. 
+
+%% TODO img entità attributi eterogenei + ristrutturazione partizionamento verticale
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Si possono accorpare entità o relationship raggruppando attributi di concetti diversi acceduti insieme. 
+%% TODO img entità legate da relationship attributi eterogenei + accorpamento
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Si eliminano attributi multivalore, introducendo nuove entità o relationship. 
+%% TODO img entità e relationship con attributi multivalore + partizionamento 
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+
+Un altro aspetto fondamentale per mantenere la consistenza tra i dati è la scelta degli identificatori principali, operazione necessaria per tradurre nel modello relazionale. 
+Questi devono essere semplici, obbligatori, ed utilizzati nelle operazioni principali. Se non sono presenti identificatori che rispettano questi requisiti è meglio introdurre dei codici, identificatori surrogati, appositi per questo scopo. 
+
+\subsubsection{Traduzione}
+
+La traduzione rappresenta le tecniche descritte ad inizio sezione. 
+Nella traduzione ogni entità diventa una relazione sugli stessi attributi e le relationship diventano relazioni sugli identificatori delle entità coinvolte, con i relativi vincoli di integrità referenziale. 
 
 Come convenzione, sui nomi degli attributi della relazione create da una relationship si utilizzano i nomi delle entità di partenza. Ogni azienda ha le sue convenzioni 
 per definire nomi diversi per gli attributi. 
 
 La traduzione non riesce a tener conto delle cardinalità minime, si dovrebbero aggiungere ulteriori vincoli, tramite \verb|CHECK|, non sono molto usati, ma è possibile 
-realizzarli in modo molto preciso e rigoroso. Possono esistere relationship ricorsive, dove la relationship viene tradotta in una relazione, con due nomi diversi per 
+realizzarli in modo molto preciso e rigoroso. 
+Possono esistere relationship ricorsive, dove la relationship viene tradotta in una relazione, con due nomi diversi per 
 entrambe le ricorrenze della stessa relazione. 
-Se la cardinalità minima è zero, l'attributo deve ammettere valori nulli. 
-Se l'identificatore esterno è anche la relationship si inserisce come attributo nella relazione. 
+Se la cardinalità minima è zero, l'attributo deve ammettere valori nulli. Se la cardinalità massima della relationship è uno, si può evitare di realizzare un'ulteriore tabella:
+%% TODO img relationship cardinalità massima 1 + traduzione + traduzione -1 entità
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Se l'identificatore esterno è anche la relationship, si inserisce come attributo nella relazione l'identificatore dell'entità legate dalla relationship. 
+%% TODO img identificatore esterno su relationship + traduzione
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure}
+
+Relationship uno ad uno tra due entità si implementano da due sole relazioni, fondendo la relationship ad una o l'altra relazione relativa all'entità, con vincoli di integrità referenziale con valori nulli ammessi o meno in base alla cardinalità minima. Si può inserire questo legame in entrambe le relazioni anche se rappresenta una ridondanza. 
+%% TODO img relationship uno ad uno + traduzione
+% \begin{figure}[H]%
+%     \centering%
+%     \includegraphics{}%
+% \end{figure} 
 
 \subsection{Normalizzazione}
 
@@ -1156,32 +1275,45 @@ Un modo semplice per normalizzare una relazione si tratta di introdurre una nuov
 relazione per ogni dipendenza funzionale con lo stesso primo membro. 
 
 Si conviene partire dalla relazione data ed effettuare operazioni di decomposizione, più complessa di un processo di sintesi di nuove relazioni. 
-Una procedura intuitiva è valida solo in casi semplici, dove per ogni dipendenza $X\to Y$, che viola la BCNF, si definire una relazione $XY$, e si elimina il secondo membro  
-dalla relazione originaria. Si procede iterativamente su ogni nuova relazione create fino ad ottenere un insieme di relazioni in forma normale, equivalente alla 
+Una procedura intuitiva è valida solo in casi semplici, dove per ogni dipendenza $X\to Y$, che viola la BCNF, si definisce una relazione $XY$, e si elimina il secondo membro  
+dalla relazione originaria. Si procede iterativamente su ogni nuova relazione creata fino ad ottenere un insieme di relazioni in forma normale, equivalente alla 
 relazione originaria. 
 
-%% TODO add to ex ?
 Si considera la relazione con le dipendenze funzionali seguenti:
 \begin{itemize}
     \item $R$(Codice Corso, Anno, Titolo, Crediti, Docente, Nome Docente, Semestre, Dipartimento, Indirizzo);
     \item Codice Corso $\to$ Titolo, Crediti, Dipartimento;
-    \item Codice Corso, ANno $\to$ Docente, Semestre;
+    \item Codice Corso, Anno $\to$ Docente, Semestre;
     \item Docente $\to$ Nome Docente;
     \item Dipartimento $\to$ Indirizzo. 
 \end{itemize}
+
+
+Se si adottasse la tecnica precedente su questa relazione, si creerebbe una relazione dove si perde il legame fra gli attributi Dipartimento ed Indirizzo, di 
+interesse. Infatti l'attributo Dipartimento viene rimosso dalla relazione originaria e non è più possibile utilizzarlo in altre relazioni aggiuntive. Le relazioni ottenute da questa decomposizione dipendono quindi dall'ordine in cui vengono scomposte dalla relazione originaria. Si può rappresentare tramite uno schema ad albero:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[trim={3cm 0 0 0},scale=0.7]{esempio_2_9-12-24.pdf}%
+\end{figure}
+
+Si considera una procedura dove per ogni dipendenza $X\to Y$ che viola la BCNF si genera una relazione $XZ$ dove $Z$ è l'insieme degli attributi che 
+dipendono da $X$, eventualmente per transitività, e si eliminano dalla relazione originaria. Anche il concetto di transitività andrebbe a sua volte definito 
+formalmente, ma in molti casi è intuitivo. 
+
+Si decompone la relazione originaria secondo le dipendenze funzionali e si generano quindi le seguenti relazioni:
+\begin{itemize}
+    \item $R_1$(\myuline{Codice Corso}, Titolo, Crediti, Dipartimento);
+    \item $R_2$(\myuline{Codice Corso}, \myuline{Anno}, Docente, Semestre);
+    \item $R_3$(\myuline{Docente}, Nome Docente);
+    \item $R_4$(\myuline{Dipartimento}, Indirizzo). 
+\end{itemize}
+
+Si possono rappresentare secondo il seguente schema concettuale:
 
 \begin{figure}[H]%
     \centering%
     \includegraphics{esempio_9-12-24.pdf}%s    
 \end{figure}
-
-Se si adottasse la tecnica precedente su questa relazione, si creerebbe una relazione dove si perde il legame fra gli attributi Dipartimento ed Indirizzo, di 
-interesse. Quindi bisogna modificare la procedura. 
-Si considera una procedura dove per ogni dipendenza $X\to Y$ che viola la BCNF si genera una relazione $XZ$ dove $Z$ è l'insieme degli attributi che 
-dipendono da $X$, eventualmente per transitività, e si eliminano dalla relazione originaria. Anche il concetto di transitività andrebbe a sua volte definito 
-formalmente, ma in molti casi è intuitivo. 
-%% TODO stesso ex con procedura sopra elencata
-%% TODO add esercizi schema a lezione
 
 Ma questa procedura non conserva le dipendenze, quindi non è una procedura perfetta ed in alcuni casi non funziona. La normalizzatone non funziona sempre. Una 
 decomposizione in BCNF, senza perdita e che conserva le dipendenze non è sempre realizzabile. Ci sono realtà difficili da modellare. Per questo la normalizzazione è 
@@ -1193,36 +1325,88 @@ delle ennuple siano indipendenti tra di loro.
 
 L'uso della normalizzazione è quindi come strumento di verifica degli schemi prodotti, o come criterio di progettazione da cui si può derivare lo schema logico. 
 
-%% TODO img entità con molto attributi non omogenei
 
 Si possono effettuare analisi analoghe su schemi ER, date entità con attributi eterogenei, allo stesso modo di una relazione con molto attribuiti, è possibile 
 identificare questi attributi come una violazione della normalizzazione delle entità. 
-Quindi si possono identificare dipendenze funzionale tra gli attributi di una stessa entità e reificare questi attributi normalizzando l'entità considerata. 
+Quindi si possono identificare dipendenze funzionale tra gli attributi di una stessa entità e reificare questi attributi normalizzando l'entità considerata:
 
-%% ex Fornitore: PartitaIVA $\to$ NomeFornitore, Indirizzo
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{normalizzazione_attributi.pdf}%    
+\end{figure}
 
 Si può effettuare un'analisi di normalizzazione su relationship non binarie, in modo da rappresentarla tramite entità e relationship binarie, ma questo caso è 
 più complesso rispetto a quello descritto precedente. 
 
-%% TODO img ex ppt
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{relationship_quaternaria.pdf}%
+\end{figure}
+\begin{equation*}
+    R(E_1,\,E_2,\,E_3,\,E_4)%
+\end{equation*}
+
 
 Si possono analizzare le dipendenze funzionali della relationship come se fosse una relazione. Partendo dalla realtà di interesse si possono determinare delle ipotesi 
 per verificare la validità delle dipendenze funzionali individuate. Inoltre bisogna individuare la chiave associata alla relationship, per determinare se viola 
-la forma normale BCNF. Intuitivamente la ``chiave'' di una relationship corrisponde all'entità presenti connesse con cardinalità $(x,1)$ alla relationship. 
+la forma normale BCNF. Intuitivamente la ``chiave'' di una relationship corrisponde alle entità presenti connesse con con una cardinalità massima pari ad uno:
+\begin{equation*}
+    R(\text{\myuline{$E_1$}},\,E_2,\,E_3,\,E_4)
+\end{equation*}
+Si considerano le seguenti dipendenze funzionali:
+\begin{itemize}
+    \item $E_1\to\,E_4$
+    \item $E_1\to\,E_2$
+    \item $E_2\to\,E_3$
+\end{itemize}
 
-Ragionando solo sulla normalizzazione si potrebbe arrivare a relationship ternarie, che rispettano tuttavia la forma normale. Bisogna quindi effettuare ulteriori 
+Ragionando solo sulla normalizzazione si potrebbe arrivare a relationship non binarie, che rispettano tuttavia la forma normale:
+\begin{itemize}
+    \item $R_1(\text{\myuline{$E_1$}},\,E_2,\,E_4)$: $E_1\to\,E_2$, $E_1\to\,E_4$
+    \item $R_2(\text{\myuline{$E_2$}},\,E_3)$: $E_2\to\,E_3$
+\end{itemize}
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{normalizzazione_relationship_quaternaria.pdf}%
+\end{figure}
+
+Questa rappresentazione di più dipendenze funzionali tra una chiave e diversi concetti non viola la BCNF, ma non è corretta dal punto di vista di uno schema ER. Bisogna quindi effettuare ulteriori 
 analisi, non solo sugli aspetti formali della normalizzazione, ma osservando la realtà di interesse per determinare come rappresentare eventuali relationship a più 
 di due entità. 
-Queste entità si possono dividere poiché rappresentano informazioni eterogenee su una stessa relationship, se la relazione contiene cardinalità non obbligatorie, 
-allora è possibile che questa relationship non mantenga il legame tra due entità in dipendenza funzionale. Quindi bisogna rappresentarlo come due legami diversi 
-poiché rappresentano concetti diversi. 
+Queste entità si possono dividere poiché rappresentano informazioni eterogenee su una stessa relationship. Questo è indifferente nella BCNF, poiché le due dipendenze funzionali espresse nelle due forme $E_1\to\,E_2,\,E_4$ ed $E_1\to\,E_2$, $E_1\to\,E_4$, sono tra di loro equivalenti. 
+Se tutte le cardinalità della relationship fossero obbligatorie, allora viene mantenuto il legame di tutte le dipendenze funzionali. Ma se anche una non è obbligatoria, 
+allora è possibile che questa relationship non mantenga il legame tra due entità in dipendenza funzionale. 
 
-%% TODO img ex ppt
+Le due entità e quindi le due proprietà rappresentate sono differenti, e quindi la relationship $R_1$ rappresenta due concetti diversi insieme. Questo non è ammesso in uno schema concettuale corretto. Quindi bisogna rappresentarlo come dei legami diversi 
+attraverso relationship diverse:
+\begin{itemize}
+    \item $R_1(\text{\myuline{$E_1$}},\,E_2)$: $E_1\to\,E_2$
+    \item $R_2(\text{\myuline{$E_2$}},\,E_3)$: $E_2\to\,E_3$
+    \item $R_3(\text{\myuline{$E_1$}},\,E_4)$: $E_1\to\,E_4$
+\end{itemize}
+Questa ulteriore decomposizione è senza perdita, poiché conserva tutti i legami considerati inizialmente. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{normalizzazione_relationship_quaternaria_2.pdf}%
+\end{figure}
 
 Ci possono essere decomposizioni suggerite da motivazioni diverse rispetto alla forma normale, ma comunque corrette, poiché sono decomposizioni senza perdita. 
 Questo caso considerava una relationship con una cardinalità pari ad uno con una entità. Invece può esistere una realtà dove una relationship ha cardinalità 
-molti a molti con più di due entità. Quindi in questi casi la decomposizione non avviene mediante la chiave della relationship, ma analizzando la realtà di 
-interesse ed invidiando legami più adatti per descrivere la realtà. 
+molti a molti con più di due entità:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{relationship_ternaria.pdf}%
+\end{figure}
+Quindi in questi casi la decomposizione non avviene mediante la chiave della relationship, ma analizzando la realtà di 
+interesse ed individuando legami più adatti per descrivere la realtà. Spesso si possono decomporre relationship non binarie molti a molti rappresentando solamente i legami diretti fra i concetti, poiché appartengono a diverse relationship indipendenti:
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{normalizzazione_relationship_ternaria.pdf}%
+\end{figure}
+Poiché sono indipendenti è possibile ricostruire la relazione originaria data questa decomposizione, quindi rappresenta una scomposizione senza perdita. 
 
 \clearpage
 
