@@ -30,8 +30,10 @@
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
-    pdftitle={Apppunti di Basi di Dati},
-    pdfauthor={Giacomo Sturm}
+    pdftitle={Appunti di Basi di Dati},
+    pdfauthor={Giacomo Sturm},
+    pdfsubject={Basi di Dati},
+    pdfkeywords={Database, Basi di Dati, SQL, RelaX, Entity-Relationship}
 }
 
 \newsavebox{\tempbox} %{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}}
@@ -42,15 +44,15 @@
 \numberwithin{equation}{subsection}
 \newcommand{\tageq}{\tag{\stepcounter{equation}\theequation}}
 \AtBeginDocument{%
-  \renewcommand{\figurename}{Fig.}
+    \renewcommand{\figurename}{Fig.}
 }
 \renewcommand{\ULdepth}{1.8pt}
 \contourlength{0.6pt}
 \newcommand{\myuline}[1]{%
-  \uline{\phantom{#1}}%
-  \llap{\contour{white}{#1}}%
+    \uline{\phantom{#1}}%
+    \llap{\contour{white}{#1}}%
 }
-\fancypagestyle{link}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{Sorgente del file LaTeX disponibile al seguente link: \url{https://github.com/00Darxk/Basi-di-Dati/}}}
+\fancypagestyle{link}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{Sorgente del file \LaTeX disponibile al seguente link: \url{https://github.com/00Darxk/Basi-di-Dati/}}}
 
 \begin{document}
 
@@ -459,7 +461,7 @@ bisogna effettuare delle unioni, o per dare nomi significativi nel risultato. In
 
 \clearpage
 
-\section{SQL}
+\section{Il Linguaggio SQL}
 
 Esistono diversi tipi di linguaggi per accedere alle basi di dati. Già si è analizzata l'algebra relazionale, un linguaggio procedurale, per costruire gradualmente il risultato tramite le relazioni della 
 base di dati. 
@@ -515,7 +517,8 @@ Per i nomi delle relazioni o degli attributi si utilizzano solo lettere minuscol
 Con la parola chiave \verb|SELECT| si effettuano delle interrogazioni sui dati, mentre si possono modificare i dati con \verb|INSERT|, \verb|DELETE| e \verb|UPDATE|. 
 Con \verb|INSERT| è possibile inserire una nuova riga in una relazione si utilizza la sintassi:
 \begin{minted}{sql}
-INSERT INTO NomeRelazione (ListaAttributi) -- omessa se coinvolge tutti gli attributi, o nello stesso ordine
+    INSERT INTO NomeRelazione (ListaAttributi) -- omessa se coinvolge tutti gli 
+    -- attributi, o nello stesso ordine
     VALUES (ListaValori) -- specificati tra singoli apici e divisi da una virgola
 \end{minted}
 Invece di specificare i valori tramite \verb|VALUES|, è possibile utilizzare \verb|SELECT|, ma verrà discusso più avanti. Se un attributo non è presente nella lista, il suo valore in quell'ennupla inserita sarà 
@@ -527,9 +530,7 @@ In SQL si possono scrivere operazioni di aggiornamento del database, tramite il 
 
 
 In SQLiteonline l'inserimento di una ennupla in una tabella non controlla se gli attributi con cui hanno un vincolo di integrità referenziale che si vogliono aggiungere sono presenti nella relazione 
-a cui si riferiscono, altrimenti potrebbe causare dei danni all'intera base di dati. Questa reference dovrebbe essere controllata ad ogni inserimento. 
-
-Su SQLite si può attivare il controllo della chiave esterna con il comando:
+a cui si riferiscono, altrimenti potrebbe causare dei danni all'intera base di dati. Questa reference dovrebbe essere controllata ad ogni inserimento. Su SQLite si può attivare il controllo della chiave esterna con il comando:
 \begin{minted}{sql}
     PRAGMA foreign_keys=on
 \end{minted}
@@ -1085,20 +1086,32 @@ ogni relationship si potrebbe inserire una attributo in una delle relazioni, cor
 le entità della relationship. In questo caso la chiave è costituita dalle chiavi primarie delle entità della relationship, poiché ogni istanza di una relationship deve essere unica. Si realizza in questo 
 modo quando si hanno relationship molti a molti, invece se si hanno relationship uno a molti, non è necessario utilizzare un'ulteriore tabella. 
 
-%% TODO img relationship uno a molti e molti a molti + relazioni corrispondenti
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
-
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25, trim={0 1cm 0 0}]{traduzione_relationships.pdf}
+    \label{fig:traduzione_relationships}
+\end{figure}
+\begin{align*}
+    &\begin{matrix}
+        E_1(\underline{A_1}, A_2, E_1^*)\\
+        E_2(\underline{A_3}, A_4)
+    \end{matrix}&\begin{matrix}
+        E_1(\underline{A_1}, A_2)\\
+        E_2(\underline{A_3}, A_4)\\
+        R_1(\underline{E_1}, \underline{E_2})
+    \end{matrix}
+\end{align*}
 
 Inoltre attributi con una cardinalità massima superiore ad uno si realizzano come relazioni, con un vincolo di integrità referenziale all'entità di appartenenza. Mentre si suppone questi attributi possano ammettere valori nulli, quindi non si hanno problemi sulla cardinalità minima nella traduzione. 
 
-%% TODO img attributo cardinalità maggiore ad uno + relazione corrispondente
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25, trim={0 1cm 0 0}]{traduzione_cardinalita_vincoli.pdf}%
+\end{figure}
+\begin{gather*}
+    E_1(\underline{A_1})\\
+    A_2(\underline{A_2}, E_1)
+\end{gather*}
 
 
 Nella raccolta dei requisiti potrebbero essere presenti ridondanze nei dati, concettualmente si vogliono poche ripetizioni, ma alcune potrebbero essere utili. Queste ridondanze potrebbero essere 
@@ -1118,11 +1131,10 @@ Per analizzare le prestazioni si considerano come indicatori lo spazio in memori
 Una ridondanza è un'informazione significativa dall'analisi dei requisiti, ma che è calcolabile da altre informazioni già presenti. Si può determinare se questa ridondanza è utile o meno, se sono note le operazioni che verranno svolte su questi dati. Le ridondanze semplificano le interrogazioni, ma complicano gli aggiornamenti. Si appesantisce la base di dati con una maggiore occupazione di spazio, trascurabile in quest'analisi, ma soprattutto si rendono più pesanti gli aggiornamenti. 
 
 Ridondanze possono essere attributi di una stessa entità o più entità, ma ci possono essere ridondanze anche nelle relationship. Queste ultime possono essere dovute a cicli presenti nello schema concettuale. 
-%% TODO img attributo derivabile in un'entità, attributo derivabile da altre entità e relationship derivabile 
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{ristrutturazione_ridondanze.pdf}%
+\end{figure}
 
 Per ogni operazione $i$-esima si considera il suo costo $c_i$ e la sua frequenza $f_i$, 
 il costo di un'operazione $c_i$ dipende dalla media del numero di letture o scritture effettuate. 
@@ -1136,64 +1148,60 @@ Confrontando uno schema senza ridondanza con uno con ridondanza, se il costo com
 
 
 Nel caso in cui ci siano delle generalizzazioni, non sono presenti costrutti che le traducono direttamente in un modello relazionale. 
-%% TODO img generalizzazione
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{traduzione_generalizzazione.pdf}%
+\end{figure}
 
 Intuitivamente si può decidere di aggregare ciò che viene acceduto insieme e separare ciò che viene acceduto separatamente. In un modello ER ristrutturato vengono eliminate le 
 generalizzazioni sostituendole in entità e relationship. Si può effettuare in tre modi diversi. 
 Si potrebbero accorpare le entità figlie nell'entità genitore poiché si suppone che vengano accedute insieme. Accorpando le entità in questo modo se sono presenti attributi specifici per un certo tipo bisogna indicarli come opzionali con una cardinalità $(0,1)$, ed un ulteriore attributo che specifica il tipo dell'entità 
-%% TODO img generalizzazione ristrutturata accorpamento entità figlie in genitore
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{traduzione_generalizzazione_1.pdf}%
+\end{figure}
 
 Si potrebbe alternativamente accorpare l'entità genitore nelle entità figlie, introducendo una ridondanza, poiché entrambe le entità figlie hanno gli stessi attributi dell'entità genitore. 
 
-%% TODO img generalizzazione ristrutturata accorpamento entità genitore in figlie
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{traduzione_generalizzazione_2.pdf}%
+\end{figure}
 
 Alternativamente si potrebbe sostituire la generalizzazione con delle relationship, aventi un'identificatore esterno nelle entità figlie. 
 
-%% TODO img generalizzazione ristrutturata sostituzione generalizzazione con relationship
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{traduzione_generalizzazione_3.pdf}%
+\end{figure}
 
-La scelta su quale di questi metodi utilizzare si può scegliere in base a delle semplice condizioni. Se gli accessi all'entità genitore ed alle figlie sono contestuali allora si preferisce il primo metodo. Se gli accessi alle entità figlie sono separati l'uno dall'altro allora è conveniente il secondo metodo. Se gli accessi alle entità figlie sono separati dagli accessi all'entità genitore allora conviene il terzo metodo. 
+La scelta su quale di questi metodi utilizzare può essere effettuata in base a delle semplice condizioni. Se gli accessi all'entità genitore ed alle figlie sono contestuali allora si preferisce il primo metodo. Se gli accessi alle entità figlie sono separati l'uno dall'altro allora è conveniente il secondo metodo. Se gli accessi alle entità figlie sono separati dagli accessi all'entità genitore allora conviene il terzo metodo. 
 Si possono utilizzare soluzioni ibride a seguito di considerazioni di carico, comuni in gerarchie a più livelli. 
 
 Durante la ristrutturazione si possono partizionare o accorpare entità o relationship in seguito a medesime esigenze di prestazioni. 
 Potrebbe essere conveniente un partizionamento verticale se un'entità ha molti attributi eterogenei, separando concetti che vengono acceduti separatamente. 
 
-%% TODO img entità attributi eterogenei + ristrutturazione partizionamento verticale
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
-
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{ristrutturazione_attributi_eterogenei.pdf}%
+\end{figure}
 Si possono accorpare entità o relationship raggruppando attributi di concetti diversi acceduti insieme. 
-%% TODO img entità legate da relationship attributi eterogenei + accorpamento
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{ristrutturazione_attributi_omogenei.pdf}%
+\end{figure}
 
 Si eliminano attributi multivalore, introducendo nuove entità o relationship. 
-%% TODO img entità e relationship con attributi multivalore + partizionamento 
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
-
-
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{ristrutturazione_attributi_multivalore.pdf}%
+\end{figure}
+Oppure si partizionano relationship con attributi opzionali. 
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{ristrutturazione_attributi_multivalore_relationships.pdf}%
+\end{figure}
 Un altro aspetto fondamentale per mantenere la consistenza tra i dati è la scelta degli identificatori principali, operazione necessaria per tradurre nel modello relazionale. 
 Questi devono essere semplici, obbligatori, ed utilizzati nelle operazioni principali. Se non sono presenti identificatori che rispettano questi requisiti è meglio introdurre dei codici, identificatori surrogati, appositi per questo scopo. 
 
@@ -1209,26 +1217,18 @@ La traduzione non riesce a tener conto delle cardinalità minime, si dovrebbero 
 realizzarli in modo molto preciso e rigoroso. 
 Possono esistere relationship ricorsive, dove la relationship viene tradotta in una relazione, con due nomi diversi per 
 entrambe le ricorrenze della stessa relazione. 
-Se la cardinalità minima è zero, l'attributo deve ammettere valori nulli. Se la cardinalità massima della relationship è uno, si può evitare di realizzare un'ulteriore tabella:
-%% TODO img relationship cardinalità massima 1 + traduzione + traduzione -1 entità
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
-
-Se l'identificatore esterno è anche la relationship, si inserisce come attributo nella relazione l'identificatore dell'entità legate dalla relationship. 
-%% TODO img identificatore esterno su relationship + traduzione
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure}
-
+Se la cardinalità minima è zero, l'attributo deve ammettere valori nulli. Se la cardinalità massima della relationship è uno, si può evitare di realizzare un'ulteriore tabella, come mostrato in \ref{fig:traduzione_relationships}. 
 Relationship uno ad uno tra due entità si implementano da due sole relazioni, fondendo la relationship ad una o l'altra relazione relativa all'entità, con vincoli di integrità referenziale con valori nulli ammessi o meno in base alla cardinalità minima. Si può inserire questo legame in entrambe le relazioni anche se rappresenta una ridondanza. 
-%% TODO img relationship uno ad uno + traduzione
-% \begin{figure}[H]%
-%     \centering%
-%     \includegraphics{}%
-% \end{figure} 
+
+Se l'identificatore esterno è anche la relationship, si inserisce come attributo nella relazione l'identificatore delle entità legate dalla relationship. 
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25, trim={0 1cm 0 1cm}]{traduzione_relationships_identificatore_esterno.pdf}%
+\end{figure}
+\begin{gather*}
+    E_1(\underline{A_1}, \underline{E_2}(A_3), A_2)\\
+    E_2(\underline{A_3}, A_4)
+\end{gather*}
 
 \subsection{Normalizzazione}
 
@@ -1293,7 +1293,7 @@ Se si adottasse la tecnica precedente su questa relazione, si creerebbe una rela
 interesse. Infatti l'attributo Dipartimento viene rimosso dalla relazione originaria e non è più possibile utilizzarlo in altre relazioni aggiuntive. Le relazioni ottenute da questa decomposizione dipendono quindi dall'ordine in cui vengono scomposte dalla relazione originaria. Si può rappresentare tramite uno schema ad albero:
 \begin{figure}[H]%
     \centering%
-    \includegraphics[trim={3cm 0 0 0},scale=0.7]{esempio_2_9-12-24.pdf}%
+    \includegraphics[trim={3cm 1cm 0 0.5cm},scale=0.7]{esempio_2_9-12-24.pdf}%
 \end{figure}
 
 Si considera una procedura dove per ogni dipendenza $X\to Y$ che viola la BCNF si genera una relazione $XZ$ dove $Z$ è l'insieme degli attributi che 
@@ -1409,6 +1409,5 @@ interesse ed individuando legami più adatti per descrivere la realtà. Spesso s
 Poiché sono indipendenti è possibile ricostruire la relazione originaria data questa decomposizione, quindi rappresenta una scomposizione senza perdita. 
 
 \clearpage
-
 
 \end{document}

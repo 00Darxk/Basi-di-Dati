@@ -20,6 +20,7 @@
 %\usepackage[export]{adjustbox}
 \usepackage{contour}
 \usepackage[normalem]{ulem}
+\usepackage[stable]{footmisc}
 \allowdisplaybreaks
 
 \setlength{\headheight}{12.0pt}
@@ -30,7 +31,9 @@
     colorlinks=true,
     linkcolor=black,
     pdftitle={Esercizi Svolti di Basi di Dati},
-    pdfauthor={Giacomo Sturm}
+    pdfauthor={Giacomo Sturm},
+    pdfsubject={Basi di Dati},
+    pdfkeywords={Database, Basi di Dati, SQL, RelaX, Entity-Relationship}
 }
 
 \newsavebox{\tempbox} %{\raisebox{\dimexpr.5\ht\tempbox-.5\height\relax}}
@@ -38,18 +41,19 @@
 
 \makeatother
 
-\numberwithin{equation}{subsection}
+% \numberwithin{equation}{section}
 \newcommand{\tageq}{\tag{\stepcounter{equation}\theequation}}
 \AtBeginDocument{%
-  \renewcommand{\figurename}{Fig.}
+    \renewcommand{\figurename}{Fig.}
 }
 \renewcommand{\ULdepth}{1.8pt}
 \contourlength{0.6pt}
 \newcommand{\myuline}[1]{%
-  \uline{\phantom{#1}}%
-  \llap{\contour{white}{#1}}%
+    \uline{\phantom{#1}}%
+    \llap{\contour{white}{#1}}%
 }
-\fancypagestyle{link}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{Sorgente del file LaTeX disponibile al seguente link: \url{https://github.com/00Darxk/Basi-di-Dati/}}}
+\fancypagestyle{link}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{Sorgente del file \LaTeX disponibile al seguente link: \url{https://github.com/00Darxk/Basi-di-Dati/}}}
+\renewcommand{\thefootnote}{\roman{footnote}}
 
 \begin{document}
 
@@ -78,11 +82,12 @@ Università degli Studi ``Roma Tre"}}
 \clearpage
 \pagenumbering{arabic}
 
-%% TODO ordinare rispetto ad argomenti (ex: algebra relazionale/relax, sql, e-r, normalizzazione)
+\section{Modello Relazionale}
 
-\section{Esercitazione del 7 Ottobre}
+Esercizi relativi all'algebra relazionale ed interrogazioni su RelaX ed SQL. 
 
-\subsection{Esercizio 1}
+\subsection{Esercizio 1\footnote{\textit{Dall'esercitazione in aula del 7 Ottobre 2024}}}
+
 
 Si considerano le seguenti relazioni, senza valori nulli:
 \begin{itemize}
@@ -187,11 +192,10 @@ con tutte le ennuple di $R_3$:
     M_{D_7}\in[M_1,M_1\cdot M_3]
 \end{equation}
 
-\subsection{Esercizio 2}
+\subsection{Esercizio 2\footnote{\textit{Dall'esercitazione in aula del 7 Ottobre 2024}}}
 
 Si considera la seguente \href{https://dbis-uibk.github.io/relax/calc/gist/b7a8eac38317e0d6a7f0b904a9a10bd3}{base di dati} su RelaX.
 
-%% TODO img inserire alberi \sim RelaX
 
 \subsubsection*{Domanda 1}
 
@@ -288,10 +292,7 @@ tramite una differenza tra insiemi alla vista capi. Rimangono sicuramente tutti 
 
 \end{minted}
 
-\clearpage
-
-\section{Esercitazione del 18 e 25 Ottobre}
-
+\subsection{Esercizio 3\footnote{\textit{Dall'esercitazione in aula del 18 e 25 Ottobre 2024}}}
 
 Si considera la seguente base di dati:
 \begin{minted}{sql}
@@ -346,204 +347,202 @@ insert into programmazione values(7, 2,1);
 
 Vengono proposti una serie di esercizi su questo database. 
 
-\subsection{Domanda 1}
+\subsubsection*{Domanda 1}
 Determinare il titolo dei pezzi che hanno durata compresa tra 40 e 60 minuti. Per effettuare quest'operazione è sufficiente operare sulla singola tabella \verb|Pezzi|:
 \begin{minted}{sql}
-SELECT titolo FROM Pezzi
-WHERE durata>40 AND durata<60
+    SELECT titolo FROM Pezzi
+    WHERE durata>40 AND durata<60
 \end{minted}
 
-\subsection{Domanda 2}
+\subsubsection*{Domanda 2}
 Determinare il titolo, nome e cognome dell'autore dei pezzi che hanno durata compresa tra 40 e 60 minuti. Oltre alla tabella \verb|Pezzi|, è necessario ottenere i campi 
 \verb|nome| e \verb|cognome| della tabella \verb|Compositori|. Si effettua mediante un join, specificando come vengono associate le due relazioni, infatti il campo \verb|autore| 
 di \verb|Pezzi| si riferisce alla chiave primaria della relazione \verb|Compositori|:
 \begin{minted}{sql}
-SELECT titolo, nome, cognome  
-FROM Pezzi JOIN Compositori ON Pezzi.autore=Compositori.codice
-WHERE durata>40 and durata<60
+    SELECT titolo, nome, cognome  
+    FROM Pezzi JOIN Compositori ON Pezzi.autore=Compositori.codice
+    WHERE durata>40 and durata<60
 \end{minted}
 
-\subsection{Domanda 3}
+\subsubsection*{Domanda 3}
 Determinare il nome e cognome dei compositori dei pezzi presenti nel ``Concerto di Giugno''. Per ottenere questo si utilizza una vista. Nei database industriali 
 la vista p contenuta nella cache. La vista può essere utilizzata come fosse un'altra tabella nel database, ed è possibile utilizzarla per effettuare altre 
 interrogazioni nella stessa query. Si crea quindi una vista di tutti i pezzi presenti nel concerto di Giugno:
 \begin{minted}{sql}
-CREATE VIEW pezzi_giugno AS Select *
-FROM Concerti JOIN Programmazione ON Concerti.codice=Programmazione.concerto
-WHERE Concerti.titolo='Concerto di Giugno'
+    CREATE VIEW pezzi_giugno AS Select *
+    FROM Concerti JOIN Programmazione ON Concerti.codice=Programmazione.concerto
+    WHERE Concerti.titolo='Concerto di Giugno'
 \end{minted}
 Per ottenere il nome ed il cognome dei compositori si effettua una join su questa vista, prima con i pezzi, e poi con la relazione compositori, selezionando solo gli 
 attributi richiesti:
 \begin{minted}{sql}
-SELECT DISTINCT nome, cognome
-FROM pezzi_giugno JOIN Pezzi ON pezzi_giugno.pezzo=Pezzi.codice
-JOIN Compositori ON Compositori.codice=autore
+    SELECT DISTINCT nome, cognome
+    FROM pezzi_giugno JOIN Pezzi ON pezzi_giugno.pezzo=Pezzi.codice
+    JOIN Compositori ON Compositori.codice=autore
 \end{minted}
 
-\subsection{Domanda 4}
+\subsubsection*{Domanda 4}
 Determinare il nome e cognome dei compositori che non hanno pezzi nel ``Concerto di Giugno''. Utilizzando la stessa vista \verb|pezzi_giugno|, è possibile utilizzare una semplice \verb|EXCEPT| sulla 
 relazione dei compositori per rimuovere quelli presenti nel concerto di Giugno:
 \begin{minted}{sql}
-SELECT DISTINCT nome, cognome
-FROM Compositori EXCEPT
-SELECT DISTINCT nome, cognome
-FROM pezzi_giugno JOIN pezzi ON pezzo=pezzi.codice 
-JOIN Compositori ON autore=Compositori.codice
+    SELECT DISTINCT nome, cognome
+    FROM Compositori EXCEPT
+    SELECT DISTINCT nome, cognome
+    FROM pezzi_giugno JOIN pezzi ON pezzo=pezzi.codice 
+    JOIN Compositori ON autore=Compositori.codice
 \end{minted}
 
-\subsection{Domanda 5}
+\subsubsection*{Domanda 5}
 Determinare il titolo e descrizione dei concerti in cui sono presenti pezzi di Mozart. Per ottenere questi risultati è sufficiente effettuare un'operazione di join tra tutte le relazioni del database, 
 considerando solo le ennuple di valore specificato per l'attributo \verb|cognome|:
 \begin{minted}{sql}
-SELECT DISTINCT Concerti.titolo, descrizione 
-FROM Concerti JOIN Programmazione ON Concerti.codice=Programmazione.concerto
-JOIN pezzi ON pezzi.codice=pezzo
-JOIN Compositori ON autore=Compositori.codice
-WHERE cognome='Mozart'
+    SELECT DISTINCT Concerti.titolo, descrizione 
+    FROM Concerti JOIN Programmazione ON Concerti.codice=Programmazione.concerto
+    JOIN pezzi ON pezzi.codice=pezzo
+    JOIN Compositori ON autore=Compositori.codice
+    WHERE cognome='Mozart'
 \end{minted}
 
-\subsection{Domanda 6}
+\subsubsection*{Domanda 6}
 Determinare il titolo e descrizione dei concerti in cui non sono presenti pezzi di Beethoven. Per effettuare quest'operazione è sufficiente trovare tutti i concerti dove sono presenti 
 pezzi di Beethoven, come nella domanda precedente, ed in seguito rimuoverli dalla lista di tutti i concerti con un \verb|EXCEPT| iniziale:
 \begin{minted}{sql}
-SELECT DISTINCT concerti.titolo, descrizione
-FROM Concerti EXCEPT
--- concerti contenenti pezzi di Beethoven
-SELECT DISTINCT Concerti.titolo, descrizione 
-FROM Concerti join Programmazione ON Concerti.codice=Programmazione.concerto
-JOIN pezzi ON pezzi.codice=pezzo
-JOIN Compositori ON autore=Compositori.codice
-WHERE cognome='Beethoven'
+    SELECT DISTINCT concerti.titolo, descrizione
+    FROM Concerti EXCEPT
+    -- concerti contenenti pezzi di Beethoven
+    SELECT DISTINCT Concerti.titolo, descrizione 
+    FROM Concerti join Programmazione ON Concerti.codice=Programmazione.concerto
+    JOIN pezzi ON pezzi.codice=pezzo
+    JOIN Compositori ON autore=Compositori.codice
+    WHERE cognome='Beethoven'
 \end{minted}
 
-\subsection{Domanda 7}
+\subsubsection*{Domanda 7}
 Determinare il codice ed il titolo dei pezzi che non sono presenti in nessun concerto. Ordinare per codice. Si può effettuare in modo analogo alla precedente domanda, si ottengono i pezzi contenuti in tutti i 
 concerti tramite un join tra le relazioni \verb|Programmazione| e \verb|Pezzi|. Si rimuove quindi questo risultato dalla relazione \verb|Pezzi|, tenendo conto di selezionare solamente gli attributi in comune, ed 
 in seguito ordinando in base al codice con il comando \verb|ORDER BY|, seguito dall'attributo su cui si vuole effettuare l'ordinamento: 
 \begin{minted}{sql}
-SELECT DISTINCT Pezzi.codice, titolo
-FROM Pezzi EXCEPT
-SELECT DISTINCT Pezzi.codice, titolo
-FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=codice
-ORDER BY Pezzi.codice 
+    SELECT DISTINCT Pezzi.codice, titolo
+    FROM Pezzi EXCEPT
+    SELECT DISTINCT Pezzi.codice, titolo
+    FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=codice
+    ORDER BY Pezzi.codice 
 \end{minted}
 
-\subsection{Domanda 8}
+\subsubsection*{Domanda 8}
 Determinare i pezzi che compaiono in ultima posizione in almeno un concerto. Mostrare codice, titolo, cognome dell'autore e durata del pezzo. Ordinare per codice. Si può utilizzare una vista \verb|ultimi_pezzi|, 
 dove vengono salvati i pezzi in ultima posizione nei concerti con il comando \verb|MAX(posizione)|, raggruppandoli rispetto all'attributo \verb|concerto|. 
 \begin{minted}{sql}
-CREATE VIEW ultimi_pezzi AS
-SELECT DISTINCT MAX(posizione), pezzo
-FROM Programmazione 
-GROUP BY Programmazione.concerto
+    CREATE VIEW ultimi_pezzi AS
+    SELECT DISTINCT MAX(posizione), pezzo
+    FROM Programmazione 
+    GROUP BY Programmazione.concerto
 \end{minted}
 Da questa vista si possono ottenere le informazioni richieste con i singoli pezzi effettuando una join con le relazioni \verb|Pezzi| e \verb|Compositori|, ed ordinando con \verb|ORDER BY| rispetto al codice dei 
 pezzi:
 \begin{minted}{sql}
-SELECT DISTINCT Pezzi.codice, Pezzi.titolo, cognome, durata
-FROM Pezzi JOIN Compositori ON Compositori.codice=autore
-JOIN ultimi_pezzi ON Pezzi.codice=pezzo
-ORDER BY Pezzi.codice
+    SELECT DISTINCT Pezzi.codice, Pezzi.titolo, cognome, durata
+    FROM Pezzi JOIN Compositori ON Compositori.codice=autore
+    JOIN ultimi_pezzi ON Pezzi.codice=pezzo
+    ORDER BY Pezzi.codice
 \end{minted}
 
-\subsection{Domanda 9}
+\subsubsection*{Domanda 9}
 Determinare i pezzi che compaiono in ultima posizione in tutti i concerti. Mostrare codice, titolo, cognome dell'autore e durata del pezzo. Ordinare per codice. Si può utilizzare la stessa vista realizzata 
 alla domanda precedente, e si utilizza la stessa interrogazione alla domanda precedente, inserendo una condizione nel \verb|WHERE| dove viene controllato che la vista \verb|ultimi_pezzi| contenga solo un'ennupla, 
 ovvero il pezzo che compare in ultima posizione in tutti i concerti:
 \begin{minted}{sql}
-SELECT DISTINCT Pezzi.codice, Pezzi.titolo, cognome, durata
-FROM Pezzi JOIN Compositori ON Compositori.codice=autore
-JOIN ultimi_pezzi ON Pezzi.codice=pezzo
-WHERE (SELECT COUNT(pezzo) FROM ultimi_pezzi)=1
-ORDER BY pezzi.codice
+    SELECT DISTINCT Pezzi.codice, Pezzi.titolo, cognome, durata
+    FROM Pezzi JOIN Compositori ON Compositori.codice=autore
+    JOIN ultimi_pezzi ON Pezzi.codice=pezzo
+    WHERE (SELECT COUNT(pezzo) FROM ultimi_pezzi)=1
+    ORDER BY pezzi.codice
 \end{minted}
 
-\subsection{Domanda 10}
+\subsubsection*{Domanda 10}
 Determinare coppie di pezzi con lo stesso titolo. Mostrare il titolo e i due codici (ordinando il risultato sul titolo). Nota bene: ogni coppia va mostrata una sola volta 
 (ad esempio, se i pezzi 3 e 5 hanno stesso titolo, va mostrata solo la coppia 3,5 e non la coppia 5,3). Effettuando un'operazione di join sulla relazione \verb|Pezzi| con sé stessa si ottiene una relazione dove sono 
 presenti due volte le stesse coppie. Per ovviare a questo problema, si può utilizzare una \verb|GROUP BY| rispetto al titolo dei pezzi, anche se questo tipo di operazioni vengono sconsigliate poiché mostrano 
 un'ennupla casualmente tra le due, senza poter scegliere quale:
 \begin{minted}{sql}
-SELECT p1.titolo, p1.codice pezzo1, p2.codice pezzo2
-FROM Pezzi p1 JOIN Pezzi p2 ON p1.titolo=p2.titolo
-WHERE p1.codice!=p2.codice
-GROUP BY p1.titolo, p1.codice
+    SELECT p1.titolo, p1.codice pezzo1, p2.codice pezzo2
+    FROM Pezzi p1 JOIN Pezzi p2 ON p1.titolo=p2.titolo
+    WHERE p1.codice!=p2.codice
+    GROUP BY p1.titolo, p1.codice
 \end{minted}
 
 Per dare priorità ad una delle due coppie, ottenendo un risultato deterministico, si può utilizzare invece del costrutto \verb|GROUP BY| una 
 disuguaglianza nella \verb|WHERE|, in questo modo si privilegia solo una delle due coppie, in modo deterministico:
 \begin{minted}{sql}
-SELECT p1.titolo, p1.codice pezzo1, p2.codice pezzo2
-FROM Pezzi p1 JOIN Pezzi p2 ON p1.titolo=p2.titolo
-WHERE p1.codice>p2.codice
+    SELECT p1.titolo, p1.codice pezzo1, p2.codice pezzo2
+    FROM Pezzi p1 JOIN Pezzi p2 ON p1.titolo=p2.titolo
+    WHERE p1.codice>p2.codice
 \end{minted}
 
-\subsection{Domanda 11}
+\subsubsection*{Domanda 11}
 Determinare per ogni concerto, la durata totale (somma delle durate dei pezzi). Supporre che per tutti i concerti ci sia almeno un pezzo. Mostrare codice e titolo del concerto e durata totale. Ordinare per codice. 
 Per ottenere le informazioni necessarie si usa una join tra le relazioni \verb|Programmazione|, \verb|Pezzi| e \verb|Concerti|. Si utilizza il comando \verb|SUM(durata)| per sommare tutte le durate dei pezzi, nello 
 stesso concerto tramite \verb|GROUP BY concerto|  
 \begin{minted}{sql}
-SELECT Concerti.codice, Concerti.titolo, SUM(durata) AS durata_concerto
-FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
-JOIN Concerti ON Concerti.codice=concerto
-GROUP BY concerto
-ORDER BY Concerti.codice
+    SELECT Concerti.codice, Concerti.titolo, SUM(durata) AS durata_concerto
+    FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
+    JOIN Concerti ON Concerti.codice=concerto
+    GROUP BY concerto
+    ORDER BY Concerti.codice
 \end{minted}
 
-\subsection{Domanda 12}
+\subsubsection*{Domanda 12}
 Determinare i concerti che hanno durata totale minore di 90 minuti; per ogni concerto, mostrare codice e durata totale. Ordinare per codice. Questa domanda è essenzialmente identica alla precedente, è 
 sufficiente inserire la nuova condizione tramite il comando \verb|HAVING|, che opera su tutte le ennuple della relazione: 
 \begin{minted}{sql}
-SELECT Concerti.codice, Concerti.titolo, SUM(durata) AS durata_concerto
-FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
-JOIN Concerti ON Concerti.codice=concerto
-GROUP BY concerto HAVING durata_concerto < 90
-ORDER by Concerti.codice
+    SELECT Concerti.codice, Concerti.titolo, SUM(durata) AS durata_concerto
+    FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
+    JOIN Concerti ON Concerti.codice=concerto
+    GROUP BY concerto HAVING durata_concerto < 90
+    ORDER by Concerti.codice
 \end{minted}
 Poiché è sostanzialmente uguale alla domanda precedente, si potrebbe realizzare una vista per rispondere alla domanda 11, utilizzata anche dalla 12:
 \begin{minted}{sql}
-CREATE VIEW concerti_con_durata AS
-SELECT Concerti.codice, Concerti.titolo, SUM(durata) AS durata_concerto
-FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
-JOIN Concerti ON Concerti.codice=concerto
-GROUP BY concerto
-ORDER BY Concerti.codice
+    CREATE VIEW concerti_con_durata AS
+    SELECT Concerti.codice, Concerti.titolo, SUM(durata) AS durata_concerto
+    FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
+    JOIN Concerti ON Concerti.codice=concerto
+    GROUP BY concerto
+    ORDER BY Concerti.codice
 
--- domanda 11:
-SELECT * FROM concerti_con_durata
+    -- domanda 11:
+    SELECT * FROM concerti_con_durata
 
---domanda 12:
-SELECT * FROM concerti_con_durata WHERE durata_concerto < 90
+    --domanda 12:
+    SELECT * FROM concerti_con_durata WHERE durata_concerto < 90
 \end{minted}
 
-\subsection{Domanda 13}
+\subsubsection*{Domanda 13}
 Determinare codice, nome e cognome dei compositori che sono presenti in tutti i concerti. Ordinare per codice. Si può realizzare in modo poco elegante tramite una serie di \verb|EXCEPT|. Si ottiene la 
 relazione dei compositori per concerto effettuando una join tra \verb|Programmazione|, \verb|Pezzi| e \verb|Compositori|, si ottiene il suo complementare effettuando una \verb|EXCEPT| tra la join di \verb|Programmazione| e 
 \verb|Compositori| per la relazione appena calcolata. Se un compositore è presente in tutti i concerti, non sarà presente in questa tabella. Quindi essenzialmente raggruppando per concerto, senza \verb|GROUP BY|, si 
 considerano solo le ennuple distinte senza l'attributo \verb|concerto|, per cui si ottiene la tabella dei compositori non presenti in tutti i concerti. La sua relazione complementare conterrà quindi tutti i compositori 
 presenti in tutti i concerti, ottenuta mediante un'altra \verb|EXCEPT|:
 \begin{minted}{sql}
--- compositori presenti in tutti i concerti:
-SELECT DISTINCT codice, nome, cognome FROM Compositori EXCEPT
-    
-    -- compositori non presenti in tutti i concerti:
-    SELECT DISTINCT codice, nome, cognome FROM(
+    -- compositori presenti in tutti i concerti:
+    SELECT DISTINCT codice, nome, cognome FROM Compositori EXCEPT
+        
+        -- compositori non presenti in tutti i concerti:
+        SELECT DISTINCT codice, nome, cognome FROM(
 
-        -- ogni compositore per ogni concerto:
-        SELECT DISTINCT Compositori.codice, nome, cognome, concerto
-        FROM Compositori JOIN Programmazione 
-        JOIN Concerti ON concerto=Concerti.codice EXCEPT
-
-            -- compositori per ogni concerto:
+            -- ogni compositore per ogni concerto:
             SELECT DISTINCT Compositori.codice, nome, cognome, concerto
-            FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
-            JOIN Compositori ON Pezzi.autore=Compositori.codice)
-ORDER BY Compositori.codice
+            FROM Compositori JOIN Programmazione 
+            JOIN Concerti ON concerto=Concerti.codice EXCEPT
+
+                -- compositori per ogni concerto:
+                SELECT DISTINCT Compositori.codice, nome, cognome, concerto
+                FROM Programmazione JOIN Pezzi ON Programmazione.pezzo=Pezzi.codice
+                JOIN Compositori ON Pezzi.autore=Compositori.codice)
+    ORDER BY Compositori.codice
 \end{minted}
 
-\clearpage
-
-\section{Esercitazione del 28 Ottobre}
+\subsection{Esercizio 4\footnote{\textit{Dall'esercitazione in aula del 28 Ottobre 2024}}}
 
 Sulla base del seguente schema di una base di dati:
 \begin{minted}{sql}
@@ -566,7 +565,7 @@ CREATE TABLE IF NOT EXISTS volo (
     orario_arrivo_previsto time)
 \end{minted}
 
-\subsection{Domanda 1}
+\subsubsection*{Domanda 1}
 
 Determinare per ogni aeroporto il volo di durata massima in partenza il giorno `2023-07-04', mostrare codice aeroporto di partenza, codice aeroporto di arrivo, 
 numero volo, durata prevista ordinati per codice aeroporto di partenza e numero volo. Si crea una vista con tutti i voli con durata, per ogni aeroporto, in partenza 
@@ -575,19 +574,20 @@ al numero del volo, e per ogni aeroporto:
 
 
 \begin{minted}{sql}
-CREATE VIEW voli_con_durata AS
-SELECT aeroporto_partenza, aeroporto_arrivo, volo.numero_volo, orario_arrivo_previsto-orario_partenza_previsto AS durata
-FROM volo_reale JOIN volo ON volo_reale.numero_volo=volo.numero_volo
-WHERE data_partenza_programmata='2023-07-04';
+    CREATE VIEW voli_con_durata AS
+    SELECT aeroporto_partenza, aeroporto_arrivo, volo.numero_volo, 
+            orario_arrivo_previsto-orario_partenza_previsto AS durata
+    FROM volo_reale JOIN volo ON volo_reale.numero_volo=volo.numero_volo
+    WHERE data_partenza_programmata='2023-07-04';
 
-SELECT * FROM voli_con_durata AS v 
-WHERE durata = (SELECT MAX(durata)
-                FROM voli_con_durata
-                WHERE aeroporto_partenza=v.aeroporto_partenza)
-ORDER BY aeroporto_partenza, numero_volo
+    SELECT * FROM voli_con_durata AS v 
+    WHERE durata = (SELECT MAX(durata)
+                    FROM voli_con_durata
+                    WHERE aeroporto_partenza=v.aeroporto_partenza)
+    ORDER BY aeroporto_partenza, numero_volo
 \end{minted}
 
-\subsection{Domanda 2}
+\subsubsection*{Domanda 2}
 
 Trovare il codice degli aeroporti con più di un volo con data partenza programmata il giorno ``2023-07-06''. Mostrare il codice dell'aeroporto e il numero di voli 
 programmati in partenza il ``2023-07-06'', ordinati per codice dell'aeroporto. Sulla relazione ottenuta dalla join delle due relazioni, si considerano i voli nella 
@@ -595,20 +595,22 @@ data specificata tramite una \verb|WHERE|, si raggruppa per il codice di aeropor
 includere solamente aeroporti con più di un volo, si specifica con una \verb|HAVING| solo gli aeroporti con più di un volo:
 
 \begin{minted}{sql}
-SELECT aeroporto_partenza, COUNT(*) AS numero_voli
-FROM volo join volo_reale USING(numero_volo)
-WHERE data_partenza_programmata='2023-07-06'
-GROUP BY aeroporto_partenza HAVING numero_voli>1
-ORDER BY aeroporto_partenza
+    SELECT aeroporto_partenza, COUNT(*) AS numero_voli
+    FROM volo join volo_reale USING(numero_volo)
+    WHERE data_partenza_programmata='2023-07-06'
+    GROUP BY aeroporto_partenza HAVING numero_voli>1
+    ORDER BY aeroporto_partenza
 \end{minted}
 
 Si utilizza la \verb|USING| per evitare di scrivere eccessivamente. 
 
 \clearpage
 
-\section{Esercitazione dell'11 Novembre}
+\section{Modello Concettuale}
 
-\subsection{Esercizio 1}
+Esercizi relativi alla progettazione di schemi concettuali, traduzione da/a schema logico ed analisi di ridondanze. 
+
+\subsection{Esercizio 1\footnote{\textit{Dall'esercitazione in aula del 11 Novembre 2024}}}
 
 Definire uno schema E-R per una biblioteca con le seguenti specifiche:
 \begin{itemize}
@@ -634,7 +636,7 @@ volume. Bisogna capire quale è più direttamente legato all'opera, in modo da d
 poiché un volume si riferisce ad una specifica edizione, così come la copia si riferisce ad uno specifico volume, per cui è necessario prima definire l'entità 
 edizione. Queste sono legate da una relationship, di cui non viene definito il nome, dove un'opera può avere nessuna edizione o più edizioni. 
 
-Per ogni edizione si ha l'anno, il numero di volumi e la collana, si rappresenta come entità a sé. %% TODO vincolo non citato
+Per ogni edizione si ha l'anno, il numero di volumi e la collana, si rappresenta come entità a sé. 
 Per ogni edizione può esserci un volume, identificato dal suo numero, il numero di pagine e la sua edizione, analogamente ogni volume può avere una o più copie, 
 caratterizzate dal numero di copia e numero di inventario. 
 
@@ -651,7 +653,7 @@ identificarla, un codice ISBN. Per ogni collana ci deve essere almeno un editore
     \includegraphics[scale=1.25]{schema_er_es_1.pdf}%
 \end{figure}
 
-\subsection{Esercizio 2}
+\subsection{Esercizio 2\footnote{\textit{Dall'esercitazione in aula del 11 Novembre 2024}}}
 
 Data la schematizzazione delle informazioni sulle automobili mostrate:
 \begin{minted}[escapeinside=||]{c}
@@ -703,7 +705,7 @@ Le versioni hanno un nome, un prezzo, una cilindrata e possono essere identifica
 
 \begin{figure}[H]%
     \centering%
-    \includegraphics[scale=1.3]{schema_er_es_2.pdf}%
+    \includegraphics[scale=1.25,trim={0 1cm 0 0}]{schema_er_es_2.pdf}%
 \end{figure}
 
 \subsubsection*{Domanda 2}
@@ -731,11 +733,9 @@ dall'entità versione.
     \includegraphics[scale=1.24]{schema_er_es_2_2.pdf}%
 \end{figure}
 
-\clearpage
+\subsection{Esercizio 3\footnote{\textit{Dall'esercitazione in aula del 18 Novembre 2024}}}
 
-\section{Esercitazione del 18 Novembre}
-
-\subsection{Domanda 1}
+\subsubsection*{Domanda 1}
 
 Mostrare lo schema concettuale per una base di dati per il programma di una stazione presso un teatro, secondo le seguenti specifiche:
 \begin{itemize}
@@ -770,7 +770,7 @@ dalla data e dall'entità concerto in relazione.
     \includegraphics[scale=1.25]{schema_er_es_3.pdf}%
 \end{figure}
 
-\subsection{Domanda 2}
+\subsubsection*{Domanda 2}
 
 Modificare lo schema prodotto in risposta alla domanda precedente con riferimento alle seguenti specifiche che modificano le precedenti 
 (mostrare l'intero schema modificato):
@@ -800,11 +800,7 @@ eventi. Si crea in questo modo un ciclo e bisogna inserire un ulteriore vincolo 
     \includegraphics[scale=1.25]{schema_er_es_4.pdf}%
 \end{figure}
 
-\clearpage
-
-\section{Esercitazione del 25 Novembre}
-
-\subsection{Esercizio 1}
+\subsection{Esercizio 4\footnote{\textit{Dall'esercitazione in aula del 25 Novembre 2024}}}
 
 Si considera il modello ER seguente:
 \begin{figure}[H]%
@@ -821,7 +817,7 @@ volo, con un vincolo di integrità referenziale tra l'attributo codice e la rela
     \item Volo(\myuline{Codice}, \myuline{Numero}, $\cdots$)
 \end{itemize}
 
-\subsection{Esercizio 2}
+\subsection{Esercizio 5\footnote{\textit{Dall'esercitazione in aula del 25 Novembre 2024}}}
 
 Analogamente per questo schema ER:
 
@@ -841,7 +837,7 @@ referenziale tra ABI e banca e CAB e agenzia
 
 Ci sono alcuni casi nei quali l'identificazione esterna ha un significato particolare e necessario. 
 
-\subsection{Esercizio 3}
+\subsection{Esercizio 6\footnote{\textit{Dall'esercitazione in aula del 25 Novembre 2024}}}
 
 Si considera questo schema concettuale:
 
@@ -872,7 +868,7 @@ la relazione dipartimento, poiché è più corretto dato che rappresenta una pro
     \item Partecipazione(\myuline{Progetto}, \myuline{Impiegato})
 \end{itemize}
 
-\subsection{Esercizio 4}
+\subsection{Esercizio 7\footnote{\textit{Dall'esercitazione in aula del 25 Novembre 2024}}}
 
 Si considera questo schema simile al precedente, ma con un identificatore esterno sull'entità sede, invece che sull'entità dipartimento. 
 
@@ -895,7 +891,7 @@ relazione dipartimento, ma in caso fossero presenti due dipartimenti con lo stes
     \item Partecipazione(\myuline{Progetto}, \myuline{Impiegato})
 \end{itemize}
 
-\subsection{Esercizio 5}
+\subsection{Esercizio 8\footnote{\textit{Dall'esercitazione in aula del 25 Novembre 2024}}}
 
 Con riferimento a ciascuno dei seguenti schemi concettuali mostrare una base di dati relazionale ottenuta per traduzione del 
 modello ER, che evidenzi le caratteristiche dello schema. Per ciascuna relazione, mostrare anche solo poche ennuple, che 
@@ -983,7 +979,7 @@ contiene anche un attribuito seggio con un vincolo di integrità referenziale co
     \end{tabular}
 \end{center}
 
-\subsection{Esercizio 6}
+\subsection{Esercizio 9\footnote{\textit{Dall'esercitazione in aula del 25 Novembre 2024}}}
 
 Mostrare uno schema concettuale per una realtà i cui dati siano organizzati per mezzo del seguente schema relazionale:
 \begin{itemize}
@@ -1009,7 +1005,7 @@ compagnie con un identificatore esterno sulla compagnia e l'attributo numero del
     \includegraphics[scale=1.25]{schema_voli_25-11-24.pdf}%
 \end{figure}
 
-\subsection{Esercizio 7}
+\subsection{Esercizio 10\footnote{\textit{Dall'esercitazione in aula del 25 Novembre 2024}}}
 
 Considerare lo schema concettuale seguente:
 \begin{figure}[H]%
@@ -1043,11 +1039,7 @@ Si ha quindi:
 \end{gather*}
 Quindi non è conveniente avere ridondanza. 
 
-\clearpage
-
-\section{Esercitazione del 29 Novembre}
-
-\subsection{Esercizio 1}
+\subsection{Esercizio 11\footnote{\textit{Dall'esercitazione in aula del 29 Novembre 2024}}}
 
 Progettare lo schema della base di dati relazionale per gestire i dati della realtà descritta dallo schema concettuale in figura:
 
@@ -1084,7 +1076,7 @@ materia.
     \item Materia(\myuline{CM}, Materia)
 \end{itemize}
 
-\subsection{Esercizio 2}
+\subsection{Esercizio 12\footnote{\textit{Dall'esercitazione in aula del 29 Novembre 2024}}}
 
 Con riferimento all'esercizio precedente, per le due porzioni di schema in figura mostrare le tabelle risultati dalla progettazione logica con 
 alcune istanze(ennuple):
@@ -1155,7 +1147,7 @@ Si considerano le tabelle corrispondenti alla relazioni del secondo schema:
     \end{tabular}
 \end{center}
 
-\subsection{Esercizio 3}
+\subsection{Esercizio 13\footnote{\textit{Dall'esercitazione in aula del 29 Novembre 2024}}}
 
 Lo schema concettuale seguente rappresenta un insieme di corsi ed un insieme di iscrizioni a tali cosi. ello schema l'attributo ricavo è 
 ridondante, poiché può essere ottenuto moltiplicando il costo del corso per il numero di iscritti, cioè il prodotto del valore dell'attributo costo di ogni 
@@ -1189,7 +1181,7 @@ Senza ridondanza è necessario oltre alla lettura su corso per conoscere il cost
 
 Quindi non è conveniente avere ridondanza. 
 
-\subsection{Esercizio 4}
+\subsection{Esercizio 14\footnote{\textit{Dall'esercitazione in aula del 29 Novembre 2024}}}
 
 Mostrare uno schema concettuale per una realtà i cui dati siano organizzati per mezzo del seguente 
 schema relazionale. Si utilizza l'asterisco per indicare la ammissibilità dei valori nulli.
@@ -1218,16 +1210,12 @@ collaborazione si può rappresentare facilmente come relationship molti a molti 
     \includegraphics[scale=1.25]{esercizio_4_29-11-24.pdf}%
 \end{figure}
 
-\clearpage
-
-\section{Esercitazione dell'8 Novembre e 2 Dicembre}
-
-\subsection{Esercizio 1}
+\subsection{Esercizio 15\footnote{\textit{Dall'esercitazione in aula del 8 Novembre e 2 Dicembre 2024}}}
 
 Considerare i quattro schemi seguenti:
 \begin{figure}[H]%
     \centering%
-    \includegraphics[scale=1.4]{domanda_8-11-24.pdf}%
+    \includegraphics[scale=1.2, trim={0 0 0 0.2cm}]{domanda_8-11-24.pdf}%
 \end{figure}
 
 Rispondere alle domande seguenti con un sì o un no nella casella:
@@ -1254,7 +1242,7 @@ Rispondere alle domande seguenti con un sì o un no nella casella:
     \item Per gli ultimi tre schemi questo è possibile poiché la cardinalità è sempre molti ad uno o a molti, per l'entità ``Divisione''. Mentre nel primo schema può avere solo un'appartenenza a reparto. 
 \end{enumerate}
 
-\subsection{Esercizio 2}
+\subsection{Esercizio 16\footnote{\textit{Dall'esercitazione in aula del 8 Novembre e 2 Dicembre 2024}}}
 
 In relazione agli schemi precedenti, realizzare un modello relazionale:
 \begin{enumerate}
@@ -1272,7 +1260,7 @@ cardinalità molti a molti, e bisogna rappresentarla mediante un'ulteriore relaz
 vincolo di integrità referenziale con le rispettive relazioni. Non si inserisce l'attributo divisione in reparto, poiché essendo una relazione 
 molti a molti, rappresenterebbe una sola delle divisioni in relazione. 
 
-\subsection{Esercizio 3}
+\subsection{Esercizio 17\footnote{\textit{Dall'esercitazione in aula del 8 Novembre e 2 Dicembre 2024}}}
 
 Nello schema seguente l'attributo ricavo è ridondante, poiché può essere calcolato dalle relative prenotazioni: 
 
@@ -1306,11 +1294,7 @@ seconda operazione richiede solamente una scrittura dell'occorrenza di prenotazi
 
 Quindi è più conveniente rimuovere la ridondanza. 
 
-\clearpage
-
-\section{Esercitazione del 13 Dicembre}
-
-\subsection{Esercizio 1}
+\subsection{Esercizio 18\footnote{\textit{Dall'esercitazione in aula del 13 Dicembre 2024}}}
 
 Considerare lo schema concettuale seguente:
 \begin{figure}[H]%
@@ -1383,7 +1367,7 @@ Con entrambe le relationship ridondanti C-F e C-B, per la prima operazione bisog
 
 Quindi è più conveniente utilizzare entrambe le ridondanze. 
 
-\subsection{Esercizio 2}
+\subsection{Esercizio 19\footnote{\textit{Dall'esercitazione in aula del 13 Dicembre 2024}}}
 
 Considerare la relazione seguente:
 
@@ -1501,7 +1485,7 @@ La chiave sembra essere il codice, si considerano quindi le dipendenze funzional
     \end{tabular}
 \end{center}
 
-\subsection{Esercizio 3}
+\subsection{Esercizio 20\footnote{\textit{Dall'esercitazione in aula del 13 Dicembre 2024}}}
 
 Considerare la relazione seguente:
 \begin{figure}[H]%
@@ -1639,7 +1623,7 @@ Dalle dipendenze funzionali si possono costruire le seguenti relazioni:
     \end{tabular}
 \end{center}
 
-\subsection{Esercizio 4}
+\subsection{Esercizio 21\footnote{\textit{Dall'esercitazione in aula del 13 Dicembre 2024}}}
 
 Considerare la relazione seguente:
 
@@ -1767,12 +1751,7 @@ Dalle dipendenze funzionali individuate alla prima domanda si possono realizzare
     \end{tabular}
 \end{center}
 
-
-\clearpage
-
-\section{Esercitazione del 16 Dicembre}
-
-\subsection{Correzione Esonero 6 Dicembre: Compito A}
+\subsection{Esercizio 22\footnote{\textit{Dall'esonero del 6 Dicembre 2024, Compito A; corretto in aula il 16 Dicembre 2024}}}
 
 La differenza tra i vari compiti consiste nella presenza in alcuni dell'entità Sport, mentre in altri dell'entità Continente, nelle prime domanda, e nella seconda le manifestazioni sono in una nazione oppure in una città in base ai compiti. 
 
@@ -1798,7 +1777,7 @@ La relazione Discipline Praticate si può realizzare sia tramite una relationshi
 
 \begin{figure}[H]%
     \centering%
-    \includegraphics{schema_1_16-12-24.pdf}%
+    \includegraphics[scale=1.25]{schema_1_16-12-24.pdf}%
 \end{figure}
 
 Non si uniscono le relationship cittadinanza e luogo di nascita, poiché la cittadinanza potrebbe differire dalla nazione relativa al luogo di nascita. 
@@ -1996,7 +1975,7 @@ Schema C:
     \end{tabular}
 \end{center}
 
-\subsection{Esercizio 1}
+\subsection{Esercizio 23\footnote{\textit{Dall'esercitazione in aula del 16 Dicembre 2024}}}
 
 A seguito di una prima, superficiale analisi di una porzione della realtà di interesse per una azienda (con dirigenti,
 assistenti, reparti e sedi), è stato prodotto lo schema ER in figura:
@@ -2029,7 +2008,7 @@ In questo caso il legame tra assistente e dirigente non è diretto, ma è mediat
     \includegraphics[scale=1.2]{schema_5_16-12-24.pdf}%
 \end{figure}
 
-\subsection{Esercizio 2}
+\subsection{Esercizio 24\footnote{\textit{Dall'esercitazione in aula del 16 Dicembre 2024}}}
 
 Procedere come per la domanda precedente, con riferimento alle seguenti specifiche:
 \begin{itemize}
@@ -2055,11 +2034,167 @@ Il legame tra Assistente e Reparto non c'è ed è presente attraverso Dirigente.
 
 Se invece fosse stato specificato che se un dirigente X collabora con un assistente Y presso Z, e con V presso W, allora non è garantito che collabori con X presso W o viceversa, sarebbe stata necessaria implementare una relationship ternaria per specificare che solamente alcune terne Dirigente, Assistente e Reparto sono vere. 
 
-\clearpage
 
-\section{Esercitazione del 20 Dicembre}
+\subsection{Esercizio 25\footnote{\textit{Dall'esercitazione in aula del 20 Dicembre 2024}}}
 
-%% TODO esercitazione 20/12/24: rec (wa)
+Considerare la seguente relazione, che contiene dati relativi ad un insieme di moduli per il pagamento di imposte. Le abbreviazioni CF, CT e CB indicano rispettivamente Codice Fiscale, Codice Tributo e Codice Banca. Per tutti e tre si usano valori semplificati rispetto a quelli reali. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=0.85]{relazione_1_20-12-24.pdf}%    
+\end{figure}
+
+Con riferimento a tale relazione, ed al suo schema, basandosi sui valori mostrati quanto sulla comprensione del contesto applicativo, che, sia pure con qualche variante, è quello visto nell'esercitazione realizzativa, specificare quanto segue:
+\begin{enumerate}
+    \item Indicare la chiave, o le chiavi, della relazione;
+    \item Indicare le dipendenze funzionali definite su di essa e, per ciascuna, se causa una violazione della BCNF;
+    \item Mostrare una buona decomposizione della relazione originaria che soddisfi la BCNF, mostrare le tabelle, indicando la chiave di ciascuna con la sottolineatura;
+    \item Mostrare uno schema concettuale che descriva la realtà di interesse considerata nei quesiti precedenti di questa domanda. 
+\end{enumerate}
+
+\subsubsection*{Domanda 1}
+
+Poiché si tratta di moduli, si suppone che questa relazione individui moduli, quindi la chiave dovrebbe essere costituita dagli attributi che li identificano. Probabilmente i moduli del pagamento sono articolati in righe, per ogni modulo di un certo ID si possono avere diverse righe, con tutti i dettagli di ciascuna riga. L'importo cambia da riga a riga, ma il totale è sempre lo stesso per un ID. Quindi la chiave potrebbe essere composta dai seguenti attributi:
+\begin{equation}
+    \text{ID, Riga}
+\end{equation}
+
+\subsubsection*{Domanda 2}
+
+Per le dipendenze funzionali, si può partire da tutte quelle che associano un codice ad un valore, come CT e tributo, CB e banca, mentre il codice fiscale CF individua il contribuente, la città ed il suo indirizzo. Per ogni modulo si ha lo stesso totale, lo stesso contribuente e banca. 
+Mentre gli attributi identificati dalla chiave sono il tributo, dal CT, e l'importo totale del modulo. L'unica dipendenza che non viola la BCNF è quella contenente la chiave. 
+
+\begin{itemize}
+    \item ID $\to$ CF, Totale, CB;
+    \item ID, Riga $\to$ CT, Importo;
+    \item CF $\to$ Contribuente, Città, Indirizzo;
+    \item CT $\to$ Tributo;
+    \item CB $\to$ Banca;
+\end{itemize}
+
+Generalmente è consigliato partire dalle dipendenze più semplici e piccole, aumentando di complessità fino ad arrivare alla chiave, a cui vengono assegnati gli attributi rimanenti, non presenti in nessuna dipendenza già precedentemente individuata. 
+
+\subsubsection*{Domanda 3}
+
+Si decompone sulla base delle dipendenze funzionali identificate alla domanda precedente:
+
+\begin{center}
+    \begin{tabular}{|c|c|c|c|}
+        \hline\myuline{ID}&CF&Totale&CB\\\hline
+        23&RSSQ&600&015\\\hline
+        52&RSSQ&200&020\\\hline
+        78&RSSY&100&015\\\hline
+        90&BRNK&200&222\\\hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|c|}
+        \hline\myuline{ID}&\myuline{Riga}&CT&Importo\\\hline
+        23&1&101&300\\\hline
+        23&2&145&100\\\hline
+        23&3&145&200\\\hline
+        52&1&101&200\\\hline
+        78&1&101&100\\\hline
+        90&1&149&200\\\hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|c|}
+        \hline\myuline{CF}&Contribuente&Città&Indirizzo\\\hline
+        RSSQ&Mario Rossi&Roma&Via Po 12\\\hline
+        RSSY&Mario Rossi&Pisa&P.zza Re 1\\\hline
+        BRNK&Luca Bruni&Roma&Via Rho 2\\\hline        
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline\myuline{CT}&Tributo\\\hline
+        101&IRPEF\\\hline
+        145&IMU\\\hline
+        149&IVA\\\hline
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline\myuline{CB}&Banca\\\hline
+        015&BXY\\\hline
+        020&BancaK\\\hline
+        222&BancaZ\\\hline        
+    \end{tabular}
+\end{center}
+
+\subsubsection*{Domanda 4}
+
+Da questo schema relazionale si possono individuare diversi concetti, la banca, il tributo ed il contribuente, che possono essere realizzati come delle entità. La relazione di chiave ID rappresenta il modulo, in relazione con l'entità contribuente e banca. Per l'ultima relazione si realizza un'entità riga, con un identificatore esterno sulla relationship con modulo. Attributi come CF e CB per l'entità Modulo ed ID e CT per Riga non sono attributi di queste due entità, ma vengono ottenuti tramite relationship con cardinalità obbligatoria alle rispettive entità; è infatti errore comune inserirli all'interno delle stesse entità Modulo e Riga. 
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.2]{schema_1_20-12-24.pdf}%
+\end{figure}
+
+\subsection{Esercizio 26\footnote{\textit{Dall'esercitazione in aula del 20 Dicembre 2024}}}
+
+Considerare la seguente relazione, che contiene dati relativi ad un insieme di negozi:
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|}
+        \hline CN&Nome&Indirizzo&Piano&CM&Marca&CC&Categoria\\\hline
+        342&Mariella&Via Larga 32&Terra&101&BeiVestiti&A&Abbigliamento\\\hline
+        342&Mariella&Via Larga 32&Terra&102&BelleScarpe&C&Calzature\\\hline
+        343&Franca&Vic. Corto 1&Primo&101&BeiVestiti&A&Abbigliamento\\\hline
+        343&Franca&Vic. Corto 1&Primo&103&BelCuoio&B&Borse\\\hline
+        343&Franca&Vic. Corto 1&Primo&104&VestitiBelli&A&Abbigliamento\\\hline
+    \end{tabular}
+\end{center}
+Assumere che siano definite sulla relazione le seguente dipendenze funzionali:
+\begin{itemize}
+    \item CN $\to$ Nome, Indirizzo, Piano;
+    \item CM $\to$ Marca, CC;
+    \item CC $\to$ Categoria
+\end{itemize}
+Con riferimento a tale relazione, ed al suo schema:
+\begin{enumerate}
+    \item Indicare la chiave, e fra le dipendenze funzionali sopra elencate, quali sono quelle che causano violazioni della BCNF;
+    \item Mostrare lo schema di una buona decomposizione che soddisfi la BCNF;
+    \item Mostrare uno schema concettuale che descriva la realtà di interesse illustrata nella domanda precedente. 
+\end{enumerate}
+
+\subsubsection*{Domanda 1}
+
+La chiave della relazione si suppone essere CN, CM, gli attributi del codice del negozio e della marca. Tutte e tre le dipendenze funzionali mostrare quindi violano la BCNF. 
+
+\subsubsection*{Domanda 2}
+
+Nella decomposizione sono necessarie quattro relazioni, tre relative alle dipendenze funzionali, ed una per mantenere il legame tra CN e CM, la chiave effettiva della relazione:
+
+\begin{center}
+    \begin{tabular}{|c|c|}
+        \hline\myuline{CN}&\myuline{CM}\\\hline
+        342&101\\\hline
+        342&102\\\hline
+        343&101\\\hline
+        343&103\\\hline
+        343&104\\\hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|c|}
+        \hline\myuline{CN}&Nome&Indirizzo&Piano\\\hline
+        342&Mariella&Via Largo 32&Terra\\\hline
+        343&Franca&Vic. Corto 1&Primo\\\hline
+    \end{tabular}
+    \begin{tabular}{|c|c|c|}
+        \hline\myuline{CM}&Marca&CC\\\hline
+        101&BeiVestiti&A\\\hline
+        102&BelleScarpe&C\\\hline
+        103&BelCuoio&B\\\hline
+        104&VestitiBelli&A\\\hline        
+    \end{tabular}
+    \begin{tabular}{|c|c|}
+        \hline\myuline{CC}&Categoria\\\hline
+        A&Abbigliamento\\\hline
+        B&Borse\\\hline
+        C&Calzature\\\hline        
+    \end{tabular}
+\end{center}
+
+\subsubsection*{Domanda 3}
+
+La relazione contenente solamente la chiave corrisponde ad una relationship molti a molti nello schema concettuale, che lega le entità Negozio e Marca. All'entità marca è legata con cardinalità uno a molti l'entità Categoria:
+
+\begin{figure}[H]%
+    \centering%
+    \includegraphics[scale=1.25]{schema_2_20-12-24.pdf}%
+\end{figure}
 
 \clearpage
 

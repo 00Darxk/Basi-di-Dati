@@ -7,10 +7,11 @@
 
     % casa produttrice
     (0,0)node[draw, rectangle](casa){Casa Produttrice}
-    (casa.140)--++(0,0.88)node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize Codice}
-    (casa.110)--++(0,0.66)node[draw, circle, inner sep=1pt, fill=black]{}node[right]{\footnotesize Nome}
-    (casa.80)--++(0,0.44)node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Indirizzo}
-    (casa.50)--++(0,0.22)node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Sito Web}
+    
+    (casa.175)--++(-0.25, 0.15)node[draw, circle, inner sep=1pt, fill=black]{}node[left]{\footnotesize Codice}
+    (casa.185)--++(-0.25,-0.15)node[draw, circle, inner sep=1pt, fill=black]{}node[left]{\footnotesize Nome}
+    (casa.355)--++( 0.25,-0.15)node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Indirizzo}
+    (casa.5) --++( 0.25, 0.15)node[draw, circle, inner sep=1pt, fill=white]{}node[right]{\footnotesize Sito Web}
 
     % modello
     (casa.270)node[below right]{\scriptsize $(0,N)$}--++(0,-0.3)node[draw, diamond, shape aspect=2, inner sep=3pt, anchor=90](r1){}
